@@ -1,0 +1,296 @@
+package br.com.contmatic.endereco;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
+import org.hamcrest.Matchers;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import br.com.contmatic.endereco.Endereco;
+import br.com.contmatic.util.Annotations;
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class EnderecoTest {
+
+    private static Endereco endereco;
+    private Validator validator;
+
+    @BeforeClass
+    public static void InicioDosTestes() {
+        FixtureFactoryLoader.loadTemplates("br.com.contmatic.util");
+        System.out.println("Iniciamos os testes na classe endereco");
+    }
+
+    @Before
+    public void setUp() {
+        endereco = Fixture.from(Endereco.class).gimme("valido");
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        this.validator = factory.getValidator();
+    }
+    
+    @Test
+    public void deve_gerar_dados_validos() {
+        Set<ConstraintViolation<Endereco>> constraintViolations = validator.validate(endereco);
+        assertEquals(0, constraintViolations.size());
+    }
+
+    @Test
+    public void nao_deve_aceitar_rua_curta() {
+        Endereco Endereco = new Endereco();
+        Endereco.setRua("Joselito");
+    }
+
+    @Test
+    public void nao_deve_aceitar_Endereco_sem_cpf_nome_telefone_boleto() {
+        Endereco Endereco = new Endereco();
+        Set<ConstraintViolation<Endereco>> restricoes = validator.validate(Endereco);
+        assertThat(restricoes, Matchers.hasSize(0));
+    }
+
+    @Test
+    public void deve_passar_na_validacao_com_cpf_nome_telefone_boleto_informados() {
+        endereco = Fixture.from(Endereco.class).gimme("valido");
+        Set<ConstraintViolation<Endereco>> restricoes = validator.validate(endereco);
+        assertThat(restricoes, empty());
+    }
+
+    @Test
+    public void nao_deve_aceitar_cep_nulo() {
+        assertNotNull(endereco.getCep());
+    }
+
+    @Test
+    public void nao_deve_aceitar_numero_nulo() {
+        assertNotNull(endereco.getNumero());
+    }
+
+    @Test
+    public void nao_deve_aceitar_rua_nulo() {
+        assertNotNull(endereco.getRua());
+    }
+
+    @Test
+    public void nao_deve_aceitar_complemento_nulo() {
+        assertNotNull(endereco.getComplemento());
+    }
+
+    @Test
+    public void nao_deve_aceitar_bairro_nulo() {
+        assertNotNull(endereco.getBairro());
+    }
+
+    @Test
+    public void nao_deve_aceitar_cidade_nulo() {
+        assertNotNull(endereco.getCidade());
+    }
+
+    @Test
+    public void nao_deve_aceitar_estado_nulo() {
+        assertNotNull(endereco.getEstado());
+    }
+
+    @Test
+    public void deve_testar_o_getCep_esta_funcionando_corretamente() {
+        endereco.setCep("03806040");
+        assertThat(endereco.getCep(), containsString("03806040"));
+    }
+
+    @Test
+    public void deve_testar_o_getNumero_esta_funcionando_corretamente() {
+        endereco.setNumero(777);
+        assertTrue(endereco.getNumero() == 777);
+    }
+
+    @Test
+    public void deve_testar_o_getRua_esta_funcionando_corretamente() {
+        endereco.setRua("Rua Joseph pequeno Joseph");
+        assertThat(endereco.getRua(), containsString("Rua Joseph pequeno Joseph"));
+    }
+
+    @Test
+    public void deve_testar_o_getComplemento_esta_funcionando_corretamente() {
+        endereco.setComplemento("Sem complemento");
+        assertThat(endereco.getComplemento(), containsString("Sem complemento"));
+    }
+
+    @Test
+    public void deve_testar_o_getBairro_esta_funcionando_corretamente() {
+        endereco.setBairro("Jardim Santo Eduardo");
+        assertThat(endereco.getBairro(), containsString("Jardim Santo Eduardo"));
+    }
+
+    @Test
+    public void deve_testar_o_getCidade_esta_funcionando_corretamente() {
+        endereco.setCidade("São Paulo");
+        assertThat(endereco.getCidade(), containsString("São Paulo"));
+    }
+
+    @Test
+    public void nao_deve_aceitar_espacos_em_branco_no_cep() {
+        assertFalse(endereco.getCep().trim().isEmpty());
+    }
+
+    @Test
+    public void nao_deve_aceitar_espacos_em_branco_na_rua() {
+        assertFalse(endereco.getRua().trim().isEmpty());
+    }
+
+    @Test
+    public void nao_deve_aceitar_espacos_em_branco_no_completo() {
+        assertFalse(endereco.getComplemento().trim().isEmpty());
+    }
+
+    @Test
+    public void nao_deve_aceitar_espacos_em_branco_no_bairro() {
+        assertFalse(endereco.getBairro().trim().isEmpty());
+    }
+
+    @Test
+    public void nao_deve_aceitar_espacos_em_branco_no_cidade() {
+        assertFalse(endereco.getCidade().trim().isEmpty());
+    }
+
+    @Test
+    public void deve_retornar_true_no_hashCode_com_enderecos_iguais() {
+        assertTrue(endereco.hashCode() == endereco.hashCode());
+    }
+
+    @Test
+    public void deve_retornar_false_no_hashCode_com_um_endereco_de_cep_null() {
+        Endereco endereco2 = new Endereco(null, 777);
+        assertFalse(endereco.hashCode() == endereco2.hashCode());
+    }
+
+    @Test
+    public void deve_retornar_true_no_equals_com_enderecos_iguais() {
+        assertTrue(endereco.equals(endereco) & endereco.equals(endereco));
+    }
+
+    @Test
+    public void deve_retornar_false_no_equals_com_um_endereco_de_cpf_null() {
+        Endereco endereco2 = new Endereco(null, 777);
+        assertFalse(endereco.equals(endereco2) & endereco2.equals(endereco));
+    }
+
+    @Test
+    public void deve_retornar_true_no_equals_comparando_um_endereco_com_ele_mesmo() {
+        assertTrue(endereco.equals(endereco));
+    }
+
+    @Test
+    public void deve_retornar_false_no_equals_comparando_um_endereco_com_null() {
+        assertFalse(endereco.equals(null));
+    }
+
+    @Test
+    public void deve_retornar_true_no_equals_comparando_dois_enderecos_de_cep_null() {
+        Endereco endereco1 = new Endereco(null, 777);
+        Endereco endereco2 = new Endereco(null, 777);
+        assertTrue(endereco1.equals(endereco2));
+    }
+
+    @Test
+    public void deve_retornar_false_no_equals_com_enderecos_de_ceps_diferentes() {
+        Endereco endereco1 = new Endereco("03806040", 777);
+        Endereco endereco2 = new Endereco("03806050", 767);
+        assertFalse(endereco2.equals(endereco1));
+    }
+
+    @Test
+    public void deve_retornar_false_no_equals_com_endereco_e_um_numero_aleatorio() {
+        assertFalse(endereco.equals(new Object()));
+    }
+
+    @Test
+    public void toString_deve_retornar_null() {
+        Endereco enderecoNull = new Endereco(null, null, 0, null, null, null, null);
+        assertThat(enderecoNull.toString(), containsString(""));
+    }
+
+    @Test
+    public void toString_deve_retornar_preenchido() {
+        assertThat(endereco.toString(), containsString(""));
+    }
+   
+    @Test
+    public void deve_testar_o_getEstado() {
+    endereco.setEstado(Estado.SP);
+    assertThat(endereco.getEstado().getEstado(), is("São Paulo – SP"));
+    }
+
+    @Test
+    public void deve_validar_cep_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_rua_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_numero_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_complemento_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_bairro_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_cidade_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @Test
+    public void deve_validar_estado_annotations() {
+        Endereco cadastroValidator = Fixture.from(Endereco.class).gimme("valido"); 
+        assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator));
+    }
+    
+    @After
+    public void tearDown() {
+
+    }
+
+    @AfterClass
+    public static void teste_no_toString() {
+        System.out.println(endereco);
+        System.out.println("Finalizamos os testes na classe endereco\n");
+        System.out.println("-----/-----/-----/-----/-----/-----/-----\n");
+    }
+
+}

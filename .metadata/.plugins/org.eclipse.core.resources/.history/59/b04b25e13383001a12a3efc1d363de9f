@@ -1,0 +1,18 @@
+package br.com.contmatic.util;
+
+public final class RegexType {
+
+    public static final String URL = "^(https?|http|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+
+    public static final String NOME = "^[a-zà-úA-ZÀ-Ú_ ]*$";
+
+    public static final String CEP = "^[[0-9]{5}-[\\\\d]{3}]+$";
+    
+    public static final String CPF = "^\\\\d{3}\\\\x2E\\\\d{3}\\\\x2E\\\\d{3}\\\\x2D\\\\d{2}$";
+    
+    public static final String CNPJ = "^\\\\d{2}.?\\\\d{3}.?\\\\d{3}/?\\\\d{4}-?\\\\d{2}";
+
+    private RegexType() {
+
+    }
+}
