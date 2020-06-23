@@ -31,6 +31,7 @@ import br.com.contmatic.telefone.Telefone;
 import br.com.contmatic.util.Annotations;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class FuncionarioTest.
@@ -432,6 +433,14 @@ public class FuncionarioTest {
     }
 	
     /* OUTROS TESTES */
+    
+    /**
+     * Verificacao simples do equals verifier no funcionario.
+     */
+    @Test
+    public void verificacao_simples_do_equals_verifier_no_fornecedor() {
+    	EqualsVerifier.simple().forClass(Funcionario.class).verify();
+    }
 
 	/**
      * Nao deve aceitar funcionario sem cpf nome idade telefone endereco salario.

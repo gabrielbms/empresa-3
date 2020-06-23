@@ -31,6 +31,7 @@ import br.com.contmatic.telefone.Telefone;
 import br.com.contmatic.util.Annotations;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class ClienteTest.
@@ -341,6 +342,14 @@ public class ClienteTest {
     }
     
     /* OUTROS TESTES */
+    
+    /**
+     * Verificacao simples do equals verifier no cliente.
+     */
+    @Test
+    public void verificacao_simples_do_equals_verifier_no_cliente() {
+    	EqualsVerifier.simple().forClass(Cliente.class).verify();
+    }
 
     /**
      * Deve retornar true no hash code com clientes iguais.

@@ -28,6 +28,7 @@ import org.junit.runners.MethodSorters;
 import br.com.contmatic.util.Annotations;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class EnderecoTest.
@@ -442,6 +443,14 @@ public class EnderecoTest {
     }
 
     /* OUTROS TESTES */
+    
+    /**
+     * Verificacao simples do equals verifier no endereco.
+     */
+    @Test
+    public void verificacao_simples_do_equals_verifier_no_endereco() {
+    	EqualsVerifier.simple().forClass(Endereco.class).verify();
+    }
 
     /**
      * Deve gerar dados validos.

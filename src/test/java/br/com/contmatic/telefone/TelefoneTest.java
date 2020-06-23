@@ -27,6 +27,7 @@ import org.junit.runners.MethodSorters;
 import br.com.contmatic.util.Annotations;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class TelefoneTest.
@@ -211,6 +212,14 @@ public class TelefoneTest {
     
     
     /* OUTROS TESTES */
+    
+    /**
+     * Verificacao simples do equals verifier no telefone;
+     */
+    @Test
+    public void verificacao_simples_do_equals_verifier_no_fornecedor() {
+    	EqualsVerifier.simple().forClass(Telefone.class).verify();
+    }
 
     /**
      * Deve gerar dados validos.

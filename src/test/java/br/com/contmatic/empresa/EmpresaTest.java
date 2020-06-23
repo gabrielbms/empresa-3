@@ -30,7 +30,8 @@ import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.telefone.Telefone;
 import br.com.contmatic.util.Annotations;
 import br.com.six2six.fixturefactory.Fixture;
-import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import nl.jqno.equalsverifier.EqualsVerifier;;
 
 /**
  * The Class EmpresaTest.
@@ -345,6 +346,14 @@ public class EmpresaTest {
 	}
 	
 	/* OUTROS TESTES */
+	
+	/**
+	 * Verificacao simples do equals verifier na empresa.
+	 */
+	@Test
+    public void verificacao_simples_do_equals_verifier_na_empresa() {
+    	EqualsVerifier.simple().forClass(Empresa.class).verify();
+    }
 
 	/**
 	 * Deve gerar dados validos.
