@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import br.com.contmatic.telefone.Telefone;
 import br.com.contmatic.util.Annotations;
+import br.com.contmatic.util.easyRandom.ClienteGenerate;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -60,7 +61,8 @@ public class ClienteTest {
      */
     @Before
     public void setUp() {
-        cliente = Fixture.from(Cliente.class).gimme("valido");
+        //cliente = Fixture.from(Cliente.class).gimme("valido");
+        this.cliente = ClienteGenerate.cliente();
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }
