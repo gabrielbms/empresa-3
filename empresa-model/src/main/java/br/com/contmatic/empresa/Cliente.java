@@ -121,7 +121,7 @@ public class Cliente {
     }
 
     public void setBoleto(BigDecimal boleto) {
-        if (boleto.doubleValue() >= 1) {
+        if (boleto.doubleValue() >= 0) {
         	this.boleto = boleto;
         } else {
         	throw new IllegalArgumentException("boleto não pode ser negativo");

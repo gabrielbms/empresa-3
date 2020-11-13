@@ -35,7 +35,7 @@ public class Funcionario {
 
     /** The cpf. */
     @CPF(message = "O CPF do cliente está inválido", groups = { Put.class, Post.class })
-    @NotNull(message = "O campo CPF não pode estar nulo", groups = { Put.class, Post.class })
+    @NotBlank(message = "O campo CPF não pode estar nulo", groups = { Put.class, Post.class })
     private String cpf;
 
     /** The nome. */
@@ -153,7 +153,7 @@ public class Funcionario {
     }
 
     public void setSalario(BigDecimal salario) {
-    	if (salario.doubleValue() >= 1) {
+    	if (salario.doubleValue() >= 0) {
     		this.salario = salario;
     	} else {
     		throw new IllegalArgumentException("salario não pode ser negativo");

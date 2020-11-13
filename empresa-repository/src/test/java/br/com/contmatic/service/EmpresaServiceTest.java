@@ -82,7 +82,7 @@ public class EmpresaServiceTest {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();
 		repository.salvar(empresa);
-		empresa.setNome("°Kaue Corporation°");
+		empresa.setNome("Teste");
 		repository.alterar(empresa);
 		FindIterable<Document> findIterable = collection.find(new Document("_id", empresa.getCnpj()));
 		Empresa novaEmpresa = new EmpresaResourceAssembly().toResource(findIterable.first());
@@ -170,8 +170,7 @@ public class EmpresaServiceTest {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();
 		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
-				.get(0);
+		Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
 		assertThat(empresaBuscada.toString(), containsString("null"));
 	}
 
@@ -189,7 +188,7 @@ public class EmpresaServiceTest {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();
 		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList(empresa.getCnpj())).get(0);
+		Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
 		assertThat(empresaBuscada.getCnpj(), equalTo(empresa.getCnpj()));
 	}
 

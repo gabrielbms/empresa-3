@@ -19,13 +19,21 @@ public class ClienteResourceAssembly implements Assembly <Cliente, Document> {
 			resource.setCpf(document.getString("cpf"));
 			resource.setNome(document.getString("nome"));
 			resource.setEmail(document.getString("email"));
-			Double boletoDouble = document.getDouble("boleto");
-			BigDecimal boletoBigDecimal = BigDecimal.valueOf(boletoDouble).setScale(2);
-			resource.setBoleto(boletoBigDecimal);
+			BigDecimal valorBoleto = validarBoleto(document);
+			resource.setBoleto(valorBoleto);
 			resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
 			return resource;
 		}
 		return null;
+	}
+	
+	private static BigDecimal validarBoleto(Document document) {
+		if (document.getDouble("boleto") != null) {
+			Double boletoDouble = document.getDouble("boleto");
+			BigDecimal boletoBigDecimal = BigDecimal.valueOf(boletoDouble).setScale(2);
+			return boletoBigDecimal;
+		} 
+		return BigDecimal.valueOf(0);
 	}
 	
 	@Override

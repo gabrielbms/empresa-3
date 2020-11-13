@@ -27,7 +27,6 @@ public class EmpresaService {
 
 	public void salvar(Empresa empresa) throws IOException {
 		Document document = Document.parse(empresa.toString());
-		document.remove("cnpj");
 		document.append("_id", empresa.getCnpj());
 		database.getCollection(NAME_COLLECTION).insertOne(document);
 

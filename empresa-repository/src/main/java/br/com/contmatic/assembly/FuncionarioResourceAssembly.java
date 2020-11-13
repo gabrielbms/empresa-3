@@ -20,19 +20,36 @@ public class FuncionarioResourceAssembly implements Assembly<Funcionario, Docume
 			Funcionario resource = new Funcionario();
 			resource.setCpf(document.getString("cpf"));
 			resource.setNome(document.getString("nome"));
-			resource.setIdade(document.getInteger("idade"));
+			Integer idade = validarIdade(document);
+			resource.setIdade(idade);
 			resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
 			resource.setEnderecos(toResourceEnderecos(document.getList("enderecos", Document.class)));
-			double salarioDouble = document.getDouble("salario");
-			BigDecimal salarioBigDecimal = BigDecimal.valueOf(salarioDouble).setScale(2);
+			BigDecimal salarioBigDecimal = validarBoleto(document);
 			resource.setSalario(salarioBigDecimal);
-			//resource.setSalario(new BigDecimal(document.getDouble("salario")));
 			resource.setDataContratacao(LocalDate(document.getString("dataContratacao"))); 
 			resource.setDataSalario(LocalDate(document.getString("dataSalario"))); 
 			return resource;
 		}
 		return null;
 	}
+	
+	private static BigDecimal validarBoleto(Document document) {
+		if (document.getDouble("salario") != null) {
+			Double salarioDouble = document.getDouble("salario");
+			BigDecimal salarioBigDecimal = BigDecimal.valueOf(salarioDouble).setScale(2);
+			return salarioBigDecimal;
+		} 
+		return BigDecimal.valueOf(0);
+	}
+	
+	private static Integer validarIdade(Document document) {
+		if (document.getInteger("idade") != null) {
+			Integer idade = document.getInteger("idade");
+			return idade;
+		} 
+		return 0;
+	}
+	
 	
 	@Override
 	public Document toDocument(Funcionario resource) {

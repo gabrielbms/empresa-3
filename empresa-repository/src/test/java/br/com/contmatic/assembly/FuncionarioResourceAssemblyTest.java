@@ -38,8 +38,10 @@ public class FuncionarioResourceAssemblyTest {
 
 	@Test
 	public void deve_transformar_uma_classe_document_em_funcionario() {
-		Document document = Document.parse(randomObject.funcionarioRandomizer().toString());
+		Funcionario funcionarioTemp = randomObject.funcionarioRandomizer();
+		Document document = Document.parse(funcionarioTemp.toString()).append("_id", funcionarioTemp.getCpf());
 		Funcionario funcionario = new FuncionarioResourceAssembly().toResource(document);
+		document.remove("_id");
 		String funcionarioUTF8 = StringEscapeUtils.unescapeJava(funcionario.toString()).replaceAll("\\s", "");
 		assertThat(funcionarioUTF8.replace(".00", ".0").replace(".10", ".1").replace(".20", ".2").replace(".30", ".3")
 				.replace(".40", ".4").replace(".50", ".5").replace(".60", ".6").replace(".70", ".7").replace(".80", ".8")
