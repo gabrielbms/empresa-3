@@ -455,6 +455,11 @@ public class EmpresaTest {
 		Empresa empresa = randomObject.empresaRandomizer();
 		assertThat(empresa.toString(), is(empresa.toString()));
 	}
+	
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Empresa.class).verify();
+    }
 
 	/**
 	 * Tear down.

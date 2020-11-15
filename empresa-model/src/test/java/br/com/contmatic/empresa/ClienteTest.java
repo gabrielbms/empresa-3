@@ -433,6 +433,11 @@ public class ClienteTest {
     	cliente = randomObject.clienteRandomizer();
     	assertTrue(isValid(cliente, "O campo nome não pode estar vazio"));
     }
+    
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Cliente.class).verify();
+    }
 
     /**
      * Tear down.

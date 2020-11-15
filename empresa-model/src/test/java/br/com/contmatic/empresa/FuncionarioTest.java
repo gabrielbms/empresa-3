@@ -530,6 +530,11 @@ public class FuncionarioTest {
         Funcionario funcionarioNull = new Funcionario(null, null, 0, null, null, new BigDecimal("0"));
         assertThat(funcionarioNull.toString(), containsString("salario"));
     }
+    
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Funcionario.class).verify();
+    }
 	
     /**
      * Tear down.

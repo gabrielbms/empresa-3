@@ -259,6 +259,11 @@ public class TelefoneTest {
 		Telefone telefone2 = new Telefone(null, null, null);
 		assertTrue(telefone1.equals(telefone2));
 	}
+	
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Telefone.class).verify();
+    }
 
 	/**
 	 * Tear down.
