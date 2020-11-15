@@ -35,7 +35,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -50,9 +49,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
 
-import br.com.contmatic.groups.Post;
-import br.com.contmatic.groups.Put;
-import br.com.contmatic.regex.RegexType;
 import br.com.contmatic.telefone.Telefone;
 
 /**
@@ -62,35 +58,34 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Cliente {
 
-    /** The cpf. */
+	/** The cpf. */
 	@CPF(message = CPF_INVALIDO)
 	@NotNull(message = CPF_VAZIO)
 	@Pattern(regexp = NUMEROS, message = CPF_INCORRETO)
 	private String cpf;
 
-    /** The nome. */
+	/** The nome. */
 	@NotBlank(message = NOME_VAZIO)
 	@Pattern(regexp = LETRAS, message = NOME_INVALIDO)
 	@Size(min = 2, max = 80, message = NOME_TAMANHO)
 	private String nome;
 
-    /** The email. */
+	/** The email. */
 	@Email(message = EMAIL_INVALIDO)
 	@NotBlank(message = EMAIL_VAZIO)
 	@Pattern(regexp = EMAIL, message = EMAIL_INVALIDO)
 	@Size(min = 5, max = 100, message = EMAIL_TAMANHO)
 	private String email;
 
-    /** The boleto. */
+	/** The boleto. */
 	@Min(value = 1, message = BOLETO_NEGATIVO)
 	@NotEmpty(message = BOLETO_VAZIO)
 	private BigDecimal boleto;
 
-    /** The telefones. */
+	/** The telefones. */
 	@Valid
 	@NotNull(message = TELEFONE_VAZIO)
-	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA),
-			@Size(max = 3, message = TELEFONE_QTDE_MAX) })
+	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA), @Size(max = 3, message = TELEFONE_QTDE_MAX) })
 	private Set<Telefone> telefones;
 
 	public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
@@ -100,32 +95,67 @@ public class Cliente {
 		this.setBoleto(boleto);
 	}
 
+	public Cliente() {
 
-    /**
-     * Instantiates a new cliente.
-     */
-    public Cliente() {
+	}
 
-    }
-    
-    public String getCpf() {
-        return cpf;
-    }
+	public String getCpf() {
+		return cpf;
+	}
 
-    public void setCpf(String setCpf) {
-        this.cpf = setCpf;
-    }
+	public void setCpf(String cpf) {
+		this.validaCpfIncorreto(cpf);
+		this.validaCalculoCpf(cpf);
+		this.validaEspacosIncorretosECaracteresEspeciaisNoCpf(cpf);
+		this.cpf = cpf;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	private void validaEspacosIncorretosECaracteresEspeciaisNoCpf(String cpf) {
+		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
+			throw new IllegalArgumentException(CPF_INVALIDO);
+		}
+	}
+
+	private void validaCalculoCpf(String cpf) {
+		if (isNotCPF(cpf)) {
+			throw new IllegalStateException(CPF_INVALIDO);
+		}
+	}
+
+	private void validaCpfIncorreto(String cpf) {
+		this.validaCpfNulloOuVazio(cpf);
+		this.validaCpfComTamanhoMenor(cpf);
+		this.validaCpfComTamanhoMaior(cpf);
+	}
+
+	private void validaCpfComTamanhoMaior(String cpf) {
+		if (cpf.length() > CPF_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+		}
+	}
+
+	private void validaCpfComTamanhoMenor(String cpf) {
+		if (cpf.length() < CPF_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+		}
+	}
+
+	private void validaCpfNulloOuVazio(String cpf) {
+		if (cpf == null || cpf.trim().isEmpty()) {
+			throw new IllegalArgumentException(CPF_VAZIO);
+		}
+	}
+
+	public String getNome() {
+		return nome;
+	}
 
 	public void setNome(String nome) {
 		this.validaNomeIncorreto(nome);
 		this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
 		this.nome = nome;
 	}
-	
+
 	private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
 		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
 			throw new IllegalArgumentException(NOME_INVALIDO);
@@ -155,15 +185,16 @@ public class Cliente {
 			throw new IllegalArgumentException(NOME_VAZIO);
 		}
 	}
-    public String getEmail() {
-        return email;
-    }
+
+	public String getEmail() {
+		return email;
+	}
 
 	public void setEmail(String email) {
 		this.validaEmailIncorreto(email);
 		this.email = email;
 	}
-	
+
 	private void validaEmailIncorreto(String email) {
 		this.validaEmailNulloOuVazio(email);
 		this.validaEmailMenorQueOTamanhoMinimo(email);
@@ -188,65 +219,65 @@ public class Cliente {
 		}
 	}
 
-    public @Valid Set<Telefone> getTelefone() {
-        return telefones;
-    }
+	public @Valid Set<Telefone> getTelefone() {
+		return telefones;
+	}
 
 	public void setTelefones(Set<Telefone> telefone) {
 		this.validaTelefoneNullo(telefone);
 		this.telefones = telefone;
 	}
-	
+
 	private void validaTelefoneNullo(Set<Telefone> telefones) {
 		if (telefones == null) {
 			throw new IllegalArgumentException(TELEFONE_VAZIO);
 		}
 	}
 
-    public BigDecimal getBoleto() {
-        return boleto;
-    }
+	public BigDecimal getBoleto() {
+		return boleto;
+	}
 
 	public void setBoleto(BigDecimal boleto) {
 		this.validaValorBoleto(boleto);
 		this.boleto = boleto;
 	}
-	
+
 	private void validaValorBoleto(BigDecimal boleto) {
 		if (boleto.doubleValue() < 0) {
 			throw new IllegalArgumentException(BOLETO_NEGATIVO);
 		}
 	}
-    
-    /**
-     * To string.
-     *
-     * @return the string
-     */
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-    
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
 }

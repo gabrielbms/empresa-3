@@ -94,7 +94,7 @@ public class GeraCPF {
 		}
 		
        	try{
-    		MaskFormatter mf = new MaskFormatter("###.###.###-##");  
+    		MaskFormatter mf = new MaskFormatter("###########");  
     		mf.setValueContainsLiteralCharacters(false);
     		cpf = mf.valueToString(texto);
        	}catch(Exception ex){

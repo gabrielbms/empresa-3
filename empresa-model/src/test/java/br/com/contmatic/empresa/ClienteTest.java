@@ -23,8 +23,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
-import br.com.contmatic.groups.Post;
-import br.com.contmatic.groups.Put;
 import br.com.contmatic.telefone.Telefone;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -33,112 +31,103 @@ import nl.jqno.equalsverifier.EqualsVerifier;
  */
 @FixMethodOrder(NAME_ASCENDING)
 public class ClienteTest {
-	
-    private static Cliente cliente;
-    
+
+	private static Cliente cliente;
+
 	private Telefone telefone;
-    
+
 	private Set<Telefone> telefones = new HashSet<>();
 
-    private Validator validator;
-    
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    
-    private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
-    
-    /**
-     * Set up.
-     */
-    @Before
-    public void setUp() {
-    	ClienteTest.cliente = randomObject.clienteRandomizer();
+	private Validator validator;
+
+	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+
+	private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
+
+	@Before
+	public void setUp() {
+		ClienteTest.cliente = randomObject.clienteRandomizer();
 		telefone = new Telefone(DDD11, "978457845", CELULAR);
 		telefones.add(telefone);
-    }
-    
-    public boolean isValid(Cliente cliente, String mensagem) {
-    	validator = factory.getValidator();
+	}
+
+	public boolean isValid(Cliente cliente, String mensagem) {
+		validator = factory.getValidator();
 		boolean valido = true;
-		Set<ConstraintViolation<Cliente>> restricoesPost = validator.validate(cliente, Post.class);
-		for (ConstraintViolation<Cliente> constraintViolation : restricoesPost)
+		Set<ConstraintViolation<Cliente>> restricoes = validator.validate(cliente);
+		for (ConstraintViolation<Cliente> constraintViolation : restricoes)
 			if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
 				valido = false;
-		
-		Set<ConstraintViolation<Cliente>> restricoesPut = validator.validate(cliente, Put.class);
-		for (ConstraintViolation<Cliente> constraintViolation : restricoesPut)
-			if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
-				valido = false;
-		
 		return valido;
 	}
-    
-    @Test
+
+	@Test
 	public void deve_testar_se_o_cpf_aceita_numeros() {
 		cliente.setCpf("43701888817");
 		assertEquals("43701888817", cliente.getCpf());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_null_no_cpf() {
 		cliente.setCpf(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_vazio_no_cpf() {
 		cliente.setCpf("");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_em_branco_no_cpf() {
 		cliente.setCpf("  ");
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
 	public void nao_deve_aceitar_letras_no_cpf() {
 		cliente.setCpf("abcdefabcde");
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
 	public void nao_deve_aceitar_cpf_invalido() {
 		cliente.setCpf("43701888818");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_caracteres_especiais_no_cpf() {
 		cliente.setCpf("@#$");
 	}
-		
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_inicio_do_cpf() {
 		cliente.setCpf(" 43701888817");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_fim_do_cpf() {
 		cliente.setCpf("43701888817 ");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_meio_do_cpf() {
 		cliente.setCpf("437018      88817");
 	}
-	
+
 	@Test
 	public void deve_testar_o_getCpf() {
 		cliente.setCpf("43701888817");
 		assertEquals("43701888817", cliente.getCpf());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_tamanho_menor_no_cpf() {
 		cliente.setCpf("1010101010");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_tamanho_maior_no_cpf() {
 		cliente.setCpf("121212121212");
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
 	public void deve_testar_exception_da_validação_do_cpf() {
 		cliente.setCpf("43701888818");
@@ -149,126 +138,126 @@ public class ClienteTest {
 		cliente.setNome("Gabriel");
 		assertEquals("Gabriel", cliente.getNome());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_null_no_nome() {
 		cliente.setNome(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_vazio_no_nome() {
 		cliente.setNome("");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_nome() {
 		cliente.setNome("          ");
 	}
-	
+
 	@Test
 	public void nao_deve_aceitar_numeros_no_nome() {
 		cliente.setNome("123456");
 		assertFalse(isValid(cliente, NOME_INVALIDO));
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_caracteres_especiais_no_nome() {
 		cliente.setNome("@#$");
 	}
-		
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_inicio_do_nome() {
 		cliente.setNome(" Gabriel");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_no_final_do_nome() {
 		cliente.setNome("Gabriel ");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_nome() {
 		cliente.setNome("Gabriel         Bueno");
 	}
-	
+
 	@Test
 	public void deve_testar_se_o_nome_aceita_um_espaco_entre_as_palavras() {
 		cliente.setNome("Gabriel Bueno");
 		assertEquals("Gabriel Bueno", cliente.getNome());
 	}
-	
+
 	@Test
 	public void deve_testar_o_getNome() {
 		cliente.setNome("Gabriel Bueno");
 		assertEquals("Gabriel Bueno", cliente.getNome());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deve_testar_exception_do_setNome_tamanho_menor() {
 		cliente.setNome("a");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deve_testar_exception_do_setNome_tamanho_maior() {
 		cliente.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc"
 				+ "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
 	}
-	
+
 	@Test
 	public void deve_testar_o_getEmail() {
 		cliente.getEmail();
 		assertEquals(cliente.getEmail(), cliente.getEmail());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_null_no_email() {
 		cliente.setEmail(null);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_vazio_no_email() {
 		cliente.setEmail("");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_espacos_em_branco_no_email() {
 		cliente.setEmail("  ");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deve_testar_exception_do_setEmail_tamanho_menor() {
 		cliente.setEmail("a");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deve_testar_exception_do_setEmail_tamanho_limite() {
-		cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca"
-				+ "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
+		cliente.setEmail(
+				"abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
 	}
-	
+
 	@Test
 	public void deve_testar_exception_do_setEmail_tamanho_maior() {
-		cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca"
-				+ "bcabcacabcabcabcaabcabcabcabxc@gmail.com");
+		cliente.setEmail(
+				"abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + "bcabcacabcabcabcaabcabcabcabxc@gmail.com");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void nao_deve_aceitar_telefone_nulo() {
 		cliente.setTelefones(null);
 	}
-	
+
 	@Test
 	public void deve_testar_o_getTelefone() {
 		cliente.setTelefones(telefones);
 		assertEquals(telefones, cliente.getTelefone());
 	}
-	
+
 	@Test
 	public void deve_testar_o_getBoleto() {
 		cliente.setBoleto(BigDecimal.valueOf(250.00));
 		assertEquals(BigDecimal.valueOf(250.00), cliente.getBoleto());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deve_testar_o_exception_do_boleto() {
 		cliente.setBoleto(BigDecimal.valueOf(-20.00));
@@ -339,18 +328,15 @@ public class ClienteTest {
 		String clienteToString = cliente.toString();
 		assertEquals(cliente.toString(), clienteToString);
 	}
-    
-    @Test
-    public void simpleEqualsContract() {
-    	EqualsVerifier.simple().forClass(Cliente.class).verify();
-    }
 
-    /**
-     * Tear down.
-     */
-    @After
-    public void tearDown() {
-    	System.out.println(cliente);
-    }
-    
+	@Test
+	public void simpleEqualsContract() {
+		EqualsVerifier.simple().forClass(Cliente.class).verify();
+	}
+
+	@After
+	public void tearDown() {
+		System.out.println(cliente);
+	}
+
 }
