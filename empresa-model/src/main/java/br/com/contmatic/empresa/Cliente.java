@@ -1,5 +1,36 @@
 package br.com.contmatic.empresa;
 
+import static br.com.contmatic.util.Constantes.BOLETO_NEGATIVO;
+import static br.com.contmatic.util.Constantes.BOLETO_VAZIO;
+import static br.com.contmatic.util.Constantes.CPF_INCORRETO;
+import static br.com.contmatic.util.Constantes.CPF_INVALIDO;
+import static br.com.contmatic.util.Constantes.CPF_SIZE;
+import static br.com.contmatic.util.Constantes.CPF_VAZIO;
+import static br.com.contmatic.util.Constantes.EMAIL_INVALIDO;
+import static br.com.contmatic.util.Constantes.EMAIL_MAX_SIZE;
+import static br.com.contmatic.util.Constantes.EMAIL_MIN_SIZE;
+import static br.com.contmatic.util.Constantes.EMAIL_TAMANHO;
+import static br.com.contmatic.util.Constantes.EMAIL_VAZIO;
+import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
+import static br.com.contmatic.util.Constantes.NOME_MAX_SIZE;
+import static br.com.contmatic.util.Constantes.NOME_MIN_SIZE;
+import static br.com.contmatic.util.Constantes.NOME_TAMANHO;
+import static br.com.contmatic.util.Constantes.NOME_VAZIO;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_CPF_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_CPF_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_EMAIL_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_EMAIL_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MAX;
+import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MINIMA;
+import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
+import static br.com.contmatic.util.RegexType.EMAIL;
+import static br.com.contmatic.util.RegexType.LETRAS;
+import static br.com.contmatic.util.RegexType.NUMEROS;
+import static br.com.contmatic.util.RegexType.validaSeNaoTemEspacosIncorretosECaracteresEspeciaos;
+import static br.com.contmatic.util.Validate.isNotCPF;
+
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -32,50 +63,43 @@ import br.com.contmatic.telefone.Telefone;
 public class Cliente {
 
     /** The cpf. */
-    @CPF(message = "O CPF do cliente está inválido", groups = { Put.class, Post.class })
-    @NotNull(message = "O campo CPF não pode estar nulo", groups = { Put.class, Post.class })
-    private String cpf;
+	@CPF(message = CPF_INVALIDO)
+	@NotNull(message = CPF_VAZIO)
+	@Pattern(regexp = NUMEROS, message = CPF_INCORRETO)
+	private String cpf;
 
     /** The nome. */
-    @NotBlank(message = "O campo nome não pode estar vazio", groups = { Put.class, Post.class })
-    @Pattern(regexp = RegexType.NOME, message = "O nome do cliente está incorreto", groups = { Put.class, Post.class })
-    @Size(min = 2, max = 80, message = "O nome mínimo é de {min} caracteres e no máximo de {max} caracteres", groups = { Put.class, Post.class })
-    private String nome;
+	@NotBlank(message = NOME_VAZIO)
+	@Pattern(regexp = LETRAS, message = NOME_INVALIDO)
+	@Size(min = 2, max = 80, message = NOME_TAMANHO)
+	private String nome;
 
     /** The email. */
-    @Email(message = "O email do cliente está invalido", groups = { Put.class, Post.class })
-    @NotBlank(message = "O campo e-mail não pode estar vazio", groups = { Put.class, Post.class })
-    @Pattern(regexp = RegexType.EMAIL, message = "O email do cliente está invalido", groups = { Put.class, Post.class })
-    @Size(min = 5, max = 100, message = "O e-mail do funcionario pode ter no máximo {max} caracteres", groups = { Put.class, Post.class })
-    private String email;
+	@Email(message = EMAIL_INVALIDO)
+	@NotBlank(message = EMAIL_VAZIO)
+	@Pattern(regexp = EMAIL, message = EMAIL_INVALIDO)
+	@Size(min = 5, max = 100, message = EMAIL_TAMANHO)
+	private String email;
 
     /** The boleto. */
-    @Min(value = 1, message = "O valor do boleto não pode ser negativo")
-    @NotEmpty(message = "O campo boleto não pode estar vazio")
-    @Digits(integer = 13, fraction = 2)
-    private BigDecimal boleto;
-    
-    /** The telefones. */
-    @Valid
-    @NotNull(message = "O telefone do cliente não pode ser vazio", groups = { Put.class, Post.class })
-    @Size.List({@Size(min = 1, message = "A lista de telefone da empresa não deve ser vazio.", groups = { Put.class,Post.class }),
-		@Size(max = 500, message = "A lista de telefone da empresa máxima é de {max}.", groups = { Put.class,Post.class }) })
-    private Set<Telefone> telefones;
+	@Min(value = 1, message = BOLETO_NEGATIVO)
+	@NotEmpty(message = BOLETO_VAZIO)
+	private BigDecimal boleto;
 
-    /**
-     * Instantiates a new cliente.
-     *
-     * @param cpf the cpf
-     * @param nome the nome
-     * @param telefone the telefone
-     * @param boleto the boleto
-     */
-    public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
-        this.cpf = cpf;
-        this.nome = nome;
-        this.telefones = telefone;
-        this.boleto = boleto;
-    }
+    /** The telefones. */
+	@Valid
+	@NotNull(message = TELEFONE_VAZIO)
+	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA),
+			@Size(max = 3, message = TELEFONE_QTDE_MAX) })
+	private Set<Telefone> telefones;
+
+	public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
+		this.setCpf(cpf);
+		this.setNome(nome);
+		this.setTelefones(telefone);
+		this.setBoleto(boleto);
+	}
+
 
     /**
      * Instantiates a new cliente.
@@ -96,37 +120,103 @@ public class Cliente {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public void setNome(String nome) {
+		this.validaNomeIncorreto(nome);
+		this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
+		this.nome = nome;
+	}
+	
+	private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
+		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+			throw new IllegalArgumentException(NOME_INVALIDO);
+		}
+	}
 
+	private void validaNomeIncorreto(String nome) {
+		this.validaNomeNulloOuVazio(nome);
+		this.validaNomeMenorQueOTamanhoMinimo(nome);
+		this.validaNomeMaiorQueOTamanhoMinimo(nome);
+	}
+
+	private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
+		if (nome.length() > NOME_MAX_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+		}
+	}
+
+	private void validaNomeMenorQueOTamanhoMinimo(String nome) {
+		if (nome.length() < NOME_MIN_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+		}
+	}
+
+	private void validaNomeNulloOuVazio(String nome) {
+		if (nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException(NOME_VAZIO);
+		}
+	}
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.validaEmailIncorreto(email);
+		this.email = email;
+	}
+	
+	private void validaEmailIncorreto(String email) {
+		this.validaEmailNulloOuVazio(email);
+		this.validaEmailMenorQueOTamanhoMinimo(email);
+		this.validaEmailMaiorQueOTamanhoMaximo(email);
+	}
+
+	private void validaEmailMaiorQueOTamanhoMaximo(String email) {
+		if (email.length() > EMAIL_MAX_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_EMAIL_GRANDE_DEMAIS);
+		}
+	}
+
+	private void validaEmailMenorQueOTamanhoMinimo(String email) {
+		if (email.length() < EMAIL_MIN_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_EMAIL_PEQUENO_DEMAIS);
+		}
+	}
+
+	private void validaEmailNulloOuVazio(String email) {
+		if (email == null || email.trim().isEmpty()) {
+			throw new IllegalArgumentException(EMAIL_VAZIO);
+		}
+	}
 
     public @Valid Set<Telefone> getTelefone() {
         return telefones;
     }
 
-    public void setTelefones(Set<Telefone> telefone) {
-        this.telefones = telefone;
-    }
+	public void setTelefones(Set<Telefone> telefone) {
+		this.validaTelefoneNullo(telefone);
+		this.telefones = telefone;
+	}
+	
+	private void validaTelefoneNullo(Set<Telefone> telefones) {
+		if (telefones == null) {
+			throw new IllegalArgumentException(TELEFONE_VAZIO);
+		}
+	}
 
     public BigDecimal getBoleto() {
         return boleto;
     }
 
-    public void setBoleto(BigDecimal boleto) {
-        if (boleto.doubleValue() >= 0) {
-        	this.boleto = boleto;
-        } else {
-        	throw new IllegalArgumentException("boleto não pode ser negativo");
-        }
-    }
+	public void setBoleto(BigDecimal boleto) {
+		this.validaValorBoleto(boleto);
+		this.boleto = boleto;
+	}
+	
+	private void validaValorBoleto(BigDecimal boleto) {
+		if (boleto.doubleValue() < 0) {
+			throw new IllegalArgumentException(BOLETO_NEGATIVO);
+		}
+	}
     
     /**
      * To string.
