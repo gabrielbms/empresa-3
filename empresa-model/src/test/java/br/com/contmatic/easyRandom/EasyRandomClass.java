@@ -1,5 +1,7 @@
 package br.com.contmatic.easyRandom;
 
+import static br.com.contmatic.easyRandom.GeraCPF.geraCPFFinal;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 
@@ -27,7 +29,7 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Cliente cliente = easyFakeObject.nextObject(Cliente.class);
-        cliente.setCpf(Geradores.geraCpf());
+        cliente.setCpf(geraCPFFinal());
         String nomeCliente = faker.name().fullName();
         cliente.setNome(nomeCliente);
         cliente.setEmail(nomeCliente.toLowerCase().replace(" ", "").replace("'", "") + Geradores.DominioEmail());
@@ -68,7 +70,7 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Funcionario funcionario = easyFakeObject.nextObject(Funcionario.class);
-        funcionario.setCpf(Geradores.geraCpf());
+        funcionario.setCpf(geraCPFFinal());
         funcionario.setNome(faker.name().fullName());
         funcionario.setIdade(faker.number().numberBetween(18, 40));
         funcionario.setSalario(Geradores.generateRandomBigDecimalValueFromRange(
