@@ -302,12 +302,6 @@ public class ClienteTest {
 		assertFalse(cliente.getBoleto() == BigDecimal.valueOf(-200.00));
 	}
     
-    @Test(expected = IllegalArgumentException.class)
-	public void nao_deve_aceitar_boleto_igual_a_0() {
-    	cliente.setBoleto(BigDecimal.valueOf(0.00));
-		assertFalse(cliente.getBoleto() == BigDecimal.valueOf(0.00));
-	}
-    
     @Test
 	public void deve_aceitar_boleto_valido() {
     	cliente.setBoleto(BigDecimal.valueOf(200.00));

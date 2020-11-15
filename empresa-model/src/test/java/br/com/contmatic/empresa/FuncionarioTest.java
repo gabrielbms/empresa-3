@@ -329,12 +329,6 @@ public class FuncionarioTest {
 		assertFalse(funcionario.getSalario() == BigDecimal.valueOf(-2500.00));
 	}
     
-    @Test(expected = IllegalArgumentException.class)
-	public void nao_deve_aceitar_salario_igual_a_0() {
-		funcionario.setSalario(BigDecimal.valueOf(0.00));
-		assertFalse(funcionario.getSalario() == BigDecimal.valueOf(0.00));
-	}
-    
     @Test
 	public void deve_aceitar_salario_valido() {
 		funcionario.setSalario(BigDecimal.valueOf(2500.00));
