@@ -559,6 +559,11 @@ public class EnderecoTest {
     public void toString_deve_retornar_preenchido() {
         assertThat(endereco.toString(), containsString(""));
     }
+    
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Endereco.class).verify();
+    }
 
     /**
      * Tear down.

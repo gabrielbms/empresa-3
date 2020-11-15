@@ -1,67 +1,231 @@
 package br.com.contmatic.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bson.Document;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import br.com.contmatic.assembly.ClienteResourceAssembly;
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.empresa.Cliente;
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
 
 public class ClienteServiceTest {
 	
-	private static ClienteService clienteService;
+	private static final MongodStarter starter = MongodStarter.getDefaultInstance();
 
-	private static Cliente cliente;
+	private static MongodExecutable mongodExe;
 
-	private static EasyRandomClass random = EasyRandomClass.InstanciaEasyRandomClass();
+	private static MongoClient mongo;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClienteServiceTest.class);
-
-	@BeforeClass
-	public static void easyRandomDados() {
-		clienteService = new ClienteService();
-		cliente = random.clienteRandomizer();
-		clienteService.save(cliente);
-	}
-
-	@Test
-	public void deve_salvar_Cliente() {
+	private MongoDatabase database;
+	
+    private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
+    
+    @BeforeClass
+	public static void setUpBeforeClass() {
 		try {
-			clienteService.save(cliente);
-			assertEquals(cliente, clienteService.findById(cliente.getCpf()));
+			mongodExe = starter.prepare(new MongodConfigBuilder().version(Version.Main.V3_4)
+					.net(new Net("localhost", 12345, Network.localhostIsIPv6())).build());
+			mongodExe.start();
+			mongo = new MongoClient("localhost", 12345);
+
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
+	@Before
+	public void setUp() {
+		database = mongo.getDatabase("empresa");
+		database.createCollection("cliente");
+	}
+
 	@Test
-	public void deve_atualizar_Cliente() {
+	public void deve_armazenar_um_cliente_no_banco() throws IOException {
+		MongoCollection<Document> collection = database.getCollection("cliente");
+		ClienteService repository = new ClienteService(database);
+		repository.salvar(randomObject.clienteRandomizer());
+		assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 1);
+	}
+
+	@Test
+	public void deve_alterar_uma_cliente_no_banco() throws IOException, InterruptedException {
+		MongoCollection<Document> collection = database.getCollection("cliente");
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
 		cliente.setNome("Teste");
-		clienteService.update(cliente);
-		assertEquals(clienteService.findById(cliente.getCpf()).getNome(), cliente.getNome());
+		repository.alterar(cliente);
+		FindIterable<Document> findIterable = collection.find(new Document("_id", cliente.getCpf()));
+		Cliente novoCliente = new ClienteResourceAssembly().toResource(findIterable.first());
+		assertThat("Deve alterar um cliente no banco", cliente.getNome(), equalTo(novoCliente.getNome()));
 	}
 
 	@Test
-	public void deve_deletar_Cliente() {
-		try {
-			EasyRandomClass random = EasyRandomClass.InstanciaEasyRandomClass();
-			cliente = random.clienteRandomizer();
-			clienteService.save(cliente);
-			clienteService.deleteById(cliente.getCpf());
-			assertEquals(null, clienteService.findById(cliente.getCpf()));
-			clienteService.save(cliente);
-		} catch (IllegalAccessException e) {
-			LOGGER.error(e.getMessage(), e);
+	public void deve_apagar_uma_cliente_no_banco() throws IOException {
+		MongoCollection<Document> collection = database.getCollection("cliente");
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		repository.deletar(cliente);
+		assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 0);
+	}
+
+	@Test
+	public void deve_selecionar_pelo_cpf_uma_cliente_no_banco() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
+		assertTrue("Deve armazenar um cliente no banco", clienteBuscado != null);
+	}
+
+	@Test
+	public void deve_selecionar_pelo_cpf_uma_cliente_no_banco_e_retornar_campos_iguais_como_salvou()
+			throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
+		assertTrue(clienteBuscado.toString().equals(cliente.toString()));
+	}
+
+	@Test
+	public void deve_selecionar_pelo_cpf_uma_cliente_e_nao_deve_ter_valores_nulo() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
+		assertThat(clienteBuscado.toString(), not(containsString("null")));
+	}
+
+	@Test
+	public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		List<Cliente> clienteBuscado = repository.selecionar((List<String>) null);
+		assertNull(clienteBuscado);
+	}
+
+	@Test
+	public void deve_retornar_nulo_quando_manda_uma_lista_vazia() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		List<Cliente> clienteBuscado = repository.selecionar(new ArrayList<String>());
+		assertNull(clienteBuscado);
+	}
+
+	@Test
+	public void deve_retornar_campo_nome_da_cliente() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
+		assertThat(clienteBuscado.toString(), containsString("\"nome\":\"" + cliente.getNome() + "\""));
+
+	}
+
+	@Test
+	public void deve_retornar_campo_nulos_da_cliente_ao_selecionar_escolhendo_campo() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(Arrays.asList("nome", "email")).get(0);
+		assertThat(clienteBuscado.toString(), containsString("null"));
+	}
+
+	@Test
+	public void deve_retornar_campo_da_cliente_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
+			throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente ClienteBuscado = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
+		assertThat(ClienteBuscado.toString(), containsString("null"));
+	}
+
+	@Test
+	public void deve_retornar_a_cliente_mesmo_nao_exista_valores() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
+		assertThat(clienteBuscado.toString(), containsString("null"));
+	}
+
+	@Test
+	public void deve_retornar_a_cliente_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		Cliente cliente = randomObject.clienteRandomizer();
+		repository.salvar(cliente);
+		Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
+		assertThat(clienteBuscado.getCpf(), equalTo(cliente.getCpf()));
+	}
+
+	@Test
+	public void deve_selecionar_todas_cliente_no_banco() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
+				randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
+		for (Cliente cliente : clientes) {
+			repository.salvar(cliente);
 		}
+
+		List<Cliente> clienteBuscado = repository.selecionar();
+		assertThat(clienteBuscado.size(), is(clientes.size()));
 	}
 
 	@Test
-	public void deve_retornar_todos_Clientes() {
-		assertFalse(clienteService.findAll().isEmpty());
-	}
+	public void deve_selecionar_todas_cliente_no_banco_e_tem_que_ser_igual() throws IOException {
+		ClienteService repository = new ClienteService(database);
+		List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
+				randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
+		for (Cliente cliente : clientes) {
+			repository.salvar(cliente);
+		}
 
+		List<Cliente> clienteBuscada = repository.selecionar();
+		assertThat(clienteBuscada, is(clientes));
+	}
+	
+	@After
+	public void tearDown() {
+		database.drop();
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() {
+		mongo.close();
+		mongodExe.stop();
+	} 
+    
 }

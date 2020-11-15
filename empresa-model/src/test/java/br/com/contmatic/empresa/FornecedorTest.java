@@ -479,6 +479,11 @@ public class FornecedorTest {
         Fornecedor fornecedorPreenchido = new Fornecedor("97904702000131", "CA peças LTDA");
         assertThat(fornecedorPreenchido.toString(), is(fornecedorPreenchido.toString()));
     }
+    
+    @Test
+    public void simpleEqualsContract() {
+    	EqualsVerifier.simple().forClass(Fornecedor.class).verify();
+    }
 
     /**
      * Tear down.

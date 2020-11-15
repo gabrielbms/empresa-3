@@ -1,122 +1,97 @@
 package br.com.contmatic.service;
 
+import static com.mongodb.client.model.Projections.include;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bson.conversions.Bson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.bson.Document;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 
+import br.com.contmatic.assembly.ClienteResourceAssembly;
 import br.com.contmatic.empresa.Cliente;
 
 public class ClienteService {
 	
-	private String host = "localhost";
-
-	private String database = "Empresa";
-
-	private MongoCollection<Cliente> collection;
+	private static final String NAME_COLLECTION = "cliente";
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClienteService.class);
-
-	private MongoDatabase getMongoDatabase() {
-		MongoClient mongoClient = mongoClient();
-		return mongoClient.getDatabase(database).withCodecRegistry(createCodecRegistry());
-	}
-
-	private MongoClient mongoClient() {
-		return new MongoClient(host, MongoClientOptions.builder().codecRegistry(createCodecRegistry()).build());
+	private MongoDatabase database;
+	
+	public ClienteService(MongoDatabase database) {
+		this.database = database;
 	}
 	
-	private void closeConnection() {
-		mongoClient().close();
-	}
+	public void salvar(Cliente cliente) throws IOException {
+		Document document = Document.parse(cliente.toString());
+		document.append("_id", cliente.getCpf());
+		database.getCollection(NAME_COLLECTION).insertOne(document);
 
-	private void connectCollection() {
-		MongoDatabase mongoDatabase = getMongoDatabase().withCodecRegistry(createCodecRegistry());
-		collection = mongoDatabase.getCollection("Cliente", Cliente.class).withCodecRegistry(createCodecRegistry());
 	}
 	
-	private static CodecRegistry createCodecRegistry() {
-		return CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+	public void alterar(Document query, Document where) {
+		database.getCollection(NAME_COLLECTION).updateMany(where, new Document("$set", query));
 	}
 	
-	public void save(Cliente cliente) {
-		try {
-			connectCollection();
-			CodecRegistry codecRegistry = createCodecRegistry();
-			collection.withCodecRegistry(codecRegistry).insertOne(cliente);
-			closeConnection();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+	public void alterar(Cliente cliente) {
+		Document document = Document.parse(cliente.toString());
+		document.remove("cpf");
+		document.append("_id", cliente.getCpf());
+
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.append("_id", cliente.getCpf());
+
+		database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
 	}
 
-
-	public void update(Cliente cliente) {
-		try {
-			connectCollection();
-			CodecRegistry codecRegistry = createCodecRegistry();
-			Bson findByCpf = Filters.eq("cpf", cliente.getCpf());
-			collection.withCodecRegistry(codecRegistry).replaceOne(findByCpf, cliente);
-			closeConnection();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+	public void deletar(Document document) {
+		database.getCollection(NAME_COLLECTION).deleteMany(document);
 	}
-
-	public void deleteById(String id) throws IllegalAccessException {
-		try {
-			connectCollection();
-			collection.deleteOne(Filters.eq("cpf", id));
-			closeConnection();
-		} catch (NullPointerException e) {
-			LOGGER.error("Cliente não existe", e);
-		}catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+	
+	public void deletar(Cliente cliente) throws IOException {
+		Document document = new Document("_id", cliente.getCpf());
+		document.remove("cpf");
+		document.append("_id", cliente.getCpf());
+		database.getCollection(NAME_COLLECTION).deleteOne(new Document("_id", cliente.getCpf()));
 	}
-
-	public Cliente findById(String id) {
-		try {
-		connectCollection();
-		Bson findByCpf = Filters.eq("cpf", id);
-		Cliente Cliente = collection.find(findByCpf).first();
-		closeConnection();
-		return Cliente;
-		}catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			return null;
-		}
+	
+	public Cliente selecionar(String _id) throws IOException {
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.append("_id", _id);
+		FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find(whereQuery);
+		return new ClienteResourceAssembly().toResource(find.first());
 	}
-
-	public List<Cliente> findAll() {
-		connectCollection();
-		MongoCursor<Cliente> cursor = collection.find().iterator();
-		List<Cliente> Clientes = new ArrayList<>();
-		try {
-			while (cursor.hasNext()) {
-				Clientes.add(cursor.next());
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		} finally {
-			cursor.close();
+	
+	public List<Cliente> selecionar() throws IOException {
+		FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find();
+		List<Cliente> clientes = new ArrayList<Cliente>();
+		ClienteResourceAssembly clienteResourceAssembly = new ClienteResourceAssembly();
+		for (Document document : find) {
+			clientes.add(clienteResourceAssembly.toResource(document));
 		}
-		closeConnection();
-		return Clientes;
+		return clientes;
 	}
+	
+	public List<Cliente> selecionar(List<String> campos) throws IOException {
+		List<Cliente> clientes = null;
+		if (campos == null) {
+			return clientes;
+		}
+		if (campos.isEmpty()) {
+			return clientes;
+		}
+		clientes = new ArrayList<Cliente>();
+		FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find().projection(include(campos))
+				.limit(50);
 
+		ClienteResourceAssembly clienteResourceAssembly = new ClienteResourceAssembly();
+		for (Document document : find) {
+			clientes.add(clienteResourceAssembly.toResource(document));
+		}
+		return clientes;
+	}
+	
 }
