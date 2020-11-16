@@ -1,13 +1,8 @@
-package br.com.contmatic.empresa;
+ package br.com.contmatic.empresa;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import java.util.HashSet;
@@ -18,7 +13,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -29,7 +23,6 @@ import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.groups.Post;
 import br.com.contmatic.groups.Put;
 import br.com.contmatic.telefone.Telefone;
-import br.com.contmatic.util.Annotations;
 import nl.jqno.equalsverifier.EqualsVerifier;;
 
 /**
@@ -38,13 +31,14 @@ import nl.jqno.equalsverifier.EqualsVerifier;;
 @FixMethodOrder(NAME_ASCENDING)
 public class EmpresaTest {
 
-	/** The empresa. */
 	private static Empresa empresa;
+	
+	private Set<Telefone> telefones = new HashSet<>();
+	
+	private Set<Endereco> enderecos = new HashSet<>();
 
-	/** The validator. */
 	private Validator validator;
 	
-	/** The factory. */
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
@@ -75,385 +69,248 @@ public class EmpresaTest {
 		return valido;
 	}
 	
-	/* TESTES NO CNPJ */
-	
-	/**
-	 * Nao deve aceitar cnpj nulo.
-	 */
 	@Test
-	public void nao_deve_aceitar_cnpj_nulo() {
-		assertNotNull(empresa.getCnpj());
-	}
-	
-	/**
-	 * Deve testar o get cnpj esta funcionando corretamente.
-	 */
-	@Test
-	public void deve_testar_o_getCnpj_esta_funcionando_corretamente() {
+	public void deve_testar_se_o_cnpj_aceita_numeros() {
 		empresa.setCnpj("35667373000103");
-		assertThat(empresa.getCnpj(), containsString("35667373000103"));
+		assertEquals("35667373000103", empresa.getCnpj());
 	}
 	
-	/**
-	 * Nao deve aceitar espacos em branco no cnpj.
-	 */
-	@Test
-	public void nao_deve_aceitar_espacos_em_branco_no_cnpj() {
-		assertFalse(empresa.getCnpj().trim().isEmpty());
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_null_no_cnpj() {
+		empresa.setCnpj(null);
 	}
 	
-	/**
-	 * Deve validar cnpj annotations.
-	 */
-	@Test
-	public void deve_validar_cnpj_annotations() {
-		Empresa cadastroValidator = randomObject.empresaRandomizer();
-		assertFalse(Annotations.MensagemErroAnnotation(cadastroValidator.getCnpj()));
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_vazio_no_cnpj() {
+		empresa.setCnpj("");
 	}
 	
-	/* TESTES NO NOME */
-	
-	/**
-	 * Nao deve aceitar nome nulo.
-	 */
-	@Test
-	public void nao_deve_aceitar_nome_nulo() {
-		empresa.setNome(null);
-		assertFalse(isValid(empresa, "O campo nome não pode estar vazio"));
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espacos_no_cnpj() {
+		empresa.setCnpj("  ");
 	}
 	
-	/**
-	 * Deve testar o get nome esta funcionando corretamente.
-	 */
-	@Test
-	public void deve_testar_o_getNome_esta_funcionando_corretamente() {
-		empresa.setNome("GB computadores");
-		assertThat(empresa.getNome(), containsString("GB computadores"));
+	@Test(expected = IllegalStateException.class)
+	public void nao_deve_aceitar_letras_no_cnpj() {
+		empresa.setCnpj("abcdefabcadgef");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_caracteres_especiais_no_cnpj() {
+		empresa.setCnpj("@#$");
+	}
+		
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espacos_no_inicio_do_cnpj() {
+		empresa.setCnpj(" 35667373000103");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espacos_no_fim_do_cnpj() {
+		empresa.setCnpj("35667373000103 ");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_se_o_cnpj_aceita_muitos_espacos_entre_os_numeros() {
+		empresa.setCnpj("3566737       3000103");
 	}
 	
 	@Test
-	public void deve_aceitar_nome_valido() {
+	public void deve_testar_o_getCnpj() {
+		empresa.setCnpj("35667373000103");
+		assertEquals(empresa.getCnpj(), ("35667373000103"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_cnpj_tamanho_menor() {
+		empresa.setCnpj("1313131313131");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_cnpj_tamanho_maior() {
+		empresa.setCnpj("1515151515151515");
+	}
+	
+	
+	@Test(expected = IllegalStateException.class)
+	public void deve_testar_exception_a_validação_do_cnpj() {
+		empresa.setCnpj("35667373000104");
+	}
+	
+	@Test
+	public void deve_testar_se_o_nome_aceita_letras() {
 		empresa.setNome("Gabriel");
-		assertTrue(isValid(empresa, "O campo nome não pode estar vazio"));
+		assertEquals("Gabriel", empresa.getNome());
+		
 	}
 	
-	/**
-	 * Nao deve aceitar espacos em branco no nome.
-	 */
-	@Test
-	public void nao_deve_aceitar_espacos_em_branco_no_nome() {
-		assertFalse(empresa.getNome().trim().isEmpty());
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_null_no_nome() {
+		empresa.setNome(null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_vazio_no_nome() {
+		empresa.setNome("");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espacos_no_nome() {
+		empresa.setNome("          ");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_caracteres_especiais_no_nome() {
+		empresa.setNome("@#$");
+	}
+		
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espaco_no_inicio_do_nome() {
+		empresa.setNome(" Gabriel");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espaco_no_fim_do_nome() {
+		empresa.setNome("Gabriel ");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espaco_no_meio_do_nome() {
+		empresa.setNome("Gabriel         Bueno");
 	}
 	
 	@Test
-	public void deve_aceitar_nome_sem_espaco() {
-		empresa.setNome("GabrielBueno");
-		assertTrue(isValid(empresa, "O nome da empresa está incorreto"));
-	}
-
-	@Test
-	public void deve_aceitar_nome_com_acento() {
-		empresa.setNome("João");
-		assertTrue(isValid(empresa, "O nome da empresa está incorreto"));
-	}
-
-	@Test
-	public void deve_aceitar_nome_com_cedilha() {
-		empresa.setNome("Maria Conceição");
-		assertTrue(isValid(empresa, "O nome da empresa está incorreto"));
-	}
-
-	@Test
-	public void deve_aceitar_nome_com_espaco() {
+	public void deve_testar_se_o_nome_aceita_um_espaco_entre_as_palavras() {
 		empresa.setNome("Gabriel Bueno");
-		assertTrue(isValid(empresa, "O nome da empresa está incorreto"));
-	}
-
-	@Test
-	public void nao_deve_aceitar_nome_com_arroba() {
-		empresa.setNome("G@briel");
-		assertFalse(isValid(empresa, "O nome da empresa está incorreto"));
-	}
-	
-	/**
-	 * Deve validar nome annotations.
-	 */
-	@Test
-	public void deve_validar_nome_annotations() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		assertFalse(Annotations.MensagemErroAnnotation(empresa.getNome()));
-	}
-	
-	/* TESTES NO SITE */
-	
-	/**
-	 * Nao deve aceitar site nulo.
-	 */
-	@Test
-	public void nao_deve_aceitar_site_nulo() {
-		empresa.setSite("gbconsertos.net");
-		assertNotNull(empresa.getNome());
-	}
-	
-	/**
-	 * Deve testar o set site esta funcionando corretamente.
-	 */
-	@Test
-	public void deve_testar_o_getSite_esta_funcionando_corretamente() {
-		assertTrue(empresa.getSite().equals(empresa.getSite()));
-	}
-	
-	/**
-	 * Nao deve aceitar espacos em branco no site.
-	 */
-	@Test
-	public void nao_deve_aceitar_espacos_em_branco_no_site() {
-		assertFalse(empresa.getSite().trim().isEmpty());
+		assertEquals("Gabriel Bueno", empresa.getNome());
 	}
 	
 	@Test
-	public void deve_aceitar_site_valido() {
+	public void deve_testar_o_getNome() {
+		empresa.setNome("Gabriel Bueno");
+		assertEquals("Gabriel Bueno", empresa.getNome());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_nome_tamanho_menor() {
+		empresa.setNome("a");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_nome_tamanho_maior() {
+		empresa.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc"
+				+ "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
+	}
+	
+	@Test
+	public void deve_testar_o_getEmail() {
 		empresa.setSite("www.gbconsertos.com.br");
-		assertTrue(isValid(empresa, "O site da empresa está inválido"));
-	}
-
-	@Test
-	public void nao_deve_aceitar_site_com_acento() {
-		empresa.setSite("www.gbcômacênto.com.br");
-		assertFalse(isValid(empresa, "O site da empresa está inválido"));
-	}
-
-	@Test
-	public void nao_deve_aceitar_site_com_cedilha() {
-		empresa.setSite("www.conceiçãocostureira.com.br");
-		assertFalse(isValid(empresa, "O site da empresa está inválido"));
-	}
-
-	@Test
-	public void nao_deve_aceitar_site_com_espaco() {
-		empresa.setSite("www.gb consertos.com.br");
-		assertFalse(isValid(empresa, "O site da empresa está inválido"));
-	}
-
-	@Test
-	public void nao_deve_aceitar_site_com_arroba() {
-		empresa.setSite("www.gbc@nsert@s.com.br");
-		assertFalse(isValid(empresa, "O site da empresa está inválido"));
+		assertEquals(empresa.getSite(), empresa.getSite());
 	}
 	
-	/**
-	 * Deve validar site annotations.
-	 */
-	@Test
-	public void deve_validar_site_annotations() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		assertFalse(Annotations.MensagemErroAnnotation(empresa.getSite()));
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_null_no_email() {
+		empresa.setSite(null);
 	}
 	
-	/* TESTES NO TELEFONE */
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_vazio_no_email() {
+		empresa.setSite("");
+	}
 	
-	/**
-	 * Nao deve aceitar telefone nulo.
-	 */
-	@Test
-	public void nao_deve_aceitar_telefone_nulo() {
-		empresa.setTelefones(null);
-		assertFalse(isValid(empresa, "O telefone da empresa não pode ser nulo"));
+	@Test(expected = IllegalArgumentException.class)
+	public void nao_deve_aceitar_espacos_em_branco_no_email() {
+		empresa.setSite("  ");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_setEmail_tamanho_menor() {
+		empresa.setSite("a");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_testar_exception_do_setEmail_tamanho_limite() {
+		empresa.setSite("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca"
+				+ "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
 	}
 	
 	@Test
-	public void nao_deve_aceitar_telefone_vazio() {
-		empresa.setTelefones(new HashSet<Telefone>());
-		assertFalse(isValid(empresa, "A lista de telefone da empresa não deve ser vazio."));
+	public void deve_testar_exception_do_setEmail_tamanho_maior() {
+		empresa.setSite("abcabcabcabcabcabcabcabcasfghg"
+				+ "fsdaabcabcabcacabbxc@gmail.com");
 	}
 	
-	/**
-	 * Deve testar o set telefones.
-	 */
-	@Test
-	public void deve_testar_o_setTelefones() {
-		Set<Telefone> telefone = new HashSet<>();
-		Empresa empresa = randomObject.empresaRandomizer();
-		telefone.addAll(empresa.getTelefone());
-		empresa.setTelefones(telefone);
-		assertTrue(telefone.equals(telefone));
-	}
 	
-	/**
-	 * Deve validar telefones annotations.
-	 */
 	@Test
-	public void deve_validar_telefones_annotations() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		assertFalse(Annotations.MensagemErroAnnotation(empresa.getTelefone()));
-	}
-	
-	/* TESTES NO ENDERECO */
-
-	/**
-	 * Nao deve aceitar endereco nulo.
-	 */
-	@Test
-	public void nao_deve_aceitar_endereco_nulo() {
-		empresa.setEnderecos(null);
-		assertFalse(isValid(empresa, "O endereço da empresa está vazio"));
-	}
-	
-	/**
-	 * Deve testar o set endereco esta funcionando corretamente.
-	 */
-	@Test
-	public void deve_testar_o_getEndereco_esta_funcionando_corretamente() {
-		empresa.getEndereco();
-		assertTrue(empresa.getEndereco().equals(empresa.getEndereco()));
+	public void deve_testar_o_getTelefone() {
+		empresa.setTelefones(telefones);
+		assertEquals(empresa.getTelefone(), telefones);
 	}
 	
 	@Test
-	public void nao_deve_aceitar_endereco_vazio() {
-		empresa.setEnderecos(new HashSet<Endereco>());
-		assertFalse(isValid(empresa, "A lista de telefone da empresa mínima é de 1."));
+	public void deve_testar_o_getEndereco() {
+		empresa.setEnderecos(enderecos);
+		assertEquals(empresa.getEndereco(), enderecos);
 	}
 	
-	/**
-	 * Deve testar o set enderecos.
-	 */
-	@Test
-	public void deve_testar_o_setEnderecos() {
-		Set<Endereco> endereco = new HashSet<>();
-		Empresa empresa = randomObject.empresaRandomizer();
-		endereco.addAll(empresa.getEndereco());
-		empresa.setEnderecos(endereco);
-		assertTrue(endereco.equals(endereco));
-	}
-	
-	/**
-	 * Deve validar enderecos annotations.
-	 */
-	@Test
-	public void deve_validar_enderecos_annotations() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		assertFalse(Annotations.MensagemErroAnnotation(empresa.getEndereco()));
-	}
-	
-	/* OUTROS TESTES */
-	
-	/**
-	 * Verificacao simples do equals verifier na empresa.
-	 */
-	@Test
-    public void verificacao_simples_do_equals_verifier_na_empresa() {
-    	EqualsVerifier.simple().forClass(Empresa.class).verify();
-    }
-
-	/**
-	 * Deve gerar dados validos.
-	 */
-	@Test
-	public void deve_gerar_dados_validos() {
-		Set<ConstraintViolation<Empresa>> constraintViolations = validator.validate(empresa);
-		assertEquals(0, constraintViolations.size());
-	}
-
-	/**
-	 * Nao deve aceitar empresa sem cnpj nome telefone endereco.
-	 */
-	@Test
-	public void nao_deve_aceitar_empresa_sem_cnpj_nome_telefone_endereco() {
-		Empresa Empresa = new Empresa();
-		Set<ConstraintViolation<Empresa>> restricoes = validator.validate(Empresa);
-		assertThat(restricoes, Matchers.hasSize(0));
-	}
-
-	/**
-	 * Deve passar na validacao com cnpj nome site telefone endereco informados.
-	 */
-	@Test
-	public void deve_passar_na_validacao_com_cnpj_nome_site_telefone_endereco_informados() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		Set<ConstraintViolation<Empresa>> restricoes = validator.validate(empresa);
-		assertThat(restricoes, empty());
-	}
-
-	/**
-	 * Deve retornar true no hash code com empresas iguais.
-	 */
 	@Test
 	public void deve_retornar_true_no_hashCode_com_empresas_iguais() {
-		Empresa empresa01 = empresa;
-		assertTrue(empresa.hashCode() == empresa01.hashCode());
+		Empresa Empresa2 = empresa;
+		assertEquals(empresa.hashCode(), Empresa2.hashCode());
 	}
 
-	/**
-	 * Deve retornar true no equals com empresas iguais.
-	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_retornar_false_no_hashCode_com_uma_empresa_de_cnpj_null() {
+		Empresa Empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
+		assertNotEquals(empresa.hashCode(), Empresa2.hashCode());
+	}
+
 	@Test
-	public void deve_retornar_true_no_equals_com_Empresas_iguais() {
-		Empresa empresa01 = empresa;
-		assertTrue(empresa.equals(empresa01) & empresa01.equals(empresa));
+	public void deve_retornar_true_no_equals_com_empresas_iguais() {
+		Empresa empresa2 = empresa;
+		assertEquals(empresa, empresa2);
 	}
 
-	/**
-	 * Deve retornar false no equals com um empresa de cnpj null.
-	 */
-	@Test
-	public void deve_retornar_false_no_equals_com_um_Empresa_de_cnpj_null() {
-		Empresa empresa1 = randomObject.empresaRandomizer();
-		Empresa empresa2 = null;
-		assertFalse(empresa1.equals(empresa2));
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_retornar_false_no_equals_com_um_empresa_de_cnpj_null() {
+		Empresa empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
+		assertFalse(empresa.equals(empresa2) & empresa2.equals(empresa));
 	}
 
-	/**
-	 * Deve retornar true no equals comparando uma empresa com ela mesmo.
-	 */
 	@Test
 	public void deve_retornar_true_no_equals_comparando_uma_empresa_com_ela_mesmo() {
-		assertTrue(empresa.equals(empresa));
+		assertEquals(empresa, empresa);
 	}
 
-	/**
-	 * Deve retornar false no equals comparando uma empresa com null.
-	 */
 	@Test
 	public void deve_retornar_false_no_equals_comparando_uma_empresa_com_null() {
-		assertFalse(empresa.equals(null));
+		assertNotEquals(empresa, null);
 	}
 
-	/**
-	 * Deve retornar false no equals com empresas de cnpj diferentes.
-	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void deve_retornar_true_no_equals_comparando_dois_empresas_de_cnpj_null() {
+		Empresa empresa1 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
+		Empresa empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
+		assertEquals(empresa1, empresa2);
+	}
+
 	@Test
-	public void deve_retornar_false_no_equals_com_Empresas_de_cnpj_diferentes() {
-		Empresa empresa1 = randomObject.empresaRandomizer();
-		empresa1.setCnpj("36.621.217/0001-67");
-		Empresa empresa2 = randomObject.empresaRandomizer();
-		empresa1.setCnpj("36.621.217/0001-68");
-		assertFalse(empresa2.equals(empresa1));
+	public void deve_retornar_false_no_equals_com_empresas_de_cnpj_diferentes() {
+		Empresa empresa1 = new Empresa("35667373000103", "GB Conserto de computadores", telefones, enderecos);
+		Empresa empresa2 = new Empresa("49695176000102", "GB Conserto de computadores", telefones, enderecos);
+		assertNotEquals(empresa2, empresa1);
 	}
 
-	/**
-	 * Deve retornar false no equals com a empresa e um objeto aleatorio.
-	 */
 	@Test
-	public void deve_retornar_false_no_equals_com_a_empresa_e_um_objeto_aleatorio() {
-		assertFalse(empresa.equals(new Object()));
+	public void deve_retornar_false_no_equals_com_a_empresa_e_um_numero_aleatorio() {
+		assertNotEquals(empresa, new Object());
 	}
 
-	/**
-	 * To string deve retornar null.
-	 */
-	@Test
-	public void toString_deve_retornar_null() {
-		Empresa empresaNull = new Empresa(null, null, null, null);
-		assertThat(empresaNull.toString(), containsString(""));
-	}
-
-	/**
-	 * To string deve retornar valores preenchidos.
-	 */
 	@Test
 	public void toString_deve_retornar_valores_preenchidos() {
-		Empresa empresa = randomObject.empresaRandomizer();
-		assertThat(empresa.toString(), is(empresa.toString()));
+		Empresa empresaPreenchida = new Empresa("35667373000103", "GB Conserto de computadores", telefones, enderecos);
+		String empresaPreenchidaToStringo = empresaPreenchida.toString();
+		assertEquals(empresaPreenchida.toString(), empresaPreenchidaToStringo);
 	}
 	
     @Test

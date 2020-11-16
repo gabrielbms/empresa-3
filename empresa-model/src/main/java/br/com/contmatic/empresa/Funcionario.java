@@ -1,5 +1,39 @@
 package br.com.contmatic.empresa;
 
+import static br.com.contmatic.util.Constantes.CPF_INCORRETO;
+import static br.com.contmatic.util.Constantes.CPF_INVALIDO;
+import static br.com.contmatic.util.Constantes.CPF_SIZE;
+import static br.com.contmatic.util.Constantes.CPF_VAZIO;
+import static br.com.contmatic.util.Constantes.DATA_CONTRATACAO_FUTURA;
+import static br.com.contmatic.util.Constantes.DATA_CONTRATACAO_VAZIA;
+import static br.com.contmatic.util.Constantes.DATA_SALARIO_FUTURA;
+import static br.com.contmatic.util.Constantes.DATA_SALARIO_NULA;
+import static br.com.contmatic.util.Constantes.ENDERECO_QTDE_MAX;
+import static br.com.contmatic.util.Constantes.ENDERECO_QTDE_MINIMA;
+import static br.com.contmatic.util.Constantes.ENDERECO_VAZIO;
+import static br.com.contmatic.util.Constantes.IDADE_MINIMA;
+import static br.com.contmatic.util.Constantes.IDADE_MINIMA_MENSAGEM;
+import static br.com.contmatic.util.Constantes.NOME_INCORRETO;
+import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
+import static br.com.contmatic.util.Constantes.NOME_MAX_SIZE;
+import static br.com.contmatic.util.Constantes.NOME_MIN_SIZE;
+import static br.com.contmatic.util.Constantes.NOME_TAMANHO;
+import static br.com.contmatic.util.Constantes.NOME_VAZIO;
+import static br.com.contmatic.util.Constantes.SALARIO_MINIMO;
+import static br.com.contmatic.util.Constantes.SALARIO_MINIMO_MENSAGEM;
+import static br.com.contmatic.util.Constantes.SALARIO_NEGATIVO;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_CPF_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_CPF_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MAX;
+import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MINIMA;
+import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
+import static br.com.contmatic.util.RegexType.LETRAS;
+import static br.com.contmatic.util.RegexType.NUMEROS;
+import static br.com.contmatic.util.RegexType.validaSeNaoTemEspacosIncorretosECaracteresEspeciaos;
+import static br.com.contmatic.util.Validate.isNotCPF;
+
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -23,7 +57,6 @@ import org.joda.time.LocalDate;
 import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.groups.Post;
 import br.com.contmatic.groups.Put;
-import br.com.contmatic.regex.RegexType;
 import br.com.contmatic.telefone.Telefone;
 
 /**
@@ -34,80 +67,68 @@ import br.com.contmatic.telefone.Telefone;
 public class Funcionario {
 
     /** The cpf. */
-    @CPF(message = "O CPF do cliente está inválido", groups = { Put.class, Post.class })
-    @NotBlank(message = "O campo CPF não pode estar nulo", groups = { Put.class, Post.class })
-    private String cpf;
+	@CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
+	@NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
+	@Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
+	private String cpf;
+
 
     /** The nome. */
-    @NotBlank(message = "O campo nome não pode estar vazio", groups = { Put.class, Post.class })
-    @Pattern(regexp = RegexType.NOME, message = "O nome do funcionário está incorreto", groups = { Put.class, Post.class })
-    @Size(min = 2, max = 80, message = "O nome mínimo é de {min} caracteres e no máximo de {max} caracteres", groups = { Put.class, Post.class })
+	@NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
+	@Pattern(regexp = LETRAS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
+	@Size(min = 2, max = 80, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
     /** The idade. */
-    @NotEmpty
-    @Min(value = 1, message = "A idade do funcionario não pode ser menor que 1", groups = { Put.class, Post.class })
+	@NotEmpty
+	@Min(value = 1, message = IDADE_MINIMA_MENSAGEM, groups = { Put.class, Post.class })
     private Integer idade;
     
     /** The salario. */
-    @Min(value = 1, message = "O salário do funcionário não pode ser negativo", groups = { Put.class, Post.class })
+	@Min(value = 1, message = SALARIO_NEGATIVO, groups = { Put.class, Post.class })
     private BigDecimal salario;
 
     /** The data contratacao. */
-    @NotNull(message = "A data de contratação do funcionario não deve estar nula", groups = { Put.class, Post.class })
-    @Past(message = "A data de contratação não pode ser maior que a data atual", groups = { Put.class, Post.class })
+	@NotNull(message = DATA_CONTRATACAO_VAZIA, groups = { Put.class, Post.class })
+	@Past(message = DATA_CONTRATACAO_FUTURA, groups = { Put.class, Post.class })
     private LocalDate dataContratacao;
 
     /** The data salario. */
-    @Future(message = "A data do salario deve ser maior que a data atual", groups = { Put.class, Post.class })
-    @NotNull(message = "A data do salário do funcionario não deve estar nula", groups = { Put.class, Post.class })
+	@Future(message = DATA_SALARIO_FUTURA, groups = { Put.class, Post.class })
+	@NotNull(message = DATA_SALARIO_NULA, groups = { Put.class, Post.class })
     private LocalDate dataSalario;
 
     /** The telefones. */
-    @Valid
-    @NotNull(message = "O telefone do funcionario não pode ser vazio", groups = { Put.class, Post.class })
-    @Size.List({@Size(min = 1, message = "A lista de telefone da empresa não deve ser vazio.", groups = { Put.class,Post.class }),
-		@Size(max = 500, message = "A lista de telefone da empresa máxima é de {max}.", groups = { Put.class,Post.class }) })
+	@Valid
+	@NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
+	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }),
+			@Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
 
     /** The enderecos. */
-    @Valid
-    @NotNull(message = "O endereço do funcionário não pode estar vazio")
-    @Size.List({@Size(min = 1, message = "A lista de telefone do funcionário mínima é de {min}.", groups = { Put.class,Post.class }),
-		@Size(max = 5, message = "A lista de telefone do funcionário máxima é de {max}.", groups = { Put.class,Post.class }) })
+	@Valid
+	@NotNull(message = ENDERECO_VAZIO)
+	@Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA),
+			@Size(max = 3, message = ENDERECO_QTDE_MAX) })
     private Set<Endereco> enderecos;
 
-    /**
-     * Instantiates a new funcionario.
-     *
-     * @param cpf the cpf
-     * @param nome the nome
-     * @param salario the salario
-     */
-    public Funcionario(String cpf, String nome, BigDecimal salario) {
-        this.cpf = cpf;
-        this.nome = nome;
-        this.salario = salario;
-    }
+	public Funcionario(String cpf, String nome, BigDecimal salario) {
+		this.setCpf(cpf);
+		this.setNome(nome);
+		this.setSalario(salario);
+	}
 
-    /**
-     * Instantiates a new funcionario.
-     *
-     * @param cpf the cpf
-     * @param nome the nome
-     * @param idade the idade
-     * @param telefone the telefone
-     * @param endereco the endereco
-     * @param salario the salario
-     */
-    public Funcionario(String cpf, String nome, int idade, @Valid Set<Telefone> telefone, @Valid Set<Endereco> endereco, BigDecimal salario) {
-        this.cpf = cpf;
-        this.nome = nome;
-        this.idade = idade;
-        this.telefones = telefone;
-        this.enderecos = endereco;
-        this.salario = salario;
-    }
+	public Funcionario(String cpf, String nome, Integer idade, Set<Telefone> telefone, Set<Endereco> endereco,
+			BigDecimal salario, LocalDate dataContratacao, LocalDate dataSalario) {
+		this.setCpf(cpf);
+		this.setNome(nome);
+		this.setIdade(idade);
+		this.setTelefones(telefone);
+		this.setEnderecos(endereco);
+		this.setSalario(salario);
+		this.setDataContratacao(dataContratacao);
+		this.setDataSalario(dataSalario);
+	}
 
     /**
      * Instantiates a new funcionario.
@@ -120,26 +141,103 @@ public class Funcionario {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
+	public void setCpf(String cpf) {
+		this.validaCpfIncorreto(cpf);
+		this.validaCalculoCpf(cpf);
+		this.validaEspacosIncorretosECaracteresEspeciais(cpf);
+		this.cpf = cpf;
+	}
+	
+	private void validaEspacosIncorretosECaracteresEspeciais(String cpf) {
+		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
+			throw new IllegalArgumentException(CPF_INVALIDO);
+		}
+	}
+	
+	private void validaCalculoCpf(String cpf) {
+		if (isNotCPF(cpf)) {
+			throw new IllegalStateException(CPF_INVALIDO);
+		}
+	}
+	
+	private void validaCpfIncorreto(String cpf) {
+		this.validaCpfNulloOuVazio(cpf);
+		this.validaCpfComTamanhoMenor(cpf);
+		this.validaCpfComTamanhoMaior(cpf);
+	}
+
+	private void validaCpfNulloOuVazio(String cpf) {
+		if (cpf == null || cpf.trim().isEmpty()) {
+			throw new IllegalArgumentException(CPF_VAZIO);
+		}
+	}
+
+	private void validaCpfComTamanhoMenor(String cpf) {
+		if (cpf.length() < CPF_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+		}
+	}
+
+	private void validaCpfComTamanhoMaior(String cpf) {
+		if (cpf.length() > CPF_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+		}
+	}
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public void setNome(String nome) {
+		this.validaNomeIncorreto(nome);
+		this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
+		this.nome = nome;
+	}
+	
+	private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
+		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+			throw new IllegalArgumentException(NOME_INVALIDO);
+		}
+	}
+	
+	private void validaNomeIncorreto(String nome) {
+		this.validaNomeNulloOuVazio(nome);
+		this.validaNomeMenorQueOTamanhoMinimo(nome);
+		this.validaNomeMaiorQueOTamanhoMinimo(nome);
+	}
+
+	private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
+		if (nome.length() > NOME_MAX_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+		}
+	}
+
+	private void validaNomeMenorQueOTamanhoMinimo(String nome) {
+		if (nome.length() < NOME_MIN_SIZE) {
+			throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+		}
+	}
+
+	private void validaNomeNulloOuVazio(String nome) {
+		if (nome == null || nome.trim().isEmpty()) {
+			throw new IllegalArgumentException(NOME_VAZIO);
+		}
+	}
 
     public int getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
-        this.idade = idade;
-    }
-
+	public void setIdade(int idade) {
+		this.validaIdade(idade);
+		this.idade = idade;
+	}
+	
+	private void validaIdade(int idade) {
+		if (idade < IDADE_MINIMA) {
+			throw new IllegalArgumentException(IDADE_MINIMA_MENSAGEM);
+		}
+	}
     public @Valid Set<Telefone> getTelefone() {
         return telefones;
     }
@@ -152,13 +250,16 @@ public class Funcionario {
         return salario;
     }
 
-    public void setSalario(BigDecimal salario) {
-    	if (salario.doubleValue() >= 0) {
-    		this.salario = salario;
-    	} else {
-    		throw new IllegalArgumentException("salario não pode ser negativo");
-    	}
-    }
+	public void setSalario(BigDecimal salario) {
+		this.validaSalario(salario);
+		this.salario = salario;
+	}
+	
+	private void validaSalario(BigDecimal salario) {
+		if (salario.doubleValue() < SALARIO_MINIMO) {
+			throw new IllegalArgumentException(SALARIO_MINIMO_MENSAGEM);
+		}
+	}
 
     public LocalDate getDataContratacao() {
         return dataContratacao;
@@ -176,13 +277,27 @@ public class Funcionario {
         this.dataSalario = dataSalario;
     }
 
-    public void setTelefones(Set<Telefone> telefone) {
-        this.telefones = telefone;
-    }
+	public void setTelefones(Set<Telefone> telefone) {
+		this.validaTelefoneNullo(telefone);
+		this.telefones = telefone;
+	}
+	
+	private void validaTelefoneNullo(Set<Telefone> telefone) {
+		if (telefone == null) {
+			throw new IllegalArgumentException(TELEFONE_VAZIO);
+		} 	
+	}
 
-    public void setEnderecos(Set<Endereco> endereco) {
-        this.enderecos = endereco;
-    }
+	public void setEnderecos(Set<Endereco> endereco) {
+		this.validaEnderecoNullo(endereco);
+		this.enderecos = endereco;
+	}
+	
+	private void validaEnderecoNullo(Set<Endereco> endereco) {
+		if (endereco == null) {
+			throw new IllegalArgumentException(ENDERECO_VAZIO);
+		}
+	}
 
     /**
      * To string.

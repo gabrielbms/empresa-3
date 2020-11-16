@@ -36,10 +36,10 @@ public class TelefoneTest {
 	private static Telefone telefone;
 
 	/** The telefone DDD. */
-	private static TelefoneDDD telefoneDDD;
+	private static TelefoneDDDType telefoneDDD;
 
 	/** The tipo telefone. */
-	private static TipoTelefone tipoTelefone;
+	private static TelefoneType tipoTelefone;
 
 	/** The validator. */
 	private Validator validator;
@@ -84,7 +84,7 @@ public class TelefoneTest {
 	 */
 	@Test
 	public void deve_testar_o_getDdd_esta_funcionando_corretamente() {
-		telefoneDDD = TelefoneDDD.valueOf("DDD11");
+		telefoneDDD = TelefoneDDDType.valueOf("DDD11");
 		assertTrue(telefoneDDD.getDdd() == 11);
 	}
 
@@ -93,7 +93,7 @@ public class TelefoneTest {
 	 */
 	@Test
 	public void deve_testar_o_getComplemento_esta_funcionando_corretamente() {
-		telefoneDDD = TelefoneDDD.valueOf("DDD11");
+		telefoneDDD = TelefoneDDDType.valueOf("DDD11");
 		assertTrue(telefoneDDD.getComplemento().equals("São Paulo – SP"));
 	}
 
@@ -107,8 +107,8 @@ public class TelefoneTest {
 
 	@Test
 	public void deve_testar_o_setDdd() {
-		telefone.setDdd(TelefoneDDD.DDD11);
-		assertTrue(telefone.getDdd().equals(TelefoneDDD.DDD11));
+		telefone.setDdd(TelefoneDDDType.DDD11);
+		assertTrue(telefone.getDdd().equals(TelefoneDDDType.DDD11));
 	}
 
 	/* TESTES NO NUMERO */
@@ -174,7 +174,7 @@ public class TelefoneTest {
 	 */
 	@Test
 	public void deve_testar_o_getDescricao_esta_funcionando_corretameante() {
-		tipoTelefone = TipoTelefone.CELULAR;
+		tipoTelefone = TelefoneType.CELULAR;
 		assertTrue(tipoTelefone.getDescricao().equals("Celular"));
 	}
 
@@ -183,7 +183,7 @@ public class TelefoneTest {
 	 */
 	@Test
 	public void deve_testar_o_getTamanho_esta_funcionando_corretameante() {
-		tipoTelefone = TipoTelefone.CELULAR;
+		tipoTelefone = TelefoneType.CELULAR;
 		assertTrue(tipoTelefone.getTamanho() == 9);
 	}
 

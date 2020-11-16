@@ -16,8 +16,8 @@ import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.endereco.Estado;
 import br.com.contmatic.regex.RegexType;
 import br.com.contmatic.telefone.Telefone;
-import br.com.contmatic.telefone.TelefoneDDD;
-import br.com.contmatic.telefone.TipoTelefone;
+import br.com.contmatic.telefone.TelefoneDDDType;
+import br.com.contmatic.telefone.TelefoneType;
 
 public class EasyRandomClass {
 	
@@ -117,9 +117,9 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDD.DddAleatorio());
-        telefone.setTipoTelefone(TipoTelefone.tipoTelefoneAleatorio());
-        if (telefone.getTipoTelefone().equals(TipoTelefone.CELULAR)) {
+        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
+        if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
         	 telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
         } else {
         	 telefone.setNumero(faker.regexify(RegexType.NUMERO_FIXO));
@@ -132,13 +132,13 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDD.DddAleatorio());
-        if (telefone.getTipoTelefone().equals(TipoTelefone.CELULAR)) {
+        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
        	 telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
        } else {
        	 telefone.setNumero(faker.regexify(RegexType.NUMERO_FIXO));
        }
-        telefone.setTipoTelefone(TipoTelefone.tipoTelefoneAleatorio());
+        telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
         return telefone;
     }
     

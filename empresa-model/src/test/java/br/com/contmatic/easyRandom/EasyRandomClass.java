@@ -1,7 +1,5 @@
 package br.com.contmatic.easyRandom;
 
-import static br.com.contmatic.easyRandom.GeraCPF.geraCPFFinal;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 
@@ -14,12 +12,13 @@ import br.com.contmatic.empresa.Cliente;
 import br.com.contmatic.empresa.Empresa;
 import br.com.contmatic.empresa.Fornecedor;
 import br.com.contmatic.empresa.Funcionario;
+import br.com.contmatic.empresa.Produto;
 import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.endereco.Estado;
 import br.com.contmatic.regex.RegexType;
 import br.com.contmatic.telefone.Telefone;
-import br.com.contmatic.telefone.TelefoneDDD;
-import br.com.contmatic.telefone.TipoTelefone;
+import br.com.contmatic.telefone.TelefoneDDDType;
+import br.com.contmatic.telefone.TelefoneType;
 
 public class EasyRandomClass {
 	
@@ -29,7 +28,7 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Cliente cliente = easyFakeObject.nextObject(Cliente.class);
-        cliente.setCpf(geraCPFFinal());
+        cliente.setCpf(Geradores.geraCpf());
         String nomeCliente = faker.name().fullName();
         cliente.setNome(nomeCliente);
         cliente.setEmail(nomeCliente.toLowerCase().replace(" ", "").replace("'", "") + Geradores.DominioEmail());
@@ -60,7 +59,7 @@ public class EasyRandomClass {
         fornecedor.setCnpj(Geradores.geraCnpj());
         String nomeFornecedor = faker.company().name();
         fornecedor.setNome(nomeFornecedor);
-        fornecedor.setProduto(faker.commerce().productName());
+        fornecedor.setProduto(produtoRandomizer());
         fornecedor.setTelefones(telefoneRandomizer());
         fornecedor.setEnderecos(enderecoRandomizer());
         return fornecedor;
@@ -70,11 +69,11 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Funcionario funcionario = easyFakeObject.nextObject(Funcionario.class);
-        funcionario.setCpf(geraCPFFinal());
+        funcionario.setCpf(Geradores.geraCpf());
         funcionario.setNome(faker.name().fullName());
         funcionario.setIdade(faker.number().numberBetween(18, 40));
         funcionario.setSalario(Geradores.generateRandomBigDecimalValueFromRange(
-        		BigDecimal.valueOf(1000.00), BigDecimal.valueOf(8000.00).setScale(2)));   
+        		BigDecimal.valueOf(1045.00), BigDecimal.valueOf(8000.00).setScale(2)));   
         funcionario.setDataContratacao(new LocalDate(Geradores.geraData(
         		new LocalDate(2012, 01, 01), new LocalDate(2014, 12, 30)).toString()));
         funcionario.setDataSalario(new LocalDate(Geradores.geraData(
@@ -82,6 +81,20 @@ public class EasyRandomClass {
         funcionario.setTelefones(telefoneRandomizer());
         funcionario.setEnderecos(enderecoRandomizer());
         return funcionario;
+    }
+    
+    public HashSet<Produto> produtoRandomizer() {
+    	HashSet<Produto> produtos = new HashSet<Produto>();
+    	Faker faker = new Faker();
+        EasyRandom easyFakeObject = new EasyRandom();
+        Produto produto = easyFakeObject.nextObject(Produto.class);
+        produto.setId(faker.number().numberBetween(1, 100));
+        produto.setNome(faker.name().fullName());
+        produto.setQuantidade(faker.number().numberBetween(1, 10));
+        produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(
+        		BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
+        produtos.add(produto);
+        return produtos;
     }
     
     public HashSet<Endereco> enderecoRandomizer() {
@@ -119,9 +132,9 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDD.DddAleatorio());
-        telefone.setTipoTelefone(TipoTelefone.tipoTelefoneAleatorio());
-        if (telefone.getTipoTelefone().equals(TipoTelefone.CELULAR)) {
+        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
+        if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
         	 telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
         } else {
         	 telefone.setNumero(faker.regexify(RegexType.NUMERO_FIXO));
@@ -134,13 +147,13 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDD.DddAleatorio());
-        if (telefone.getTipoTelefone().equals(TipoTelefone.CELULAR)) {
+        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
        	 telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
        } else {
        	 telefone.setNumero(faker.regexify(RegexType.NUMERO_FIXO));
        }
-        telefone.setTipoTelefone(TipoTelefone.tipoTelefoneAleatorio());
+        telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
         return telefone;
     }
     

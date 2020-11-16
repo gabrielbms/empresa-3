@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * The Enum TipoTelefone.
  */
-public enum TipoTelefone {
+public enum TelefoneType {
 
     /** The celular. */
     CELULAR("Celular", 9),
@@ -28,7 +28,7 @@ public enum TipoTelefone {
      * @param descricao the descricao
      * @param tamanho the tamanho
      */
-    private TipoTelefone(String descricao, int tamanho) {
+    private TelefoneType(String descricao, int tamanho) {
         this.descricao = descricao;
         this.tamanho = tamanho;
     }
@@ -51,11 +51,11 @@ public enum TipoTelefone {
         return this.tamanho;
     }
 
-    private static final List<TipoTelefone> tipoTelefone = Collections.unmodifiableList(Arrays.asList(values()));
+    private static final List<TelefoneType> tipoTelefone = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int size = tipoTelefone.size();
     private static final Random random = new Random();
     
-    public static TipoTelefone tipoTelefoneAleatorio()  {
+    public static TelefoneType tipoTelefoneAleatorio()  {
         return tipoTelefone.get(random.nextInt(size));
     }
 }

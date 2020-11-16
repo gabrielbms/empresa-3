@@ -18,11 +18,11 @@ public class Telefone {
 	
     /** The tipo telefone. */
     @NotBlank(message = "O campo tipo do telefone não pode estar nulo")
-    private TipoTelefone tipoTelefone;
+    private TelefoneType tipoTelefone;
 
     /** The ddd. */
     @NotBlank(message = "O campo DDD do telefone não pode estar nulo")
-    private TelefoneDDD ddd;
+    private TelefoneDDDType ddd;
   
     /** The numero. */
     @Size(min = 8, max = 10)
@@ -44,17 +44,17 @@ public class Telefone {
      * @param numero the numero
      * @param telefone the telefone
      */
-    public Telefone (TelefoneDDD ddd, String numero, TipoTelefone telefone) {
+    public Telefone (TelefoneDDDType ddd, String numero, TelefoneType telefone) {
         this.ddd = ddd;
         this.numero = numero;
         this.tipoTelefone = telefone;
     }
     
-    public void setDdd(TelefoneDDD ddd) {
+    public void setDdd(TelefoneDDDType ddd) {
 		this.ddd = ddd;
 	}
 
-    public TelefoneDDD getDdd() {
+    public TelefoneDDDType getDdd() {
         return ddd;
     }
 
@@ -66,11 +66,11 @@ public class Telefone {
             this.numero = numero;
     }
 
-    public TipoTelefone getTipoTelefone() {
+    public TelefoneType getTipoTelefone() {
         return tipoTelefone;
     }
 
-	public void setTipoTelefone(TipoTelefone tipoTelefone) {
+	public void setTipoTelefone(TelefoneType tipoTelefone) {
 		this.tipoTelefone = tipoTelefone;
 	}
 

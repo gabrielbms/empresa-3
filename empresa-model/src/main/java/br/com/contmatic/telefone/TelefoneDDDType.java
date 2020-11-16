@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * The Enum TelefoneDDD.
  */
-public enum TelefoneDDD {
+public enum TelefoneDDDType {
         
     /** The ddd11. */
     DDD11(11, "São Paulo – SP"),
@@ -217,7 +217,7 @@ public enum TelefoneDDD {
      * @param ddd the ddd
      * @param complemento the complemento
      */
-    TelefoneDDD(int ddd, String complemento) {
+    TelefoneDDDType(int ddd, String complemento) {
         this.ddd = ddd;
         this.complemento = complemento;
     }
@@ -246,11 +246,11 @@ public enum TelefoneDDD {
         return complemento;
     }
     
-    private static final List<TelefoneDDD> DDDs = Collections.unmodifiableList(Arrays.asList(values()));
+    private static final List<TelefoneDDDType> DDDs = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int tamanho = DDDs.size();
     private static final Random random = new Random();
     
-    public static TelefoneDDD DddAleatorio()  {
+    public static TelefoneDDDType DddAleatorio()  {
         return DDDs.get(random.nextInt(tamanho));
     }
 }

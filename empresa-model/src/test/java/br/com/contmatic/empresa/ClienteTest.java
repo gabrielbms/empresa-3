@@ -1,7 +1,7 @@
 package br.com.contmatic.empresa;
 
-import static br.com.contmatic.telefone.TelefoneDDD.DDD11;
-import static br.com.contmatic.telefone.TipoTelefone.CELULAR;
+import static br.com.contmatic.telefone.TelefoneDDDType.DDD11;
+import static br.com.contmatic.telefone.TelefoneType.CELULAR;
 import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,6 +23,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
+import br.com.contmatic.groups.Post;
+import br.com.contmatic.groups.Put;
 import br.com.contmatic.telefone.Telefone;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -51,13 +53,19 @@ public class ClienteTest {
 		telefones.add(telefone);
 	}
 
-	public boolean isValid(Cliente cliente, String mensagem) {
+    public boolean isValid(Cliente cliente, String mensagem) {
 		validator = factory.getValidator();
 		boolean valido = true;
-		Set<ConstraintViolation<Cliente>> restricoes = validator.validate(cliente);
-		for (ConstraintViolation<Cliente> constraintViolation : restricoes)
+		Set<ConstraintViolation<Cliente>> restricoesPost = validator.validate(cliente, Post.class);
+		for (ConstraintViolation<Cliente> constraintViolation : restricoesPost)
 			if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
 				valido = false;
+		
+		Set<ConstraintViolation<Cliente>> restricoesPut = validator.validate(cliente, Put.class);
+		for (ConstraintViolation<Cliente> constraintViolation : restricoesPut)
+			if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
+				valido = false;
+		
 		return valido;
 	}
 
