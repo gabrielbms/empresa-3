@@ -145,7 +145,7 @@ public class EmpresaServiceTest {
 		assertNull(empresaBuscada);
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nome_da_empresa() throws IOException {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();
@@ -155,7 +155,7 @@ public class EmpresaServiceTest {
 
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nulos_da_empresa_ao_selecionar_escolhendo_campo() throws IOException {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();
@@ -164,7 +164,7 @@ public class EmpresaServiceTest {
 		assertThat(empresaBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_da_empresa_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
 			throws IOException {
 		EmpresaService repository = new EmpresaService(database);
@@ -174,7 +174,7 @@ public class EmpresaServiceTest {
 		assertThat(empresaBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_a_empresa_mesmo_nao_exista_valores() throws IOException {
 		EmpresaService repository = new EmpresaService(database);
 		Empresa empresa = randomObject.empresaRandomizer();

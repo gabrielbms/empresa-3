@@ -144,7 +144,7 @@ public class ClienteServiceTest {
 		assertNull(clienteBuscado);
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nome_da_cliente() throws IOException {
 		ClienteService repository = new ClienteService(database);
 		Cliente cliente = randomObject.clienteRandomizer();
@@ -154,7 +154,7 @@ public class ClienteServiceTest {
 
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nulos_da_cliente_ao_selecionar_escolhendo_campo() throws IOException {
 		ClienteService repository = new ClienteService(database);
 		Cliente cliente = randomObject.clienteRandomizer();
@@ -163,7 +163,7 @@ public class ClienteServiceTest {
 		assertThat(clienteBuscado.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_da_cliente_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
 			throws IOException {
 		ClienteService repository = new ClienteService(database);
@@ -173,7 +173,7 @@ public class ClienteServiceTest {
 		assertThat(ClienteBuscado.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_a_cliente_mesmo_nao_exista_valores() throws IOException {
 		ClienteService repository = new ClienteService(database);
 		Cliente cliente = randomObject.clienteRandomizer();

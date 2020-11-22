@@ -76,7 +76,7 @@ public class Fornecedor {
 	@NotBlank(message = PRODUTO_VAZIO, groups = { Put.class, Post.class })
 	@Length(min = 2, max = 80, message = PRODUTO_INCORRETO, groups = { Put.class, Post.class })
 	@Pattern(regexp = LETRAS	, message = PRODUTO_INVALIDO, groups = { Put.class, Post.class })
-    private Set<Produto> produto;
+    private Set<Produto> produtos;
     
     /** The telefones. */
 	@Valid
@@ -215,12 +215,12 @@ public class Fornecedor {
 	}
     
 	public Set<Produto> getProduto() {
-		return produto;
+		return produtos;
 	}
 
 	public void setProduto(Set<Produto> produto) {
 		this.validaProdutoNullo(produto);
-		this.produto = produto;
+		this.produtos = produto;
 	}
 
 	private void validaProdutoNullo(Set<Produto> produto) {

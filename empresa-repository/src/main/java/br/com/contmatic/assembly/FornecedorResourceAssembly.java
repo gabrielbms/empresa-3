@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bson.Document;
 
 import br.com.contmatic.empresa.Fornecedor;
+import br.com.contmatic.empresa.Produto;
 import br.com.contmatic.telefone.Telefone;
 import br.com.contmatic.endereco.Endereco;
 
@@ -18,7 +19,7 @@ public class FornecedorResourceAssembly  implements Assembly<Fornecedor, Documen
 			Fornecedor resource = new Fornecedor();
 			resource.setCnpj(document.getString("cnpj"));
 			resource.setNome(document.getString("nome"));
-			resource.setProduto(document.getString("produto"));
+			resource.setProduto(toResourceProdutos(document.getList("produtos", Document.class)));
 			resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
 			resource.setEnderecos(toResourceEnderecos(document.getList("enderecos", Document.class)));
 			return resource;
@@ -32,6 +33,20 @@ public class FornecedorResourceAssembly  implements Assembly<Fornecedor, Documen
 			return Document.parse(resource.toString());
 		}
 		return null;
+	}
+	
+	private Set<Produto> toResourceProdutos(List<Document> documents) {
+		Set<Produto> produtos = null;
+		if (documents == null) {
+			return produtos;
+		}
+		ProdutoResourceAssembly assembly = new ProdutoResourceAssembly();
+		produtos = new HashSet<Produto>();
+		for (Document document : documents) {
+			produtos.add(assembly.toResource(document));
+		}
+
+		return produtos;
 	}
 	
 	private Set<Telefone> toResourceTelefones(List<Document> documents) {

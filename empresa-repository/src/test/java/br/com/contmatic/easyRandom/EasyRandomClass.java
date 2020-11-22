@@ -12,6 +12,7 @@ import br.com.contmatic.empresa.Cliente;
 import br.com.contmatic.empresa.Empresa;
 import br.com.contmatic.empresa.Fornecedor;
 import br.com.contmatic.empresa.Funcionario;
+import br.com.contmatic.empresa.Produto;
 import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.endereco.Estado;
 import br.com.contmatic.regex.RegexType;
@@ -58,7 +59,7 @@ public class EasyRandomClass {
         fornecedor.setCnpj(Geradores.geraCnpj());
         String nomeFornecedor = faker.company().name();
         fornecedor.setNome(nomeFornecedor);
-        fornecedor.setProduto(faker.commerce().productName());
+        fornecedor.setProduto(produtoRandomizer());
         fornecedor.setTelefones(telefoneRandomizer());
         fornecedor.setEnderecos(enderecoRandomizer());
         return fornecedor;
@@ -72,7 +73,7 @@ public class EasyRandomClass {
         funcionario.setNome(faker.name().fullName());
         funcionario.setIdade(faker.number().numberBetween(18, 40));
         funcionario.setSalario(Geradores.generateRandomBigDecimalValueFromRange(
-        		BigDecimal.valueOf(1000.00), BigDecimal.valueOf(8000.00).setScale(2)));
+        		BigDecimal.valueOf(1045.00), BigDecimal.valueOf(8000.00).setScale(2)));
         funcionario.setDataContratacao(new LocalDate(Geradores.geraData(
         		new LocalDate(2012, 01, 01), new LocalDate(2014, 12, 30)).toString()));
         funcionario.setDataSalario(new LocalDate(Geradores.geraData(
@@ -80,6 +81,32 @@ public class EasyRandomClass {
         funcionario.setTelefones(telefoneRandomizer());
         funcionario.setEnderecos(enderecoRandomizer());
         return funcionario;
+    }
+    
+    public HashSet<Produto> produtoRandomizer() {
+    	HashSet<Produto> produtos = new HashSet<Produto>();
+    	Faker faker = new Faker();
+        EasyRandom easyFakeObject = new EasyRandom();
+        Produto produto = easyFakeObject.nextObject(Produto.class);
+        produto.setId(faker.number().numberBetween(1, 100));
+        produto.setNome(faker.name().fullName());
+        produto.setQuantidade(faker.number().numberBetween(1, 10));
+        produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(
+        		BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
+        produtos.add(produto);
+        return produtos;
+    }
+    
+    public Produto produtoRandomizerClass() {
+    	Faker faker = new Faker();
+        EasyRandom easyFakeObject = new EasyRandom();
+        Produto produto = easyFakeObject.nextObject(Produto.class);
+        produto.setId(faker.number().numberBetween(1, 100));
+        produto.setNome(faker.name().fullName());
+        produto.setQuantidade(faker.number().numberBetween(1, 10));
+        produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(
+        		BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
+        return produto;
     }
     
     public HashSet<Endereco> enderecoRandomizer() {

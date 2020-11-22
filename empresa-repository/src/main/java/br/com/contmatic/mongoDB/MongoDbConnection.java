@@ -12,6 +12,7 @@ import br.com.contmatic.empresa.Cliente;
 import br.com.contmatic.empresa.Empresa;
 import br.com.contmatic.empresa.Fornecedor;
 import br.com.contmatic.empresa.Funcionario;
+import br.com.contmatic.empresa.Produto;
 
 public class MongoDbConnection {
     
@@ -52,6 +53,12 @@ public class MongoDbConnection {
         MongoCollection<Document> funcionarioCollection = database.getCollection("Funcionario");
         funcionarioCollection.insertOne(Document.parse(funcionario.toString()).append("_id", funcionario.getCpf()));
         return "Funcionario -> Documento nº" + funcionarioCollection.countDocuments() + "Inserido com sucesso";
+    }
+    
+    public static String SentToDatabaseProduto(Produto produto) {
+    	MongoCollection<Document> produtoCollection = database.getCollection("Produto");
+    	produtoCollection.insertOne(Document.parse(produto.toString()).append("_id", produto.getId()));
+    	return "Produto -> Id n°" + produtoCollection.countDocuments() + "Inserido com sucesso";
     }
 
 }

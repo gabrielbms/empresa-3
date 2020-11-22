@@ -68,7 +68,7 @@ public class FuncionarioServiceTest {
 	}
 
 	@Test
-	public void deve_armazenar_uma_Funcionario_no_banco() throws IOException {
+	public void deve_armazenar_um_Funcionario_no_banco() throws IOException {
 		MongoCollection<Document> collection = database.getCollection("Funcionario");
 		FuncionarioService repository = new FuncionarioService(database);
 		repository.salvar(randomObject.funcionarioRandomizer());
@@ -144,7 +144,7 @@ public class FuncionarioServiceTest {
 		assertNull(FuncionarioBuscada);
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nome_da_Funcionario() throws IOException {
 		FuncionarioService repository = new FuncionarioService(database);
 		Funcionario Funcionario = randomObject.funcionarioRandomizer();
@@ -154,7 +154,7 @@ public class FuncionarioServiceTest {
 
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nulos_da_Funcionario_ao_selecionar_escolhendo_campo() throws IOException {
 		FuncionarioService repository = new FuncionarioService(database);
 		Funcionario Funcionario = randomObject.funcionarioRandomizer();
@@ -163,7 +163,7 @@ public class FuncionarioServiceTest {
 		assertThat(FuncionarioBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_da_Funcionario_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
 			throws IOException {
 		FuncionarioService repository = new FuncionarioService(database);
@@ -173,7 +173,7 @@ public class FuncionarioServiceTest {
 		assertThat(FuncionarioBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_a_Funcionario_mesmo_nao_exista_valores() throws IOException {
 		FuncionarioService repository = new FuncionarioService(database);
 		Funcionario Funcionario = randomObject.funcionarioRandomizer();

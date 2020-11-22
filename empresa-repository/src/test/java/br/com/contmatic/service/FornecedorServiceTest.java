@@ -144,7 +144,7 @@ public class FornecedorServiceTest {
 		assertNull(FornecedorBuscada);
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nome_da_Fornecedor() throws IOException {
 		FornecedorService repository = new FornecedorService(database);
 		Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
@@ -154,7 +154,7 @@ public class FornecedorServiceTest {
 
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_nulos_da_Fornecedor_ao_selecionar_escolhendo_campo() throws IOException {
 		FornecedorService repository = new FornecedorService(database);
 		Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
@@ -163,7 +163,7 @@ public class FornecedorServiceTest {
 		assertThat(FornecedorBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_campo_da_Fornecedor_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
 			throws IOException {
 		FornecedorService repository = new FornecedorService(database);
@@ -173,7 +173,7 @@ public class FornecedorServiceTest {
 		assertThat(FornecedorBuscada.toString(), containsString("null"));
 	}
 
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void deve_retornar_a_Fornecedor_mesmo_nao_exista_valores() throws IOException {
 		FornecedorService repository = new FornecedorService(database);
 		Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
