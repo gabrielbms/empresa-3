@@ -27,7 +27,7 @@ public final class RegexType {
 	public static final String URL = "^(www).[-a-zA-Z0-9+_|!:,.;]*[-a-zA-Z0-9+_|]";
 
 	/** The Constant CEP. */
-	public static final String CEP = "^[[0-9]{5}-[\\\\d]{3}]+$";
+	public static final String CEP = "[0-9]{8}";
 
 	/** The Constant EMAIL. */
 	public static final String EMAIL = "[\\w-]+@([\\w-]+\\.)+[\\w-]+";

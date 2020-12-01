@@ -1,5 +1,6 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.easyRandom.Geradores.randomiza;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -99,7 +100,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_cnpj_uma_Produto_no_banco() throws IOException {
+	public void deve_selecionar_pelo_id_uma_Produto_no_banco() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -108,7 +109,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_cnpj_uma_Produto_no_banco_e_retornar_campos_iguais_como_salvou()
+	public void deve_selecionar_pelo_id_uma_Produto_no_banco_e_retornar_campos_iguais_como_salvou()
 			throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
@@ -118,7 +119,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_cnpj_uma_Produto_e_nao_deve_ter_valores_nulo() throws IOException {
+	public void deve_selecionar_pelo_id_uma_Produto_e_nao_deve_ter_valores_nulo() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -194,18 +195,24 @@ public class ProdutoServiceTest {
 	@Test
 	public void deve_selecionar_todas_Produto_no_banco() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
-		List<Produto> Produtos = Arrays.asList(randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
+		List<Produto> produtos = Arrays.asList(randomObject.produtoRandomizerClass(),
+				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
 				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());
-		for (Produto Produto : Produtos) {
-			repository.salvar(Produto);
+		for (Produto produto : produtos) {
+			for (int i = 0; i < 5; i++) {
+				if (produto.getId().equals(produtos.get(i).getId())) {
+					produto.setId(produto.getId() + randomiza(3));
+				}
+			}
+			repository.salvar(produto);
 		}
 
 		List<Produto> ProdutoBuscada = repository.selecionar();
-		assertThat(ProdutoBuscada.size(), is(Produtos.size()));
+		assertThat(ProdutoBuscada.size(), is(produtos.size()));
 	}
 
 	@Test
-	public void deve_selecionar_todas_Produto_no_banco_e_tem_que_ser_igual() throws IOException {
+	public void deve_selecionar_todas_Produtos_no_banco_e_tem_que_ser_igual() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		List<Produto> Produtos = Arrays.asList(randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
 				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());

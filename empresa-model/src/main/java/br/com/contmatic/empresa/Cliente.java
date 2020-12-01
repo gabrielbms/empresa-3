@@ -60,227 +60,227 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Cliente {
 
-	/** The cpf. */
-	@CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
-	@NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
-	@Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
-	private String cpf;
+    /** The cpf. */
+    @CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
+    @NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
+    @Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
+    private String cpf;
 
-	/** The nome. */
-	@NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
-	@Pattern(regexp = LETRAS, message = NOME_INVALIDO, groups = { Put.class, Post.class })
-	@Size(min = 2, max = 80, message = NOME_TAMANHO, groups = { Put.class, Post.class })
-	private String nome;
+    /** The nome. */
+    @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
+    @Pattern(regexp = LETRAS, message = NOME_INVALIDO, groups = { Put.class, Post.class })
+    @Size(min = 2, max = 80, message = NOME_TAMANHO, groups = { Put.class, Post.class })
+    private String nome;
 
-	/** The email. */
-	@Email(message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
-	@NotBlank(message = EMAIL_VAZIO, groups = { Put.class, Post.class })
-	@Pattern(regexp = EMAIL, message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
-	@Size(min = 5, max = 100, message = EMAIL_TAMANHO, groups = { Put.class, Post.class })
-	private String email;
+    /** The email. */
+    @Email(message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
+    @NotBlank(message = EMAIL_VAZIO, groups = { Put.class, Post.class })
+    @Pattern(regexp = EMAIL, message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
+    @Size(min = 5, max = 100, message = EMAIL_TAMANHO, groups = { Put.class, Post.class })
+    private String email;
 
-	/** The boleto. */
-	@Min(value = 1, message = BOLETO_NEGATIVO, groups = { Put.class, Post.class })
-	@NotEmpty(message = BOLETO_VAZIO, groups = { Put.class, Post.class })
-	private BigDecimal boleto;
+    /** The boleto. */
+    @Min(value = 1, message = BOLETO_NEGATIVO, groups = { Put.class, Post.class })
+    @NotEmpty(message = BOLETO_VAZIO, groups = { Put.class, Post.class })
+    private BigDecimal boleto;
 
-	/** The telefones. */
-	@Valid
-	@NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
-	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }),
-		@Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
-	private Set<Telefone> telefones;
+    /** The telefones. */
+    @Valid
+    @NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
+    @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
+        @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
+    private Set<Telefone> telefones;
 
-	public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
-		this.setCpf(cpf);
-		this.setNome(nome);
-		this.setTelefones(telefone);
-		this.setBoleto(boleto);
-	}
+    public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
+        this.setCpf(cpf);
+        this.setNome(nome);
+        this.setTelefones(telefone);
+        this.setBoleto(boleto);
+    }
 
-	public Cliente() {
+    public Cliente() {
 
-	}
+    }
 
-	public String getCpf() {
-		return cpf;
-	}
+    public String getCpf() {
+        return cpf;
+    }
 
-	public void setCpf(String cpf) {
-		this.validaCpfIncorreto(cpf);
-		this.validaCalculoCpf(cpf);
-		this.validaEspacosIncorretosECaracteresEspeciaisNoCpf(cpf);
-		this.cpf = cpf;
-	}
+    public void setCpf(String cpf) {
+        this.validaCpfIncorreto(cpf);
+        this.validaCalculoCpf(cpf);
+        this.validaEspacosIncorretosECaracteresEspeciaisNoCpf(cpf);
+        this.cpf = cpf;
+    }
 
-	private void validaEspacosIncorretosECaracteresEspeciaisNoCpf(String cpf) {
-		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
-			throw new IllegalArgumentException(CPF_INVALIDO);
-		}
-	}
+    private void validaEspacosIncorretosECaracteresEspeciaisNoCpf(String cpf) {
+        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
+            throw new IllegalArgumentException(CPF_INVALIDO);
+        }
+    }
 
-	private void validaCalculoCpf(String cpf) {
-		if (isNotCPF(cpf)) {
-			throw new IllegalStateException(CPF_INVALIDO);
-		}
-	}
+    private void validaCalculoCpf(String cpf) {
+        if (isNotCPF(cpf)) {
+            throw new IllegalStateException(CPF_INVALIDO);
+        }
+    }
 
-	private void validaCpfIncorreto(String cpf) {
-		this.validaCpfNulloOuVazio(cpf);
-		this.validaCpfComTamanhoMenor(cpf);
-		this.validaCpfComTamanhoMaior(cpf);
-	}
+    private void validaCpfIncorreto(String cpf) {
+        this.validaCpfNulloOuVazio(cpf);
+        this.validaCpfComTamanhoMenor(cpf);
+        this.validaCpfComTamanhoMaior(cpf);
+    }
 
-	private void validaCpfComTamanhoMaior(String cpf) {
-		if (cpf.length() > CPF_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
-		}
-	}
+    private void validaCpfComTamanhoMaior(String cpf) {
+        if (cpf.length() > CPF_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+        }
+    }
 
-	private void validaCpfComTamanhoMenor(String cpf) {
-		if (cpf.length() < CPF_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
-		}
-	}
+    private void validaCpfComTamanhoMenor(String cpf) {
+        if (cpf.length() < CPF_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+        }
+    }
 
-	private void validaCpfNulloOuVazio(String cpf) {
-		if (cpf == null || cpf.trim().isEmpty()) {
-			throw new IllegalArgumentException(CPF_VAZIO);
-		}
-	}
+    private void validaCpfNulloOuVazio(String cpf) {
+        if (cpf == null || cpf.trim().isEmpty()) {
+            throw new IllegalArgumentException(CPF_VAZIO);
+        }
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setNome(String nome) {
-		this.validaNomeIncorreto(nome);
-		this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
-		this.nome = nome;
-	}
+    public void setNome(String nome) {
+        this.validaNomeIncorreto(nome);
+        this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
+        this.nome = nome;
+    }
 
-	private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-			throw new IllegalArgumentException(NOME_INVALIDO);
-		}
-	}
+    private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
+        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+            throw new IllegalArgumentException(NOME_INVALIDO);
+        }
+    }
 
-	private void validaNomeIncorreto(String nome) {
-		this.validaNomeNulloOuVazio(nome);
-		this.validaNomeMenorQueOTamanhoMinimo(nome);
-		this.validaNomeMaiorQueOTamanhoMinimo(nome);
-	}
+    private void validaNomeIncorreto(String nome) {
+        this.validaNomeNulloOuVazio(nome);
+        this.validaNomeMenorQueOTamanhoMinimo(nome);
+        this.validaNomeMaiorQueOTamanhoMinimo(nome);
+    }
 
-	private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
-		if (nome.length() > NOME_MAX_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
-		}
-	}
+    private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
+        if (nome.length() > NOME_MAX_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        }
+    }
 
-	private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-		if (nome.length() < NOME_MIN_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-		}
-	}
+    private void validaNomeMenorQueOTamanhoMinimo(String nome) {
+        if (nome.length() < NOME_MIN_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+        }
+    }
 
-	private void validaNomeNulloOuVazio(String nome) {
-		if (nome == null || nome.trim().isEmpty()) {
-			throw new IllegalArgumentException(NOME_VAZIO);
-		}
-	}
+    private void validaNomeNulloOuVazio(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException(NOME_VAZIO);
+        }
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.validaEmailIncorreto(email);
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.validaEmailIncorreto(email);
+        this.email = email;
+    }
 
-	private void validaEmailIncorreto(String email) {
-		this.validaEmailNulloOuVazio(email);
-		this.validaEmailMenorQueOTamanhoMinimo(email);
-		this.validaEmailMaiorQueOTamanhoMaximo(email);
-	}
+    private void validaEmailIncorreto(String email) {
+        this.validaEmailNulloOuVazio(email);
+        this.validaEmailMenorQueOTamanhoMinimo(email);
+        this.validaEmailMaiorQueOTamanhoMaximo(email);
+    }
 
-	private void validaEmailMaiorQueOTamanhoMaximo(String email) {
-		if (email.length() > EMAIL_MAX_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_EMAIL_GRANDE_DEMAIS);
-		}
-	}
+    private void validaEmailMaiorQueOTamanhoMaximo(String email) {
+        if (email.length() > EMAIL_MAX_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_EMAIL_GRANDE_DEMAIS);
+        }
+    }
 
-	private void validaEmailMenorQueOTamanhoMinimo(String email) {
-		if (email.length() < EMAIL_MIN_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_EMAIL_PEQUENO_DEMAIS);
-		}
-	}
+    private void validaEmailMenorQueOTamanhoMinimo(String email) {
+        if (email.length() < EMAIL_MIN_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_EMAIL_PEQUENO_DEMAIS);
+        }
+    }
 
-	private void validaEmailNulloOuVazio(String email) {
-		if (email == null || email.trim().isEmpty()) {
-			throw new IllegalArgumentException(EMAIL_VAZIO);
-		}
-	}
+    private void validaEmailNulloOuVazio(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException(EMAIL_VAZIO);
+        }
+    }
 
-	public @Valid Set<Telefone> getTelefone() {
-		return telefones;
-	}
+    public @Valid Set<Telefone> getTelefone() {
+        return telefones;
+    }
 
-	public void setTelefones(Set<Telefone> telefone) {
-		this.validaTelefoneNullo(telefone);
-		this.telefones = telefone;
-	}
+    public void setTelefones(Set<Telefone> telefone) {
+        this.validaTelefoneNullo(telefone);
+        this.telefones = telefone;
+    }
 
-	private void validaTelefoneNullo(Set<Telefone> telefones) {
-		if (telefones == null) {
-			throw new IllegalArgumentException(TELEFONE_VAZIO);
-		}
-	}
+    private void validaTelefoneNullo(Set<Telefone> telefones) {
+        if (telefones == null) {
+            throw new IllegalArgumentException(TELEFONE_VAZIO);
+        }
+    }
 
-	public BigDecimal getBoleto() {
-		return boleto;
-	}
+    public BigDecimal getBoleto() {
+        return boleto;
+    }
 
-	public void setBoleto(BigDecimal boleto) {
-		this.validaValorBoleto(boleto);
-		this.boleto = boleto;
-	}
+    public void setBoleto(BigDecimal boleto) {
+        this.validaValorBoleto(boleto);
+        this.boleto = boleto;
+    }
 
-	private void validaValorBoleto(BigDecimal boleto) {
-		if (boleto.doubleValue() < 0) {
-			throw new IllegalArgumentException(BOLETO_NEGATIVO);
-		}
-	}
+    private void validaValorBoleto(BigDecimal boleto) {
+        if (boleto.doubleValue() < 0) {
+            throw new IllegalArgumentException(BOLETO_NEGATIVO);
+        }
+    }
 
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-	}
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+    }
 
-	/**
-	 * Hash code.
-	 *
-	 * @return the int
-	 */
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+    /**
+     * Hash code.
+     *
+     * @return the int
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
-	/**
-	 * Equals.
-	 *
-	 * @param obj the obj
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
+    /**
+     * Equals.
+     *
+     * @param obj the obj
+     * @return true, if successful
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
 
 }

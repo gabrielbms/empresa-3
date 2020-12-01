@@ -35,198 +35,194 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 
-
 public class EmpresaServiceTest {
-	
-	private static final MongodStarter starter = MongodStarter.getDefaultInstance();
 
-	private static MongodExecutable mongodExe;
+    private static final MongodStarter starter = MongodStarter.getDefaultInstance();
 
-	private static MongoClient mongo;
+    private static MongodExecutable mongodExe;
 
-	private MongoDatabase database;
-	
+    private static MongoClient mongo;
+
+    private MongoDatabase database;
+
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
-    
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		try {
-			mongodExe = starter.prepare(new MongodConfigBuilder().version(Version.Main.V3_4)
-					.net(new Net("localhost", 12345, Network.localhostIsIPv6())).build());
-			mongodExe.start();
-			mongo = new MongoClient("localhost", 12345);
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        try {
+            mongodExe = starter.prepare(new MongodConfigBuilder().version(Version.Main.V3_4).net(new Net("localhost", 12345, Network.localhostIsIPv6())).build());
+            mongodExe.start();
+            mongo = new MongoClient("localhost", 12345);
 
-	@Before
-	public void setUp() {
-		database = mongo.getDatabase("empresa");
-		database.createCollection("empresa");
-	}
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	@Test
-	public void deve_armazenar_uma_empresa_no_banco() throws IOException {
-		MongoCollection<Document> collection = database.getCollection("empresa");
-		EmpresaService repository = new EmpresaService(database);
-		repository.salvar(randomObject.empresaRandomizer());
-		assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 1);
-	}
+    @Before
+    public void setUp() {
+        database = mongo.getDatabase("empresa");
+        database.createCollection("empresa");
+    }
 
-	@Test
-	public void deve_alterar_uma_empresa_no_banco() throws IOException, InterruptedException {
-		MongoCollection<Document> collection = database.getCollection("empresa");
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		empresa.setNome("Teste");
-		repository.alterar(empresa);
-		FindIterable<Document> findIterable = collection.find(new Document("_id", empresa.getCnpj()));
-		Empresa novaEmpresa = new EmpresaResourceAssembly().toResource(findIterable.first());
-		assertThat("Deve alterar uma empresa no banco", empresa.getNome(), equalTo(novaEmpresa.getNome()));
-	}
+    @Test
+    public void deve_armazenar_uma_empresa_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("empresa");
+        EmpresaService repository = new EmpresaService(database);
+        repository.salvar(randomObject.empresaRandomizer());
+        assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 1);
+    }
 
-	@Test
-	public void deve_apagar_uma_empresa_no_banco() throws IOException {
-		MongoCollection<Document> collection = database.getCollection("empresa");
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		repository.deletar(empresa);
-		assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 0);
-	}
+    @Test
+    public void deve_alterar_uma_empresa_no_banco() throws IOException, InterruptedException {
+        MongoCollection<Document> collection = database.getCollection("empresa");
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        empresa.setNome("Teste");
+        repository.alterar(empresa);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", empresa.getCnpj()));
+        Empresa novaEmpresa = new EmpresaResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar uma empresa no banco", empresa.getNome(), equalTo(novaEmpresa.getNome()));
+    }
 
-	@Test
-	public void deve_selecionar_pelo_cnpj_uma_empresa_no_banco() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-		assertTrue("Deve armazenar uma empresa no banco", empresaBuscada != null);
-	}
+    @Test
+    public void deve_apagar_uma_empresa_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("empresa");
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        repository.deletar(empresa);
+        assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 0);
+    }
 
-	@Test
-	public void deve_selecionar_pelo_cnpj_uma_empresa_no_banco_e_retornar_campos_iguais_como_salvou()
-			throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-		assertTrue(empresaBuscada.toString().equals(empresa.toString()));
-	}
+    @Test
+    public void deve_selecionar_pelo_cnpj_uma_empresa_no_banco() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
+        assertTrue("Deve armazenar uma empresa no banco", empresaBuscada != null);
+    }
 
-	@Test
-	public void deve_selecionar_pelo_cnpj_uma_empresa_e_nao_deve_ter_valores_nulo() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-		assertThat(empresaBuscada.toString(), not(containsString("null")));
-	}
+    @Test
+    public void deve_selecionar_pelo_cnpj_uma_empresa_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
+        assertTrue(empresaBuscada.toString().equals(empresa.toString()));
+    }
 
-	@Test
-	public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		List<Empresa> empresaBuscada = repository.selecionar((List<String>) null);
-		assertNull(empresaBuscada);
-	}
+    @Test
+    public void deve_selecionar_pelo_cnpj_uma_empresa_e_nao_deve_ter_valores_nulo() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
+        assertThat(empresaBuscada.toString(), not(containsString("null")));
+    }
 
-	@Test
-	public void deve_retornar_nulo_quando_manda_uma_lista_vazia() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		List<Empresa> empresaBuscada = repository.selecionar(new ArrayList<String>());
-		assertNull(empresaBuscada);
-	}
+    @Test
+    public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        List<Empresa> empresaBuscada = repository.selecionar((List<String>) null);
+        assertNull(empresaBuscada);
+    }
 
-	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_nome_da_empresa() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-		assertThat(empresaBuscada.toString(), containsString("\"nome\":\"" + empresa.getNome() + "\""));
+    @Test
+    public void deve_retornar_nulo_quando_manda_uma_lista_vazia() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        List<Empresa> empresaBuscada = repository.selecionar(new ArrayList<String>());
+        assertNull(empresaBuscada);
+    }
 
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_retornar_campo_nome_da_empresa() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
+        assertThat(empresaBuscada.toString(), containsString("\"nome\":\"" + empresa.getNome() + "\""));
 
-	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_nulos_da_empresa_ao_selecionar_escolhendo_campo() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-		assertThat(empresaBuscada.toString(), containsString("null"));
-	}
+    }
 
-	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_da_empresa_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
-			throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-		assertThat(empresaBuscada.toString(), containsString("null"));
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_retornar_campo_nulos_da_empresa_ao_selecionar_escolhendo_campo() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
+        assertThat(empresaBuscada.toString(), containsString("null"));
+    }
 
-	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_a_empresa_mesmo_nao_exista_valores() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-		assertThat(empresaBuscada.toString(), containsString("null"));
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_retornar_campo_da_empresa_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
+        assertThat(empresaBuscada.toString(), containsString("null"));
+    }
 
-	@Test
-	public void deve_retornar_a_empresa_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		Empresa empresa = randomObject.empresaRandomizer();
-		repository.salvar(empresa);
-		Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-		assertThat(empresaBuscada.getCnpj(), equalTo(empresa.getCnpj()));
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_retornar_a_empresa_mesmo_nao_exista_valores() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
+        assertThat(empresaBuscada.toString(), containsString("null"));
+    }
 
-	@Test
-	public void deve_selecionar_todas_empresa_no_banco() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(),
-				randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
-		for (Empresa empresa : empresas) {
-			repository.salvar(empresa);
-		}
+    @Test
+    public void deve_retornar_a_empresa_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
+        assertThat(empresaBuscada.getCnpj(), equalTo(empresa.getCnpj()));
+    }
 
-		List<Empresa> empresaBuscada = repository.selecionar();
-		assertThat(empresaBuscada.size(), is(empresas.size()));
-	}
+    @Test
+    public void deve_selecionar_todas_empresa_no_banco() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(), 
+            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
+        for(Empresa empresa : empresas) {
+            repository.salvar(empresa);
+        }
 
-	@Test
-	public void deve_selecionar_todas_empresa_no_banco_e_tem_que_ser_igual() throws IOException {
-		EmpresaService repository = new EmpresaService(database);
-		List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(),
-				randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
-		for (Empresa empresa : empresas) {
-			repository.salvar(empresa);
-		}
+        List<Empresa> empresaBuscada = repository.selecionar();
+        assertThat(empresaBuscada.size(), is(empresas.size()));
+    }
 
-		List<Empresa> empresaBuscada = repository.selecionar();
-		assertThat(empresaBuscada, is(empresas));
-	}
-	
-	@After
-	public void tearDown() {
-		database.drop();
-	}
-	
-	@AfterClass
-	public static void tearDownAfterClass() {
-		mongo.close();
-		mongodExe.stop();
-	}
-	
+    @Test
+    public void deve_selecionar_todas_empresa_no_banco_e_tem_que_ser_igual() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(),
+            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
+        for(Empresa empresa : empresas) {
+            repository.salvar(empresa);
+        }
+
+        List<Empresa> empresaBuscada = repository.selecionar();
+        assertThat(empresaBuscada, is(empresas));
+    }
+
+    @After
+    public void tearDown() {
+        database.drop();
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        mongo.close();
+        mongodExe.stop();
+    }
+
 }

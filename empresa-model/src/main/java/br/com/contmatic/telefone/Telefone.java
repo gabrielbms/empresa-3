@@ -1,5 +1,15 @@
 package br.com.contmatic.telefone;
 
+import static br.com.contmatic.regex.RegexType.NUMEROS;
+import static br.com.contmatic.util.Constantes.DDD_VAZIO;
+import static br.com.contmatic.util.Constantes.NUMERO_TELEFONE_INCORRETAMENTE;
+import static br.com.contmatic.util.Constantes.TELEFONE_INVALIDO;
+import static br.com.contmatic.util.Constantes.TELEFONE_PREENCHIDO_INCORRETAMENTE;
+import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
+import static br.com.contmatic.util.Constantes.TEL_MAX_SIZE;
+import static br.com.contmatic.util.Constantes.TEL_MIN_SIZE;
+import static br.com.contmatic.util.Constantes.TIPO_TELEFONE_VAZIO;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -9,34 +19,32 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import br.com.contmatic.regex.RegexType;
-
 /**
  * The Class Telefone.
  */
 public class Telefone {
-	
+
     /** The tipo telefone. */
-    @NotBlank(message = "O campo tipo do telefone não pode estar nulo")
+    @NotBlank(message = TIPO_TELEFONE_VAZIO)
     private TelefoneType tipoTelefone;
 
     /** The ddd. */
-    @NotBlank(message = "O campo DDD do telefone não pode estar nulo")
+    @NotBlank(message = DDD_VAZIO)
     private TelefoneDDDType ddd;
-  
+
     /** The numero. */
     @Size(min = 8, max = 10)
-    @NotBlank(message = "O campo número do telefone não pode estar nulo")
-    @Pattern(regexp = RegexType.NUMEROS, message = "O campo Numero está invalido")
+    @NotBlank(message = TELEFONE_VAZIO)
+    @Pattern(regexp = NUMEROS, message = NUMERO_TELEFONE_INCORRETAMENTE)
     private String numero;
-    
+
     /**
      * Instantiates a new telefone.
      */
-    public Telefone () {
+    public Telefone() {
 
     }
-    
+
     /**
      * Instantiates a new telefone.
      *
@@ -44,44 +52,77 @@ public class Telefone {
      * @param numero the numero
      * @param telefone the telefone
      */
-    public Telefone (TelefoneDDDType ddd, String numero, TelefoneType telefone) {
-        this.ddd = ddd;
-        this.numero = numero;
-        this.tipoTelefone = telefone;
+    public Telefone(TelefoneDDDType ddd, String numero, TelefoneType tipoTelefone) {
+        this.setDdd(ddd);
+        this.setTipoTelefone(tipoTelefone);
+        this.setNumero(numero);
     }
-    
+
     public void setDdd(TelefoneDDDType ddd) {
-		this.ddd = ddd;
-	}
+        this.dddVazio(ddd);
+        this.ddd = ddd;
+    }
+
+    public void dddVazio(TelefoneDDDType ddd) {
+        if (ddd == null) {
+            throw new IllegalArgumentException(DDD_VAZIO);
+        }
+    }
 
     public TelefoneDDDType getDdd() {
         return ddd;
+    }
+
+    public void setNumero(String numero) {
+        this.validaNumetoTelefoneIncorreto(numero);
+        this.validaTipoTelefone(numero);
+        this.numero = numero;
+    }
+
+    private TelefoneType validaTipoTelefone(String numero) {
+        if (numero.length() == TEL_MAX_SIZE) {
+            return TelefoneType.CELULAR;
+        }
+        if (numero.length() == TEL_MIN_SIZE) {
+            return TelefoneType.FIXO;
+        } else {
+            throw new IllegalArgumentException(TELEFONE_INVALIDO);
+        }
+    }
+
+    private void validaNumetoTelefoneIncorreto(String numero) {
+        if (numero == null || numero.trim().isEmpty() || numero.length() < TEL_MIN_SIZE || numero.length() > TEL_MAX_SIZE) {
+            throw new IllegalArgumentException(TELEFONE_PREENCHIDO_INCORRETAMENTE);
+        }
     }
 
     public String getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
-            this.numero = numero;
-    }
-
     public TelefoneType getTipoTelefone() {
         return tipoTelefone;
     }
 
-	public void setTipoTelefone(TelefoneType tipoTelefone) {
-		this.tipoTelefone = tipoTelefone;
-	}
+    public void setTipoTelefone(TelefoneType tipoTelefone) {
+        this.tipoTelefoneVazio(tipoTelefone);
+        this.tipoTelefone = tipoTelefone;
+    }
 
-	/**
+    public void tipoTelefoneVazio(TelefoneType tipoTelefone) {
+        if (tipoTelefone == null) {
+            throw new IllegalArgumentException(TIPO_TELEFONE_VAZIO);
+        }
+    }
+
+    /**
      * To string.
      *
      * @return the string
      */
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this,ToStringStyle.JSON_STYLE);
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
     /**

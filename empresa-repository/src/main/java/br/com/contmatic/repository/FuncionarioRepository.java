@@ -5,8 +5,8 @@ import java.util.List;
 import br.com.contmatic.empresa.Funcionario;
 
 public interface FuncionarioRepository {
-	
-	public void save(Funcionario cadastro) throws IllegalAccessException;
+
+    public void save(Funcionario cadastro) throws IllegalAccessException;
 
     public void update(Funcionario cadastro);
 

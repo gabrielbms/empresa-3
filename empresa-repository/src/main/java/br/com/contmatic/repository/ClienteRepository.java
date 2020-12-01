@@ -5,8 +5,8 @@ import java.util.List;
 import br.com.contmatic.empresa.Cliente;
 
 public interface ClienteRepository {
-	
-	public void save(Cliente cliente) throws IllegalAccessException;
+
+    public void save(Cliente cliente) throws IllegalAccessException;
 
     public void update(Cliente cliente);
 

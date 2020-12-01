@@ -12,7 +12,7 @@ public final class Constantes {
 	
 	public static final String EMAIL_TAMANHO = "O e-mail do funcionario pode ter no máximo {max} caracteres";
 	
-	public static final String TELEFONE_VAZIO = "O telefone do cliente não pode ser vazio";
+	public static final String TELEFONE_VAZIO = "O telefone não pode ser vazio";
 	
 	public static final String TELEFONE_QTDE_MINIMA = "os telefones do cliente não devem ser menor que um";
 	
@@ -158,7 +158,7 @@ public final class Constantes {
 	
 	public static final String DDD_VAZIO = "O DDD foi preenchido incorretamente.";
 	
-	public static final String TIPO_TELEFONE_VAZIO = "O tipo telefone foi preenchido incorretamente.";
+	public static final String TIPO_TELEFONE_VAZIO = "O tipo telefone está vazio.";
 	
 	public static final String CEP_VAZIO = "O campo cep não pode estar nulo ou vazio";
 
@@ -175,6 +175,8 @@ public final class Constantes {
 	public static final String ESTADO_VAZIO = "O campo estado não pode estar nulo ou vazio";
 	
 	public static final String TELEFONE_PREENCHIDO_INCORRETAMENTE = "O numero do telefone foi preenchido incorretamente.";
+	
+	public static final String NUMERO_TELEFONE_INCORRETAMENTE = "O campo Numero está invalido";
 
 	public static final Integer CPF_SIZE = 11;
 

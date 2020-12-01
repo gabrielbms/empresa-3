@@ -21,10 +21,11 @@ import br.com.contmatic.service.ProdutoServiceTest;
  * The Class TestRunner.
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ClienteResourceAssemblyTest.class, EmpresaResourceAssemblyTest.class, FornecedorResourceAssemblyTest.class, 
-	FuncionarioResourceAssemblyTest.class, EnderecoResourceAssemblyTest.class, TelefoneResourceAssemblyTest.class, 
-	ProdutoResourceAssemblyTest.class, ClienteServiceTest.class, EmpresaServiceTest.class, FornecedorServiceTest.class, 
-	FuncionarioServiceTest.class, ProdutoServiceTest.class })
+@SuiteClasses({ ClienteResourceAssemblyTest.class, EmpresaResourceAssemblyTest.class, FornecedorResourceAssemblyTest.class,
+    FuncionarioResourceAssemblyTest.class, EnderecoResourceAssemblyTest.class, TelefoneResourceAssemblyTest.class, 
+    ProdutoResourceAssemblyTest.class, ClienteServiceTest.class, EmpresaServiceTest.class, FornecedorServiceTest.class, 
+    FuncionarioServiceTest.class,
+    ProdutoServiceTest.class })
 public class TestRunnerRepository {
 
 }

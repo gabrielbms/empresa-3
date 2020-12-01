@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * The Enum Estado.
  */
-public enum Estado {
+public enum EstadoType {
     
     /** The sp. */
     SP("São Paulo – SP"),    
@@ -99,19 +99,9 @@ public enum Estado {
      *
      * @param estado the estado
      */
-    private Estado(String estado) {
+    private EstadoType(String estado) {
         this.est = estado;
     }
-    
-//    public static Estado valueOfEst(String est) {
-//    	
-//    	for (Estado estado : values()) {
-//			if (estado.est.equals(est)) {
-//				return estado;
-//			}
-//		}
-//		return null;
-//    }
 
     /**
      * Gets the estado.
@@ -122,11 +112,11 @@ public enum Estado {
         return est;
     }
     
-    private static final List<Estado> estados = Collections.unmodifiableList(Arrays.asList(values()));
+    private static final List<EstadoType> estados = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int tamanho = estados.size();
     private static final Random random = new Random();
     
-    public static Estado estadoAleatorio()  {
+    public static EstadoType estadoAleatorio()  {
         return estados.get(random.nextInt(tamanho));
     }
     

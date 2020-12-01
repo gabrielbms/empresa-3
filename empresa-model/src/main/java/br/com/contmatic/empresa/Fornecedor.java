@@ -61,35 +61,35 @@ import br.com.contmatic.telefone.Telefone;
 public class Fornecedor {
 
     /** The cnpj. */
-	@CNPJ(message = CNPJ_INVALIDO, groups = { Put.class, Post.class })
-	@NotBlank(message = CNPJ_VAZIO, groups = { Put.class, Post.class })
-	@Pattern(regexp = NUMEROS, message = CNPJ_INCORRETO, groups = { Put.class, Post.class })
+    @CNPJ(message = CNPJ_INVALIDO, groups = { Put.class, Post.class })
+    @NotBlank(message = CNPJ_VAZIO, groups = { Put.class, Post.class })
+    @Pattern(regexp = NUMEROS, message = CNPJ_INCORRETO, groups = { Put.class, Post.class })
     private String cnpj;
 
     /** The nome. */
-	@NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
-	@Pattern(regexp = LETRAS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
-	@Size(min = 2, max = 100, message = NOME_TAMANHO, groups = { Put.class, Post.class })
+    @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
+    @Pattern(regexp = LETRAS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
+    @Size(min = 2, max = 100, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
     /** The produto. */
-	@NotBlank(message = PRODUTO_VAZIO, groups = { Put.class, Post.class })
-	@Length(min = 2, max = 80, message = PRODUTO_INCORRETO, groups = { Put.class, Post.class })
-	@Pattern(regexp = LETRAS	, message = PRODUTO_INVALIDO, groups = { Put.class, Post.class })
+    @NotBlank(message = PRODUTO_VAZIO, groups = { Put.class, Post.class })
+    @Length(min = 2, max = 80, message = PRODUTO_INCORRETO, groups = { Put.class, Post.class })
+    @Pattern(regexp = LETRAS, message = PRODUTO_INVALIDO, groups = { Put.class, Post.class })
     private Set<Produto> produtos;
-    
+
     /** The telefones. */
-	@Valid
-	@NotEmpty(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
-	@Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }),
-			@Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
+    @Valid
+    @NotEmpty(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
+    @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
+        @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
 
     /** The enderecos. */
-	@Valid
-	@NotEmpty(message = ENDERECO_VAZIO, groups = { Put.class, Post.class })
-	@Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA, groups = { Put.class, Post.class }),
-			@Size(max = 3, message =ENDERECO_QTDE_MAX, groups = { Put.class, Post.class }) })
+    @Valid
+    @NotEmpty(message = ENDERECO_VAZIO, groups = { Put.class, Post.class })
+    @Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA, groups = { Put.class, Post.class }), 
+        @Size(max = 3, message = ENDERECO_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Endereco> enderecos;
 
     /**
@@ -98,27 +98,27 @@ public class Fornecedor {
      * @param cnpj the cnpj
      * @param nome the nome
      */
-	public Fornecedor(String cnpj, String nome) {
-		this.setCnpj(cnpj);
-		this.setNome(nome);
-	}
-	
-	/**
-	 * Instantiates a new fornecedor.
-	 *
-	 * @param cnpj the cnpj
-	 * @param nome the nome
-	 * @param telefone the telefones
-	 * @param produto the produto
-	 * @param endereco the enderecos
-	 */
-	public Fornecedor(String cnpj, String nome, Set<Telefone> telefone, Set<Produto> produto, Set<Endereco> endereco) {
-		this.setCnpj(cnpj);
-		this.setNome(nome);
-		this.setTelefones(telefone);
-		this.setProduto(produto);
-		this.setEnderecos(endereco);
-	}
+    public Fornecedor(String cnpj, String nome) {
+        this.setCnpj(cnpj);
+        this.setNome(nome);
+    }
+
+    /**
+     * Instantiates a new fornecedor.
+     *
+     * @param cnpj the cnpj
+     * @param nome the nome
+     * @param telefone the telefones
+     * @param produto the produto
+     * @param endereco the enderecos
+     */
+    public Fornecedor(String cnpj, String nome, Set<Telefone> telefone, Set<Produto> produto, Set<Endereco> endereco) {
+        this.setCnpj(cnpj);
+        this.setNome(nome);
+        this.setTelefones(telefone);
+        this.setProduto(produto);
+        this.setEnderecos(endereco);
+    }
 
     /**
      * Instantiates a new fornecedor.
@@ -132,134 +132,134 @@ public class Fornecedor {
     }
 
     public void setCnpj(String cnpj) {
-		this.validaCnpjIncorreto(cnpj);
-		this.validaCnpjInvalido(cnpj);
-		this.validaEspacosIncorretosECaracteresEspeciais(cnpj);
-		this.cnpj = cnpj;
-	}
-	
-	private void validaEspacosIncorretosECaracteresEspeciais(String cnpj) {
-		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
-			throw new IllegalArgumentException(CPF_INVALIDO);
-		}
-	}
-	
-	private void validaCnpjInvalido(String cnpj) {
-		if (isNotCNPJ(cnpj)) {
-			throw new IllegalStateException(CNPJ_INVALIDO);
-		}
-	}
-	
-	private void validaCnpjIncorreto(String cnpj) {
-		this.validaCnpjNulloOuVazio(cnpj);
-		this.validaCnpjComTamanhoMenor(cnpj);
-		this.validaCnpjComTamanhoMaior(cnpj);
-	}
+        this.validaCnpjIncorreto(cnpj);
+        this.validaCnpjInvalido(cnpj);
+        this.validaEspacosIncorretosECaracteresEspeciais(cnpj);
+        this.cnpj = cnpj;
+    }
 
-	private void validaCnpjComTamanhoMaior(String cnpj) {
-		if (cnpj.length() > CNPJ_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
-		}
-	}
+    private void validaEspacosIncorretosECaracteresEspeciais(String cnpj) {
+        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
+            throw new IllegalArgumentException(CPF_INVALIDO);
+        }
+    }
 
-	private void validaCnpjComTamanhoMenor(String cnpj) {
-		if (cnpj.length() < CNPJ_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
-		}
-	}
+    private void validaCnpjInvalido(String cnpj) {
+        if (isNotCNPJ(cnpj)) {
+            throw new IllegalStateException(CNPJ_INVALIDO);
+        }
+    }
 
-	private void validaCnpjNulloOuVazio(String cnpj) {
-		if (cnpj == null || cnpj.trim().isEmpty()) {
-			throw new IllegalArgumentException(CNPJ_VAZIO);
-		}
-	}
+    private void validaCnpjIncorreto(String cnpj) {
+        this.validaCnpjNulloOuVazio(cnpj);
+        this.validaCnpjComTamanhoMenor(cnpj);
+        this.validaCnpjComTamanhoMaior(cnpj);
+    }
+
+    private void validaCnpjComTamanhoMaior(String cnpj) {
+        if (cnpj.length() > CNPJ_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
+        }
+    }
+
+    private void validaCnpjComTamanhoMenor(String cnpj) {
+        if (cnpj.length() < CNPJ_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
+        }
+    }
+
+    private void validaCnpjNulloOuVazio(String cnpj) {
+        if (cnpj == null || cnpj.trim().isEmpty()) {
+            throw new IllegalArgumentException(CNPJ_VAZIO);
+        }
+    }
 
     public String getNome() {
         return nome;
     }
 
-	public void setNome(String nome) {
-		this.validaNomeIncorreto(nome);
-		this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
-		this.nome = nome;
-	}
-	
-	private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-		if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-			throw new IllegalArgumentException(NOME_INVALIDO);
-		}
-	}
-	
-	private void validaNomeIncorreto(String nome) {
-		this.validaNomeNulloOuVazio(nome);
-		this.validaNomeMenorQueOTamanhoMinimo(nome);
-		this.validaNomeMaiorQueOTamanhoMinimo(nome);
-	}
+    public void setNome(String nome) {
+        this.validaNomeIncorreto(nome);
+        this.validaEspacosIncorretosECaracteresEspeciaisNoNome(nome);
+        this.nome = nome;
+    }
 
-	private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
-		if (nome.length() > NOME_MAX_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
-		}
-	}
+    private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
+        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+            throw new IllegalArgumentException(NOME_INVALIDO);
+        }
+    }
 
-	private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-		if (nome.length() < NOME_MIN_SIZE) {
-			throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-		}
-	}
+    private void validaNomeIncorreto(String nome) {
+        this.validaNomeNulloOuVazio(nome);
+        this.validaNomeMenorQueOTamanhoMinimo(nome);
+        this.validaNomeMaiorQueOTamanhoMinimo(nome);
+    }
 
-	private void validaNomeNulloOuVazio(String nome) {
-		if (nome == null || nome.trim().isEmpty()) {
-			throw new IllegalArgumentException(NOME_VAZIO);
-		}
-	}
-    
-	public Set<Produto> getProduto() {
-		return produtos;
-	}
+    private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
+        if (nome.length() > NOME_MAX_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        }
+    }
 
-	public void setProduto(Set<Produto> produto) {
-		this.validaProdutoNullo(produto);
-		this.produtos = produto;
-	}
+    private void validaNomeMenorQueOTamanhoMinimo(String nome) {
+        if (nome.length() < NOME_MIN_SIZE) {
+            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+        }
+    }
 
-	private void validaProdutoNullo(Set<Produto> produto) {
-		if (produto == null) {
-			throw new IllegalArgumentException(PRODUTO_VAZIO);
-		}
-	}
+    private void validaNomeNulloOuVazio(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException(NOME_VAZIO);
+        }
+    }
+
+    public Set<Produto> getProduto() {
+        return produtos;
+    }
+
+    public void setProduto(Set<Produto> produto) {
+        this.validaProdutoNullo(produto);
+        this.produtos = produto;
+    }
+
+    private void validaProdutoNullo(Set<Produto> produto) {
+        if (produto == null) {
+            throw new IllegalArgumentException(PRODUTO_VAZIO);
+        }
+    }
 
     public @Valid Set<Telefone> getTelefone() {
         return telefones;
     }
 
-	public void setTelefones(Set<Telefone> telefone) {
-		Preconditions.checkArgument(telefone.size() < 2, TELEFONE_SIZE_MAX);
-		this.validaTelefoneNullo(telefone);
-		this.telefones = telefone;
-	}
-	
-	private void validaTelefoneNullo(Set<Telefone> telefone) {
-		if (telefone == null) {
-			throw new IllegalArgumentException(TELEFONE_VAZIO);
-		}
-	}
+    public void setTelefones(Set<Telefone> telefone) {
+        Preconditions.checkArgument(telefone.size() < 2, TELEFONE_SIZE_MAX);
+        this.validaTelefoneNullo(telefone);
+        this.telefones = telefone;
+    }
+
+    private void validaTelefoneNullo(Set<Telefone> telefone) {
+        if (telefone == null) {
+            throw new IllegalArgumentException(TELEFONE_VAZIO);
+        }
+    }
 
     public @Valid Set<Endereco> getEndereco() {
         return enderecos;
     }
-	
-	public void setEnderecos(Set<Endereco> endereco) {
-		Preconditions.checkArgument(endereco.size() < 2, ENDERECO_SIZE_MAX);
-		this.validaEnderecoNullo(endereco);
-		this.enderecos = endereco;
-	}
-	
-	private void validaEnderecoNullo(Set<Endereco> endereco) {
-		if (endereco == null) {
-			throw new IllegalArgumentException(ENDERECO_VAZIO);
-		}
-	}
+
+    public void setEnderecos(Set<Endereco> endereco) {
+        Preconditions.checkArgument(endereco.size() < 2, ENDERECO_SIZE_MAX);
+        this.validaEnderecoNullo(endereco);
+        this.enderecos = endereco;
+    }
+
+    private void validaEnderecoNullo(Set<Endereco> endereco) {
+        if (endereco == null) {
+            throw new IllegalArgumentException(ENDERECO_VAZIO);
+        }
+    }
 
     /**
      * To string.

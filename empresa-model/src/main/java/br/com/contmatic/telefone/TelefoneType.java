@@ -18,7 +18,7 @@ public enum TelefoneType {
 
     /** The descricao. */
     private String descricao;
-    
+
     /** The tamanho. */
     private int tamanho;
 
@@ -54,8 +54,8 @@ public enum TelefoneType {
     private static final List<TelefoneType> tipoTelefone = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int size = tipoTelefone.size();
     private static final Random random = new Random();
-    
-    public static TelefoneType tipoTelefoneAleatorio()  {
+
+    public static TelefoneType tipoTelefoneAleatorio() {
         return tipoTelefone.get(random.nextInt(size));
     }
 }

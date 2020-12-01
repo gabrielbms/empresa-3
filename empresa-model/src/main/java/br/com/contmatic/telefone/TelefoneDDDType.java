@@ -221,13 +221,13 @@ public enum TelefoneDDDType {
         this.ddd = ddd;
         this.complemento = complemento;
     }
-    
+
     /** The ddd. */
     private int ddd;
-    
+
     /** The complemento. */
     private String complemento;
-    
+
     /**
      * Gets the ddd.
      *
@@ -236,7 +236,7 @@ public enum TelefoneDDDType {
     public int getDdd() {
         return ddd;
     }
- 
+
     /**
      * Gets the complemento.
      *
@@ -245,12 +245,12 @@ public enum TelefoneDDDType {
     public String getComplemento() {
         return complemento;
     }
-    
+
     private static final List<TelefoneDDDType> DDDs = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int tamanho = DDDs.size();
     private static final Random random = new Random();
-    
-    public static TelefoneDDDType DddAleatorio()  {
+
+    public static TelefoneDDDType DddAleatorio() {
         return DDDs.get(random.nextInt(tamanho));
     }
 }

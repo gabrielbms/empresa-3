@@ -5,8 +5,8 @@ import java.util.List;
 import br.com.contmatic.empresa.Produto;
 
 public interface ProdutoRepository {
-	
-	public void save(Produto produto) throws IllegalAccessException;
+
+    public void save(Produto produto) throws IllegalAccessException;
 
     public void update(Produto produto);
 

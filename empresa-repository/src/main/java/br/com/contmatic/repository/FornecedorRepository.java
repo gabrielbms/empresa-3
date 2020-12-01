@@ -5,8 +5,8 @@ import java.util.List;
 import br.com.contmatic.empresa.Fornecedor;
 
 public interface FornecedorRepository {
-	
-	public void save(Fornecedor fornecedor) throws IllegalAccessException;
+
+    public void save(Fornecedor fornecedor) throws IllegalAccessException;
 
     public void update(Fornecedor fornecedor);
 

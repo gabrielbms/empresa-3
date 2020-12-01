@@ -6,9 +6,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Geradores {
-	
-	static Random random = new Random();
-	
+
+    static Random random = new Random();
+
     public static String DominioEmail() {
         Random random = new Random();
         Integer numero = random.nextInt(3);
@@ -26,101 +26,101 @@ public class Geradores {
         }
         return "@" + dominio + ".com.br";
     }
-    
-	private static int randomiza(int n) {
+
+    private static int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
-		return ranNum;
-	}
-	
-	private static int mod(int dividendo, int divisor) {
-		return (int) Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
-	}
-	
-	public static String geraCpf() {
-		int n = 9;
-		int n1 = randomiza(n);
-		int n2 = randomiza(n);
-		int n3 = randomiza(n);
-		int n4 = randomiza(n);
-		int n5 = randomiza(n);
-		int n6 = randomiza(n);
-		int n7 = randomiza(n);
-		int n8 = randomiza(n);
-		int n9 = randomiza(n);
-		int d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+        return ranNum;
+    }
 
-		d1 = 11 - (mod(d1, 11));
+    private static int mod(int dividendo, int divisor) {
+        return (int) Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
+    }
 
-		if (d1 >= 10)
-			d1 = 0;
+    public static String geraCpf() {
+        int n = 9;
+        int n1 = randomiza(n);
+        int n2 = randomiza(n);
+        int n3 = randomiza(n);
+        int n4 = randomiza(n);
+        int n5 = randomiza(n);
+        int n6 = randomiza(n);
+        int n7 = randomiza(n);
+        int n8 = randomiza(n);
+        int n9 = randomiza(n);
+        int d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
 
-		int d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
+        d1 = 11 - (mod(d1, 11));
 
-		d2 = 11 - (mod(d2, 11));
+        if (d1 >= 10)
+            d1 = 0;
 
-		String retorno = null;
+        int d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
 
-		if (d2 >= 10)
-			d2 = 0;
-		retorno = "";
+        d2 = 11 - (mod(d2, 11));
 
-		retorno = "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + d1 + d2;
+        String retorno = null;
 
-		return retorno;
-	}
-	
-	public static String geraCnpj() {
-		int n = 9;
-		int n1 = randomiza(n);
-		int n2 = randomiza(n);
-		int n3 = randomiza(n);
-		int n4 = randomiza(n);
-		int n5 = randomiza(n);
-		int n6 = randomiza(n);
-		int n7 = randomiza(n);
-		int n8 = randomiza(n);
-		int n9 = 0;
-		int n10 = 0;
-		int n11 = 0;
-		int n12 = 1;
-		int d1 = n12 * 2 + n11 * 3 + n10 * 4 + n9 * 5 + n8 * 6 + n7 * 7 + n6 * 8 + n5 * 9 + n4 * 2 + n3 * 3 + n2 * 4 + n1 * 5;
+        if (d2 >= 10)
+            d2 = 0;
+        retorno = "";
 
-		d1 = 11 - (mod(d1, 11));
+        retorno = "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + d1 + d2;
 
-		if (d1 >= 10)
-			d1 = 0;
+        return retorno;
+    }
 
-		int d2 = d1 * 2 + n12 * 3 + n11 * 4 + n10 * 5 + n9 * 6 + n8 * 7 + n7 * 8 + n6 * 9 + n5 * 2 + n4 * 3 + n3 * 4 + n2 * 5 + n1 * 6;
+    public static String geraCnpj() {
+        int n = 9;
+        int n1 = randomiza(n);
+        int n2 = randomiza(n);
+        int n3 = randomiza(n);
+        int n4 = randomiza(n);
+        int n5 = randomiza(n);
+        int n6 = randomiza(n);
+        int n7 = randomiza(n);
+        int n8 = randomiza(n);
+        int n9 = 0;
+        int n10 = 0;
+        int n11 = 0;
+        int n12 = 1;
+        int d1 = n12 * 2 + n11 * 3 + n10 * 4 + n9 * 5 + n8 * 6 + n7 * 7 + n6 * 8 + n5 * 9 + n4 * 2 + n3 * 3 + n2 * 4 + n1 * 5;
 
-		d2 = 11 - (mod(d2, 11));
+        d1 = 11 - (mod(d1, 11));
 
-		if (d2 >= 10)
-			d2 = 0;
+        if (d1 >= 10)
+            d1 = 0;
 
-		String retorno = null;
+        int d2 = d1 * 2 + n12 * 3 + n11 * 4 + n10 * 5 + n9 * 6 + n8 * 7 + n7 * 8 + n6 * 9 + n5 * 2 + n4 * 3 + n3 * 4 + n2 * 5 + n1 * 6;
 
-		retorno = "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12 + d1 + d2;
+        d2 = 11 - (mod(d2, 11));
 
-		return retorno;
-	}
-	
-	public static BigDecimal generateRandomBigDecimalValueFromRange(BigDecimal valorMinimo, BigDecimal Valormaximo) {
-	    BigDecimal randomBigDecimal = valorMinimo.add(new BigDecimal(Math.random()).multiply(Valormaximo.subtract(valorMinimo)));
-	    return randomBigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP);
-	}
-	
-	public static LocalDate geraData(org.joda.time.LocalDate dataMin, org.joda.time.LocalDate dataMax) {
-		int diaMinConvertido = dataMin.getDayOfMonth();
-		int mesMinConvertido = dataMin.getMonthOfYear();
-		int anoMinConvertido = dataMin.getYear();
-	    long diaMin = LocalDate.of(anoMinConvertido, mesMinConvertido, diaMinConvertido).toEpochDay();
-		int diaMaxConvertido = dataMax.getDayOfMonth();
-		int mesMaxConvertido = dataMax.getMonthOfYear();
-		int anoMaxConvertido = dataMax.getYear();
-	    long diaMax = LocalDate.of(anoMaxConvertido, mesMaxConvertido, diaMaxConvertido).toEpochDay();
-	    long diaAleatorio = ThreadLocalRandom.current().nextLong(diaMin, diaMax);
-	    LocalDate dataAleatoria = LocalDate.ofEpochDay(diaAleatorio);
-	    return dataAleatoria;
-	}
-	
+        if (d2 >= 10)
+            d2 = 0;
+
+        String retorno = null;
+
+        retorno = "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12 + d1 + d2;
+
+        return retorno;
+    }
+
+    public static BigDecimal generateRandomBigDecimalValueFromRange(BigDecimal valorMinimo, BigDecimal Valormaximo) {
+        BigDecimal randomBigDecimal = valorMinimo.add(new BigDecimal(Math.random()).multiply(Valormaximo.subtract(valorMinimo)));
+        return randomBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public static LocalDate geraData(org.joda.time.LocalDate dataMin, org.joda.time.LocalDate dataMax) {
+        int diaMinConvertido = dataMin.getDayOfMonth();
+        int mesMinConvertido = dataMin.getMonthOfYear();
+        int anoMinConvertido = dataMin.getYear();
+        long diaMin = LocalDate.of(anoMinConvertido, mesMinConvertido, diaMinConvertido).toEpochDay();
+        int diaMaxConvertido = dataMax.getDayOfMonth();
+        int mesMaxConvertido = dataMax.getMonthOfYear();
+        int anoMaxConvertido = dataMax.getYear();
+        long diaMax = LocalDate.of(anoMaxConvertido, mesMaxConvertido, diaMaxConvertido).toEpochDay();
+        long diaAleatorio = ThreadLocalRandom.current().nextLong(diaMin, diaMax);
+        LocalDate dataAleatoria = LocalDate.ofEpochDay(diaAleatorio);
+        return dataAleatoria;
+    }
+
 }
