@@ -27,7 +27,7 @@ public class Geradores {
         return "@" + dominio + ".com.br";
     }
 
-    private static int randomiza(int n) {
+    public static int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
         return ranNum;
     }
