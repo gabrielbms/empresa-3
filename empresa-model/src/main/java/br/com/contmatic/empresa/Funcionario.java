@@ -66,45 +66,37 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Funcionario {
 
-    /** The cpf. */
     @CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
     @NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
     private String cpf;
 
-    /** The nome. */
     @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
     @Size(min = 2, max = 80, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
-    /** The idade. */
     @NotEmpty
     @Min(value = 1, message = IDADE_MINIMA_MENSAGEM, groups = { Put.class, Post.class })
     private Integer idade;
 
-    /** The salario. */
     @Min(value = 1, message = SALARIO_NEGATIVO, groups = { Put.class, Post.class })
     private BigDecimal salario;
 
-    /** The data contratacao. */
     @NotNull(message = DATA_CONTRATACAO_VAZIA, groups = { Put.class, Post.class })
     @Past(message = DATA_CONTRATACAO_FUTURA, groups = { Put.class, Post.class })
     private LocalDate dataContratacao;
 
-    /** The data salario. */
     @Future(message = DATA_SALARIO_FUTURA, groups = { Put.class, Post.class })
     @NotNull(message = DATA_SALARIO_NULA, groups = { Put.class, Post.class })
     private LocalDate dataSalario;
 
-    /** The telefones. */
     @Valid
     @NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
 
-    /** The enderecos. */
     @Valid
     @NotNull(message = ENDERECO_VAZIO)
     @Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA), @Size(max = 3, message = ENDERECO_QTDE_MAX) })
@@ -127,9 +119,6 @@ public class Funcionario {
         this.setDataSalario(dataSalario);
     }
 
-    /**
-     * Instantiates a new funcionario.
-     */
     public Funcionario() {
 
     }
@@ -297,32 +286,16 @@ public class Funcionario {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

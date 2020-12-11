@@ -17,23 +17,22 @@ import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
+/**
+ * The Class FuncionarioTest.
+ * 
+ * @author gabriel.santos
+ */
 public class ProdutoTest {
 
     private static Produto produto;
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
-    /**
-     * Set up before class.
-     */
     @BeforeClass
     public static void setUpBeforeClass() {
         FixtureFactoryLoader.loadTemplates("br.com.contmatic.util");
     }
 
-    /**
-     * Set up.
-     */
     @Before
     public void setUp() {
         ProdutoTest.produto = randomObject.produtoRandomizerClass();

@@ -43,75 +43,50 @@ import br.com.contmatic.groups.Put;
 
 /**
  * The Class Endereco.
+ * 
+ * @author gabriel.santos
  */
 public class Endereco {
 
-    /** The cep. */
     @NotBlank(message = CEP_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = CEP, message = CEP_INCORRETO, groups = { Put.class, Post.class })
     private String cep;
 
-    /** The rua. */
     @Size(min = 2, max = 80)
     @NotBlank(message = RUA_VAZIA, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS_NUMEROS, message = RUA_INCORRETO, groups = { Put.class, Post.class })
     private String rua;
 
-    /** The numero. */
     @NotBlank(message = NUMERO_VAZIO)
     @Size(min = 1, message = NUMERO_INCORRETO)
     private Integer numero;
 
-    /** The complemento. */
     @Size(min = 2, max = 80)
     @NotBlank(message = COMPLEMENTO_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS_NUMEROS, message = COMPLEMENTO_INCORRETO, groups = { Put.class, Post.class })
     private String complemento;
 
-    /** The bairro. */
     @Size(min = 2, max = 40)
     @NotBlank(message = BAIRRO_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS_NUMEROS, message = BAIRRO_INCORRETO, groups = { Put.class, Post.class })
     private String bairro;
 
-    /** The cidade. */
     @Size(min = 2, max = 40)
     @NotBlank(message = CIDADE_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS_NUMEROS, message = CIDADE_INCORRETO, groups = { Put.class, Post.class })
     private String cidade;
 
-    /** The estado. */
     @NotBlank(message = ESTADO_VAZIO, groups = { Put.class, Post.class })
     private EstadoType estado;
 
-    /**
-     * Instantiates a new endereco.
-     *
-     * @param cep the cep
-     * @param numero the numero
-     */
     public Endereco(String cep, Integer numero) {
         this.setCep(cep);
         this.setNumero(numero);
     }
 
-    /**
-     * Instantiates a new endereco.
-     */
     public Endereco() {
     }
 
-    /**
-     * Instantiates a new endereco.
-     *
-     * @param cep the cep
-     * @param rua the rua
-     * @param numero the numero
-     * @param complemento the complemento
-     * @param bairro the bairro
-     * @param cidade the cidade
-     * @param estado the estado
-     */
     public Endereco(String cep, String rua, Integer numero, String complemento, String bairro, String cidade, EstadoType estado) {
         this.setCep(cep);
         this.setRua(rua);
@@ -255,32 +230,16 @@ public class Endereco {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

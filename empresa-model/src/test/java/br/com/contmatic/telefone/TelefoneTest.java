@@ -16,18 +16,16 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class TelefoneTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TelefoneTest {
 
-    /** The telefone. */
     private static Telefone telefone;
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
-    /**
-     * Set up.
-     */
     @Before
     public void setUp() {
         TelefoneTest.telefone = randomObject.telefoneRandomizerClass();
@@ -217,9 +215,6 @@ public class TelefoneTest {
         EqualsVerifier.simple().forClass(Telefone.class).verify();
     }
 
-    /**
-     * Tear down.
-     */
     @After
     public void tearDown() {
         System.out.println(telefone);

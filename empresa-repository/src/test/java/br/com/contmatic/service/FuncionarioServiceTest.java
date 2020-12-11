@@ -2,11 +2,10 @@ package br.com.contmatic.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Funcionario.getCpf());
-        assertThat(FuncionarioBuscada.toString(), not(containsString("null")));
+        assertFalse(FuncionarioBuscada.toString().contains("null"));
     }
 
     @Test
@@ -148,7 +147,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-        assertThat(FuncionarioBuscada.toString(), containsString("\"nome\":\"" + Funcionario.getNome() + "\""));
+        assertTrue(FuncionarioBuscada.toString().contains("\"nome\":\"" + Funcionario.getNome() + "\""));
 
     }
 
@@ -158,7 +157,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-        assertThat(FuncionarioBuscada.toString(), containsString("null"));
+        assertTrue(FuncionarioBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -167,7 +166,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Arrays.asList("nome", "salario", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(FuncionarioBuscada.toString(), containsString("null"));
+        assertTrue(FuncionarioBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -176,7 +175,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(FuncionarioBuscada.toString(), containsString("null"));
+        assertTrue(FuncionarioBuscada.toString().contains("null"));
     }
 
     @Test

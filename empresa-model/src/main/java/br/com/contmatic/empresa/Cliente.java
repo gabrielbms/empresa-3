@@ -60,31 +60,26 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Cliente {
 
-    /** The cpf. */
     @CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
     @NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
     private String cpf;
 
-    /** The nome. */
     @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS, message = NOME_INVALIDO, groups = { Put.class, Post.class })
     @Size(min = 2, max = 80, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
-    /** The email. */
     @Email(message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
     @NotBlank(message = EMAIL_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = EMAIL, message = EMAIL_INVALIDO, groups = { Put.class, Post.class })
     @Size(min = 5, max = 100, message = EMAIL_TAMANHO, groups = { Put.class, Post.class })
     private String email;
 
-    /** The boleto. */
     @Min(value = 1, message = BOLETO_NEGATIVO, groups = { Put.class, Post.class })
     @NotEmpty(message = BOLETO_VAZIO, groups = { Put.class, Post.class })
     private BigDecimal boleto;
 
-    /** The telefones. */
     @Valid
     @NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
@@ -252,32 +247,16 @@ public class Cliente {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

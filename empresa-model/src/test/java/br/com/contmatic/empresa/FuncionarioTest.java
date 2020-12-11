@@ -34,6 +34,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class FuncionarioTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(NAME_ASCENDING)
 public class FuncionarioTest {
@@ -332,9 +334,6 @@ public class FuncionarioTest {
         EqualsVerifier.simple().forClass(Funcionario.class).verify();
     }
 
-    /**
-     * Tear down.
-     */
     @After
     public void tearDown() {
         System.out.println(funcionario);

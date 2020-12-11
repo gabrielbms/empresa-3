@@ -3,11 +3,10 @@ package br.com.contmatic.service;
 import static br.com.contmatic.easyRandom.Geradores.randomiza;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Produto.getId());
-		assertThat(ProdutoBuscada.toString(), not(containsString("null")));
+		assertFalse(ProdutoBuscada.toString().contains("null"));
 	}
 
 	@Test
@@ -151,8 +150,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-		assertThat(ProdutoBuscada.toString(), containsString("\"nome\":\"" + Produto.getNome() + "\""));
-
+		assertTrue(ProdutoBuscada.toString().contains("\"nome\":\"" + Produto.getNome() + "\""));
 	}
 
 	@Test (expected = IllegalArgumentException.class)
@@ -161,7 +159,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-		assertThat(ProdutoBuscada.toString(), containsString("null"));
+		assertTrue(ProdutoBuscada.toString().contains("null"));
 	}
 
 	@Test (expected = IllegalArgumentException.class)
@@ -171,7 +169,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Arrays.asList("nome", "salario", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-		assertThat(ProdutoBuscada.toString(), containsString("null"));
+		assertTrue(ProdutoBuscada.toString().contains("null"));
 	}
 
 	@Test (expected = IllegalArgumentException.class)
@@ -180,7 +178,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-		assertThat(ProdutoBuscada.toString(), containsString("null"));
+		assertTrue(ProdutoBuscada.toString().contains("null"));
 	}
 
 	@Test

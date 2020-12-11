@@ -27,6 +27,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;;
 
 /**
  * The Class EmpresaTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(NAME_ASCENDING)
 public class EmpresaTest {
@@ -43,9 +45,7 @@ public class EmpresaTest {
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
-    /**
-     * Set up.
-     */
+
     @Before
     public void setUp() {
         EmpresaTest.empresa = randomObject.empresaRandomizer();
@@ -197,7 +197,7 @@ public class EmpresaTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_exception_do_nome_tamanho_maior() {
-        empresa.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+        empresa.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" + 
     "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
     }
 
@@ -229,12 +229,14 @@ public class EmpresaTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_exception_do_setEmail_tamanho_limite() {
-        empresa.setSite("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
+        empresa.setSite("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + 
+    "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
     }
 
     @Test
     public void deve_testar_exception_do_setEmail_tamanho_maior() {
-        empresa.setSite("abcabcabcabcabcabcabcabcasfghg" + "fsdaabcabcabcacabbxc@gmail.com");
+        empresa.setSite("abcabcabcabcabcabcabcabcasfghg" +
+    "fsdaabcabcabcacabbxc@gmail.com");
     }
 
     @Test
@@ -314,9 +316,6 @@ public class EmpresaTest {
         EqualsVerifier.simple().forClass(Empresa.class).verify();
     }
 
-    /**
-     * Tear down.
-     */
     @After
     public void TearDown() {
         System.out.println(empresa);

@@ -60,58 +60,38 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Fornecedor {
 
-    /** The cnpj. */
     @CNPJ(message = CNPJ_INVALIDO, groups = { Put.class, Post.class })
     @NotBlank(message = CNPJ_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = NUMEROS, message = CNPJ_INCORRETO, groups = { Put.class, Post.class })
     private String cnpj;
 
-    /** The nome. */
     @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
     @Size(min = 2, max = 100, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
-    /** The produto. */
     @NotBlank(message = PRODUTO_VAZIO, groups = { Put.class, Post.class })
     @Length(min = 2, max = 80, message = PRODUTO_INCORRETO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS, message = PRODUTO_INVALIDO, groups = { Put.class, Post.class })
     private Set<Produto> produtos;
 
-    /** The telefones. */
     @Valid
     @NotEmpty(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
 
-    /** The enderecos. */
     @Valid
     @NotEmpty(message = ENDERECO_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = ENDERECO_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Endereco> enderecos;
 
-    /**
-     * Instantiates a new fornecedor.
-     *
-     * @param cnpj the cnpj
-     * @param nome the nome
-     */
     public Fornecedor(String cnpj, String nome) {
         this.setCnpj(cnpj);
         this.setNome(nome);
     }
 
-    /**
-     * Instantiates a new fornecedor.
-     *
-     * @param cnpj the cnpj
-     * @param nome the nome
-     * @param telefone the telefones
-     * @param produto the produto
-     * @param endereco the enderecos
-     */
     public Fornecedor(String cnpj, String nome, Set<Telefone> telefone, Set<Produto> produto, Set<Endereco> endereco) {
         this.setCnpj(cnpj);
         this.setNome(nome);
@@ -120,9 +100,6 @@ public class Fornecedor {
         this.setEnderecos(endereco);
     }
 
-    /**
-     * Instantiates a new fornecedor.
-     */
     public Fornecedor() {
 
     }
@@ -261,32 +238,16 @@ public class Fornecedor {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

@@ -21,37 +21,26 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Class Telefone.
+ * 
+ *  @author gabriel.santos
  */
 public class Telefone {
 
-    /** The tipo telefone. */
     @NotBlank(message = TIPO_TELEFONE_VAZIO)
     private TelefoneType tipoTelefone;
 
-    /** The ddd. */
     @NotBlank(message = DDD_VAZIO)
     private TelefoneDDDType ddd;
 
-    /** The numero. */
     @Size(min = 8, max = 10)
     @NotBlank(message = TELEFONE_VAZIO)
     @Pattern(regexp = NUMEROS, message = NUMERO_TELEFONE_INCORRETAMENTE)
     private String numero;
 
-    /**
-     * Instantiates a new telefone.
-     */
     public Telefone() {
 
     }
 
-    /**
-     * Instantiates a new telefone.
-     *
-     * @param ddd the ddd
-     * @param numero the numero
-     * @param telefone the telefone
-     */
     public Telefone(TelefoneDDDType ddd, String numero, TelefoneType tipoTelefone) {
         this.setDdd(ddd);
         this.setTipoTelefone(tipoTelefone);

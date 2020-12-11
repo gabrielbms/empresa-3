@@ -2,11 +2,10 @@ package br.com.contmatic.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertThat(FornecedorBuscada.toString(), not(containsString("null")));
+        assertFalse(FornecedorBuscada.toString().contains("null"));
     }
 
     @Test
@@ -148,7 +147,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-        assertThat(FornecedorBuscada.toString(), containsString("\"nome\":\"" + Fornecedor.getNome() + "\""));
+        assertTrue(FornecedorBuscada.toString().contains("\"nome\":\"" + Fornecedor.getNome() + "\""));
 
     }
 
@@ -158,7 +157,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-        assertThat(FornecedorBuscada.toString(), containsString("null"));
+        assertTrue(FornecedorBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -167,7 +166,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome", "produto", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(FornecedorBuscada.toString(), containsString("null"));
+        assertTrue(FornecedorBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -176,7 +175,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(FornecedorBuscada.toString(), containsString("null"));
+        assertTrue(FornecedorBuscada.toString().contains("null"));
     }
 
     @Test

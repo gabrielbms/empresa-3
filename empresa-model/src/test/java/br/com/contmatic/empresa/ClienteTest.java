@@ -30,6 +30,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class ClienteTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(NAME_ASCENDING)
 public class ClienteTest {
@@ -207,7 +209,7 @@ public class ClienteTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_exception_do_setNome_tamanho_maior() {
-        cliente.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" + 
+        cliente.setNome("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
     "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
     }
 
@@ -239,12 +241,14 @@ public class ClienteTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_exception_do_setEmail_tamanho_limite() {
-        cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
+        cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" +
+    "bcabcabcabcabcabcaabcabcabcabxc@gmail.com");
     }
 
     @Test
     public void deve_testar_exception_do_setEmail_tamanho_maior() {
-        cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" + "bcabcacabcabcabcaabcabcabcabxc@gmail.com");
+        cliente.setEmail("abcabcabcabcabcabcabcbcabcabcaabcabcabcabcabcaabca" +
+    "bcabcacabcabcabcaabcabcabcabxc@gmail.com");
     }
 
     @Test(expected = IllegalArgumentException.class)

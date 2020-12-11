@@ -1,9 +1,8 @@
 package br.com.contmatic.service;
 
-import static org.junit.matchers.JUnitMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -121,7 +120,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-        assertThat(empresaBuscada.toString(), not(containsString("null")));
+        assertFalse(empresaBuscada.toString().contains("null"));
     }
 
     @Test
@@ -148,7 +147,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-        assertThat(empresaBuscada.toString(), containsString("\"nome\":\"" + empresa.getNome() + "\""));
+        assertTrue(empresaBuscada.toString().contains("\"nome\":\"" + empresa.getNome() + "\""));
 
     }
 
@@ -158,7 +157,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-        assertThat(empresaBuscada.toString(), containsString("null"));
+        assertTrue(empresaBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -167,7 +166,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(empresaBuscada.toString(), containsString("null"));
+        assertTrue(empresaBuscada.toString().contains("null"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -176,7 +175,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertThat(empresaBuscada.toString(), containsString("null"));
+        assertTrue(empresaBuscada.toString().contains("null"));
     }
 
     @Test

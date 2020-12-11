@@ -14,20 +14,18 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 /**
  * The Class EnderecoTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EnderecoTest {
 
-    /** The endereco. */
     private static Endereco endereco;
 
     private static EstadoType estado = EstadoType.SP;
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
-    /**
-     * Set up.
-     */
     @Before
     public void setUp() {
         EnderecoTest.endereco = randomObject.enderecoRandomizerClass();
@@ -434,9 +432,6 @@ public class EnderecoTest {
         EqualsVerifier.simple().forClass(Endereco.class).verify();
     }
 
-    /**
-     * Tear down.
-     */
     @After
     public void tearDown() {
     }

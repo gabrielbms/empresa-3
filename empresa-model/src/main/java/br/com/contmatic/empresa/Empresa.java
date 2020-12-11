@@ -61,47 +61,34 @@ import br.com.contmatic.telefone.Telefone;
  */
 public class Empresa {
 
-    /** The cnpj. */
     @CNPJ(message = CNPJ_INVALIDO, groups = { Put.class, Post.class })
     @NotBlank(message = CNPJ_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = NUMEROS, message = CNPJ_INCORRETO, groups = { Put.class, Post.class })
     private String cnpj;
 
-    /** The nome. */
     @NotBlank(message = NOME_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = LETRAS_NUMEROS, message = NOME_INCORRETO, groups = { Put.class, Post.class })
     @Size(min = 2, max = 100, message = NOME_TAMANHO, groups = { Put.class, Post.class })
     private String nome;
 
-    /** The site. */
     @URL
     @Length(min = 5, max = 60)
     @NotBlank(message = SITE_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = URL, message = SITE_INVALIDO, groups = { Put.class, Post.class })
     private String site;
 
-    /** The telefones. */
     @Valid
     @NotNull(message = TELEFONE_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
 
-    /** The enderecos. */
     @Valid
     @NotNull(message = ENDERECO_VAZIO, groups = { Put.class, Post.class })
     @Size.List({ @Size(min = 1, message = ENDERECO_QTDE_MINIMA, groups = { Put.class, Post.class }),
         @Size(max = 3, message = ENDERECO_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Endereco> enderecos;
 
-    /**
-     * Instantiates a new empresa.
-     *
-     * @param cnpj the cnpj
-     * @param nome the nome
-     * @param telefone the telefone
-     * @param endereco the endereco
-     */
     public Empresa(String cnpj, String nome, @Valid Set<Telefone> telefone, @Valid Set<Endereco> endereco) {
         this.setCnpj(cnpj);
         this.setNome(nome);
@@ -109,9 +96,6 @@ public class Empresa {
         this.setEnderecos(endereco);
     }
 
-    /**
-     * Instantiates a new empresa.
-     */
     public Empresa() {
     }
 
@@ -265,32 +249,16 @@ public class Empresa {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
+    
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

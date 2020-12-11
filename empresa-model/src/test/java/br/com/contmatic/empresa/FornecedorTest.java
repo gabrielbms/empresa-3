@@ -28,11 +28,12 @@ import nl.jqno.equalsverifier.EqualsVerifier;;
 
 /**
  * The Class FornecedorTest.
+ * 
+ * @author gabriel.santos
  */
 @FixMethodOrder(NAME_ASCENDING)
 public class FornecedorTest {
 
-    /** The fornecedor. */
     private static Fornecedor fornecedor;
 
     private Produto produto;
@@ -40,19 +41,15 @@ public class FornecedorTest {
     Set<Produto> produtos = new HashSet<>();
 
     private Set<Telefone> telefones = new HashSet<>();
+    
     private Set<Endereco> enderecos = new HashSet<>();
 
-    /** The validator. */
     private Validator validator;
 
-    /** The factory. */
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
-    /**
-     * Set up.
-     */
     @Before
     public void setUp() {
         FornecedorTest.fornecedor = randomObject.fornecedorRandomizer();
@@ -319,9 +316,6 @@ public class FornecedorTest {
         EqualsVerifier.simple().forClass(Fornecedor.class).verify();
     }
 
-    /**
-     * Tear down.
-     */
     @After
     public void tearDown() {
         System.out.println(fornecedor);
