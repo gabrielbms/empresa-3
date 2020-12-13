@@ -38,7 +38,6 @@ public class Telefone {
     private String numero;
 
     public Telefone() {
-
     }
 
     public Telefone(TelefoneDDDType ddd, String numero, TelefoneType tipoTelefone) {
@@ -104,32 +103,16 @@ public class Telefone {
         }
     }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
-    /**
-     * Hash code.
-     *
-     * @return the int
-     */
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
-    /**
-     * Equals.
-     *
-     * @param obj the obj
-     * @return true, if successful
-     */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);

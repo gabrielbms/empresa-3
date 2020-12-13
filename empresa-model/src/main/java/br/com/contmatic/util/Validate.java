@@ -2,6 +2,11 @@ package br.com.contmatic.util;
 
 import java.util.InputMismatchException;
 
+/**
+ * The Class Validate.
+ * 
+ * @author gabriel.santos
+ */
 public final class Validate {
 	
 	private Validate() {

@@ -8,4 +8,3 @@ package br.com.contmatic.groups;
 public interface Put {
 
 }
-

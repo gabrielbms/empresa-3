@@ -1,5 +1,10 @@
 package br.com.contmatic.util;
 
+/**
+ * The Class Constantes.
+ * 
+ * @author gabriel.santos
+ */
 public final class Constantes {
 	
 	public static final String CPF_INVALIDO = "O CPF informado não é valido.";
