@@ -98,10 +98,10 @@ public enum TelefoneDDDType {
     }
 
     private static final List<TelefoneDDDType> DDDs = Collections.unmodifiableList(Arrays.asList(values()));
-    private static final int tamanho = DDDs.size();
-    private static final Random random = new Random();
+    private static final int TAMANHO = DDDs.size();
+    private static final Random RANDOM = new Random();
 
-    public static TelefoneDDDType DddAleatorio() {
-        return DDDs.get(random.nextInt(tamanho));
+    public static TelefoneDDDType dddAleatorio() {
+        return DDDs.get(RANDOM.nextInt(TAMANHO));
     }
 }

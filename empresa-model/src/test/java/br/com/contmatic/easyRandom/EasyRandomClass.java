@@ -137,7 +137,7 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        telefone.setDdd(TelefoneDDDType.dddAleatorio());
         telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
         if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
             telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
@@ -152,7 +152,7 @@ public class EasyRandomClass {
         Faker faker = new Faker();
         EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
-        telefone.setDdd(TelefoneDDDType.DddAleatorio());
+        telefone.setDdd(TelefoneDDDType.dddAleatorio());
         if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
             telefone.setNumero(faker.regexify(RegexType.NUMERO_CELULAR));
         } else {

@@ -51,11 +51,11 @@ public enum EstadoType {
     }
     
     private static final List<EstadoType> estados = Collections.unmodifiableList(Arrays.asList(values()));
-    private static final int tamanho = estados.size();
-    private static final Random random = new Random();
+    private static final int TAMANHO = estados.size();
+    private static final Random RANDOM = new Random();
     
     public static EstadoType estadoAleatorio()  {
-        return estados.get(random.nextInt(tamanho));
+        return estados.get(RANDOM.nextInt(TAMANHO));
     }
     
 }

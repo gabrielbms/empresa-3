@@ -74,9 +74,8 @@ public final class Validate {
 	private static boolean verificaPosicaoDosDigitosDoCpf(String cpf, char dig10, char dig11) {
 		if (dig10 == cpf.charAt(9) && dig11 == cpf.charAt(10)) {
 			return true;
-		} else {
-			return false;
 		}
+        return false;
 	}
 
 	public static boolean isCNPJ(String cnpj) {
@@ -144,8 +143,7 @@ public final class Validate {
 	private static boolean verificaPosicaoDosDigitosDoCnpj(String cnpj, char dig13, char dig14) {
 		if (dig13 == cnpj.charAt(12) && dig14 == cnpj.charAt(13)) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 }

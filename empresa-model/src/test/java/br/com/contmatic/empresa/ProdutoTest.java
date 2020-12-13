@@ -162,6 +162,7 @@ public class ProdutoTest {
     @Test(expected = IllegalArgumentException.class)
     public void deve_retornar_false_no_hashCode_com_um_produto_de_id_null() {
         Produto outroProduto = new Produto(null, "teste", 5, BigDecimal.valueOf(500.00));
+        
         assertNotEquals(produto.hashCode(), outroProduto.hashCode());
     }
 

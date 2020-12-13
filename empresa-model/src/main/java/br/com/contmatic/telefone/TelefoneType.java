@@ -33,10 +33,10 @@ public enum TelefoneType {
     }
 
     private static final List<TelefoneType> tipoTelefone = Collections.unmodifiableList(Arrays.asList(values()));
-    private static final int size = tipoTelefone.size();
-    private static final Random random = new Random();
+    private static final int SIZE = tipoTelefone.size();
+    private static final Random RANDOM = new Random();
 
     public static TelefoneType tipoTelefoneAleatorio() {
-        return tipoTelefone.get(random.nextInt(size));
+        return tipoTelefone.get(RANDOM.nextInt(SIZE));
     }
 }
