@@ -29,11 +29,6 @@ public class ClienteService {
         Document document = Document.parse(cliente.toString());
         document.append("_id", cliente.getCpf());
         database.getCollection(NAME_COLLECTION).insertOne(document);
-
-    }
-
-    public void alterar(Document query, Document where) {
-        database.getCollection(NAME_COLLECTION).updateMany(where, new Document("$set", query));
     }
 
     public void alterar(Cliente cliente) {
@@ -45,10 +40,6 @@ public class ClienteService {
         whereQuery.append("_id", cliente.getCpf());
 
         database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
-    }
-
-    public void deletar(Document document) {
-        database.getCollection(NAME_COLLECTION).deleteMany(document);
     }
 
     public void deletar(Cliente cliente) throws IOException {

@@ -66,7 +66,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_armazenar_um_Funcionario_no_banco() throws IOException {
+    public void deve_armazenar_um_funcionario_no_banco() throws IOException {
         MongoCollection<Document> collection = database.getCollection("Funcionario");
         FuncionarioService repository = new FuncionarioService(database);
         repository.salvar(randomObject.funcionarioRandomizer());
@@ -74,7 +74,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_alterar_uma_Funcionario_no_banco() throws IOException, InterruptedException {
+    public void deve_alterar_um_funcionario_no_banco() throws IOException, InterruptedException {
         MongoCollection<Document> collection = database.getCollection("Funcionario");
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
@@ -87,7 +87,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_apagar_uma_Funcionario_no_banco() throws IOException {
+    public void deve_apagar_um_funcionario_no_banco() throws IOException {
         MongoCollection<Document> collection = database.getCollection("Funcionario");
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
@@ -97,7 +97,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Funcionario_no_banco() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_funcionario_no_banco() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -106,7 +106,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Funcionario_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_funcionario_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -115,7 +115,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Funcionario_e_nao_deve_ter_valores_nulo() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_funcionario_e_nao_deve_ter_valores_nulo() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -142,7 +142,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nome_da_Funcionario() throws IOException {
+    public void deve_retornar_campo_nome_do_funcionario() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -152,7 +152,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nulos_da_Funcionario_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_nulos_do_funcionario_ao_selecionar_escolhendo_campo() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -161,7 +161,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_da_Funcionario_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_do_funcionario_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -170,7 +170,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_a_Funcionario_mesmo_nao_exista_valores() throws IOException {
+    public void deve_retornar_o_funcionario_mesmo_nao_exista_valores() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -179,7 +179,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_retornar_a_Funcionario_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+    public void deve_retornar_o_funcionario_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
@@ -188,7 +188,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_selecionar_todas_Funcionario_no_banco() throws IOException {
+    public void deve_selecionar_todos_funcionario_no_banco() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
             randomObject.funcionarioRandomizer());
@@ -201,7 +201,7 @@ public class FuncionarioServiceTest {
     }
 
     @Test
-    public void deve_selecionar_todas_Funcionario_no_banco_e_tem_que_ser_igual() throws IOException {
+    public void deve_selecionar_todos_funcionario_no_banco_e_tem_que_ser_igual() throws IOException {
         FuncionarioService repository = new FuncionarioService(database);
         List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
             randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer());

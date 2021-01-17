@@ -29,11 +29,6 @@ public class FornecedorService {
         Document document = Document.parse(fornecedor.toString());
         document.append("_id", fornecedor.getCnpj());
         database.getCollection(NAME_COLLECTION).insertOne(document);
-
-    }
-
-    public void alterar(Document query, Document where) {
-        database.getCollection(NAME_COLLECTION).updateMany(where, new Document("$set", query));
     }
 
     public void alterar(Fornecedor fornecedor) {
@@ -45,10 +40,6 @@ public class FornecedorService {
         whereQuery.append("_id", fornecedor.getCnpj());
 
         database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
-    }
-
-    public void deletar(Document document) {
-        database.getCollection(NAME_COLLECTION).deleteMany(document);
     }
 
     public void deletar(Fornecedor fornecedor) throws IOException {

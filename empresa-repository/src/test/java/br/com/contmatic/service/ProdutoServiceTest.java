@@ -68,7 +68,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_armazenar_uma_Produto_no_banco() throws IOException {
+	public void deve_armazenar_um_produto_no_banco() throws IOException {
 		MongoCollection<Document> collection = database.getCollection("Produto");
 		ProdutoService repository = new ProdutoService(database);
 		repository.salvar(randomObject.produtoRandomizerClass());
@@ -76,7 +76,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_alterar_uma_Produto_no_banco() throws IOException, InterruptedException {
+	public void deve_alterar_um_produto_no_banco() throws IOException, InterruptedException {
 		MongoCollection<Document> collection = database.getCollection("Produto");
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
@@ -89,7 +89,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_apagar_uma_Produto_no_banco() throws IOException {
+	public void deve_apagar_um_produto_no_banco() throws IOException {
 		MongoCollection<Document> collection = database.getCollection("Produto");
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
@@ -99,7 +99,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_id_uma_Produto_no_banco() throws IOException {
+	public void deve_selecionar_pelo_id_um_produto_no_banco() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -108,7 +108,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_id_uma_Produto_no_banco_e_retornar_campos_iguais_como_salvou()
+	public void deve_selecionar_pelo_id_um_produto_no_banco_e_retornar_campos_iguais_como_salvou()
 			throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
@@ -118,7 +118,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_pelo_id_uma_Produto_e_nao_deve_ter_valores_nulo() throws IOException {
+	public void deve_selecionar_pelo_id_um_produto_e_nao_deve_ter_valores_nulo() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -145,7 +145,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_nome_da_Produto() throws IOException {
+	public void deve_retornar_campo_nome_do_produto() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -154,7 +154,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_nulos_da_Produto_ao_selecionar_escolhendo_campo() throws IOException {
+	public void deve_retornar_campo_nulos_do_produto_ao_selecionar_escolhendo_campo() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -163,7 +163,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_campo_da_Produto_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
+	public void deve_retornar_campo_do_produto_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo()
 			throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
@@ -173,7 +173,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test (expected = IllegalArgumentException.class)
-	public void deve_retornar_a_Produto_mesmo_nao_exista_valores() throws IOException {
+	public void deve_retornar_o_produto_mesmo_nao_exista_valores() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -182,7 +182,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_retornar_a_Produto_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+	public void deve_retornar_o_produto_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
@@ -191,7 +191,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_todas_Produto_no_banco() throws IOException {
+	public void deve_selecionar_todos_produto_no_banco() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		List<Produto> produtos = Arrays.asList(randomObject.produtoRandomizerClass(),
 				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
@@ -210,7 +210,7 @@ public class ProdutoServiceTest {
 	}
 
 	@Test
-	public void deve_selecionar_todas_Produtos_no_banco_e_tem_que_ser_igual() throws IOException {
+	public void deve_selecionar_todos_produtos_no_banco_e_tem_que_ser_igual() throws IOException {
 		ProdutoService repository = new ProdutoService(database);
 		List<Produto> Produtos = Arrays.asList(randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
 				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());

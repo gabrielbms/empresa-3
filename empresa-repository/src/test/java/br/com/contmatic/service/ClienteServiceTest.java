@@ -75,7 +75,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_alterar_uma_cliente_no_banco() throws IOException, InterruptedException {
+    public void deve_alterar_um_cliente_no_banco() throws IOException, InterruptedException {
         MongoCollection<Document> collection = database.getCollection("cliente");
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
@@ -88,7 +88,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_apagar_uma_cliente_no_banco() throws IOException {
+    public void deve_apagar_um_cliente_no_banco() throws IOException {
         MongoCollection<Document> collection = database.getCollection("cliente");
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
@@ -98,7 +98,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cpf_uma_cliente_no_banco() throws IOException {
+    public void deve_selecionar_pelo_cpf_um_cliente_no_banco() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -107,7 +107,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cpf_uma_cliente_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
+    public void deve_selecionar_pelo_cpf_um_cliente_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -116,7 +116,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cpf_uma_cliente_e_nao_deve_ter_valores_nulo() throws IOException {
+    public void deve_selecionar_pelo_cpf_um_cliente_e_nao_deve_ter_valores_nulo() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -143,7 +143,7 @@ public class ClienteServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nome_da_cliente() throws IOException {
+    public void deve_retornar_campo_nome_do_cliente() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -153,7 +153,7 @@ public class ClienteServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nulos_da_cliente_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_nulos_do_cliente_ao_selecionar_escolhendo_campo() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -162,7 +162,7 @@ public class ClienteServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_da_cliente_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_do_cliente_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -171,7 +171,7 @@ public class ClienteServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_a_cliente_mesmo_nao_exista_valores() throws IOException {
+    public void deve_retornar_ao_cliente_mesmo_nao_exista_valores() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -180,7 +180,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_retornar_a_cliente_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+    public void deve_retornar_ao_cliente_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -202,7 +202,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deve_selecionar_todas_cliente_no_banco_e_tem_que_ser_igual() throws IOException {
+    public void deve_selecionar_todos_cliente_no_banco_e_tem_que_ser_igual() throws IOException {
         ClienteService repository = new ClienteService(database);
         List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
             randomObject.clienteRandomizer(), randomObject.clienteRandomizer());

@@ -29,11 +29,6 @@ public class FuncionarioService {
         Document document = Document.parse(Funcionario.toString());
         document.append("_id", Funcionario.getCpf());
         database.getCollection(NAME_COLLECTION).insertOne(document);
-
-    }
-
-    public void alterar(Document query, Document where) {
-        database.getCollection(NAME_COLLECTION).updateMany(where, new Document("$set", query));
     }
 
     public void alterar(Funcionario Funcionario) {
@@ -45,10 +40,6 @@ public class FuncionarioService {
         whereQuery.append("_id", Funcionario.getCpf());
 
         database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
-    }
-
-    public void deletar(Document document) {
-        database.getCollection(NAME_COLLECTION).deleteMany(document);
     }
 
     public void deletar(Funcionario Funcionario) throws IOException {

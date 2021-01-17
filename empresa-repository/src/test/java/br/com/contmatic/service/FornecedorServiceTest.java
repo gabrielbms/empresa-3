@@ -66,7 +66,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_armazenar_uma_Fornecedor_no_banco() throws IOException {
+    public void deve_armazenar_um_fornecedor_no_banco() throws IOException {
         MongoCollection<Document> collection = database.getCollection("Fornecedor");
         FornecedorService repository = new FornecedorService(database);
         repository.salvar(randomObject.fornecedorRandomizer());
@@ -74,7 +74,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_alterar_uma_Fornecedor_no_banco() throws IOException, InterruptedException {
+    public void deve_alterar_um_fornecedor_no_banco() throws IOException, InterruptedException {
         MongoCollection<Document> collection = database.getCollection("Fornecedor");
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
@@ -87,7 +87,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_apagar_uma_Fornecedor_no_banco() throws IOException {
+    public void deve_apagar_um_fornecedor_no_banco() throws IOException {
         MongoCollection<Document> collection = database.getCollection("Fornecedor");
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
@@ -97,7 +97,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Fornecedor_no_banco() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_fornecedor_no_banco() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -106,7 +106,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Fornecedor_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_fornecedor_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -115,7 +115,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_selecionar_pelo_cnpj_uma_Fornecedor_e_nao_deve_ter_valores_nulo() throws IOException {
+    public void deve_selecionar_pelo_cnpj_um_fornecedor_e_nao_deve_ter_valores_nulo() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -142,7 +142,7 @@ public class FornecedorServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nome_da_Fornecedor() throws IOException {
+    public void deve_retornar_campo_nome_do_fornecedor() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -152,7 +152,7 @@ public class FornecedorServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nulos_da_Fornecedor_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_nulos_do_fornecedor_ao_selecionar_escolhendo_campo() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -161,7 +161,7 @@ public class FornecedorServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_da_Fornecedor_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
+    public void deve_retornar_campo_do_fornecedor_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -170,7 +170,7 @@ public class FornecedorServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_a_Fornecedor_mesmo_nao_exista_valores() throws IOException {
+    public void deve_retornar_o_fornecedor_mesmo_nao_exista_valores() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -179,7 +179,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_retornar_a_Fornecedor_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
+    public void deve_retornar_o_fornecedor_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
@@ -188,7 +188,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_selecionar_todas_Fornecedor_no_banco() throws IOException {
+    public void deve_selecionar_todos_fornecedor_no_banco() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(), 
             randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
@@ -201,7 +201,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    public void deve_selecionar_todas_Fornecedor_no_banco_e_tem_que_ser_igual() throws IOException {
+    public void deve_selecionar_todos_fornecedor_no_banco_e_tem_que_ser_igual() throws IOException {
         FornecedorService repository = new FornecedorService(database);
         List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(),
             randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
