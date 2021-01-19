@@ -123,6 +123,32 @@ public class EmpresaServiceTest {
         Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
         assertFalse(empresaBuscada.toString().contains("null"));
     }
+    
+    @Test
+    public void deve_selecionar_todas_empresa_no_banco() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(), 
+            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
+        for(Empresa empresa : empresas) {
+            repository.salvar(empresa);
+        }
+
+        List<Empresa> empresaBuscada = repository.selecionar();
+        assertThat(empresaBuscada.size(), is(empresas.size()));
+    }
+
+    @Test
+    public void deve_selecionar_todas_empresa_no_banco_e_tem_que_ser_igual() throws IOException {
+        EmpresaService repository = new EmpresaService(database);
+        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(),
+            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
+        for(Empresa empresa : empresas) {
+            repository.salvar(empresa);
+        }
+
+        List<Empresa> empresaBuscada = repository.selecionar();
+        assertThat(empresaBuscada, is(empresas));
+    }
 
     @Test
     public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
@@ -168,7 +194,7 @@ public class EmpresaServiceTest {
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "site", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
         assertTrue(empresaBuscada.toString().contains("null"));
     }
-
+    
     @Test(expected = IllegalArgumentException.class)
     public void deve_retornar_a_empresa_mesmo_nao_exista_valores() throws IOException {
         EmpresaService repository = new EmpresaService(database);
@@ -185,32 +211,6 @@ public class EmpresaServiceTest {
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
         assertThat(empresaBuscada.getCnpj(), equalTo(empresa.getCnpj()));
-    }
-
-    @Test
-    public void deve_selecionar_todas_empresa_no_banco() throws IOException {
-        EmpresaService repository = new EmpresaService(database);
-        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(), 
-            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
-        for(Empresa empresa : empresas) {
-            repository.salvar(empresa);
-        }
-
-        List<Empresa> empresaBuscada = repository.selecionar();
-        assertThat(empresaBuscada.size(), is(empresas.size()));
-    }
-
-    @Test
-    public void deve_selecionar_todas_empresa_no_banco_e_tem_que_ser_igual() throws IOException {
-        EmpresaService repository = new EmpresaService(database);
-        List<Empresa> empresas = Arrays.asList(randomObject.empresaRandomizer(), randomObject.empresaRandomizer(),
-            randomObject.empresaRandomizer(), randomObject.empresaRandomizer());
-        for(Empresa empresa : empresas) {
-            repository.salvar(empresa);
-        }
-
-        List<Empresa> empresaBuscada = repository.selecionar();
-        assertThat(empresaBuscada, is(empresas));
     }
 
     @After

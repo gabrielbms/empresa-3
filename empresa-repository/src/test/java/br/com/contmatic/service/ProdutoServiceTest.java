@@ -126,6 +126,38 @@ public class ProdutoServiceTest {
 		Produto ProdutoBuscada = repository.selecionar(Produto.getId());
 		assertFalse(ProdutoBuscada.toString().contains("null"));
 	}
+	
+    @Test
+    public void deve_selecionar_todos_produto_no_banco() throws IOException {
+        ProdutoService repository = new ProdutoService(database);
+        List<Produto> produtos = Arrays.asList(randomObject.produtoRandomizerClass(),
+                randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
+                randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());
+        for (Produto produto : produtos) {
+            for (int i = 0; i < 5; i++) {
+                if (produto.getId().equals(produtos.get(i).getId())) {
+                    produto.setId(produto.getId() + randomiza(3));
+                }
+            }
+            repository.salvar(produto);
+        }
+
+        List<Produto> ProdutoBuscada = repository.selecionar();
+        assertThat(ProdutoBuscada.size(), is(produtos.size()));
+    }
+
+    @Test
+    public void deve_selecionar_todos_produtos_no_banco_e_tem_que_ser_igual() throws IOException {
+        ProdutoService repository = new ProdutoService(database);
+        List<Produto> Produtos = Arrays.asList(randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
+                randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());
+        for (Produto Produto : Produtos) {
+            repository.salvar(Produto);
+        }
+
+        List<Produto> ProdutoBuscada = repository.selecionar();
+        assertThat(ProdutoBuscada, is(Produtos));
+    }
 
 	@Test
 	public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
@@ -189,38 +221,6 @@ public class ProdutoServiceTest {
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Produto.getId());
 		assertThat(ProdutoBuscada.getId(), equalTo(Produto.getId()));
-	}
-
-	@Test
-	public void deve_selecionar_todos_produto_no_banco() throws IOException {
-		ProdutoService repository = new ProdutoService(database);
-		List<Produto> produtos = Arrays.asList(randomObject.produtoRandomizerClass(),
-				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
-				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());
-		for (Produto produto : produtos) {
-			for (int i = 0; i < 5; i++) {
-				if (produto.getId().equals(produtos.get(i).getId())) {
-					produto.setId(produto.getId() + randomiza(3));
-				}
-			}
-			repository.salvar(produto);
-		}
-
-		List<Produto> ProdutoBuscada = repository.selecionar();
-		assertThat(ProdutoBuscada.size(), is(produtos.size()));
-	}
-
-	@Test
-	public void deve_selecionar_todos_produtos_no_banco_e_tem_que_ser_igual() throws IOException {
-		ProdutoService repository = new ProdutoService(database);
-		List<Produto> Produtos = Arrays.asList(randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass(),
-				randomObject.produtoRandomizerClass(), randomObject.produtoRandomizerClass());
-		for (Produto Produto : Produtos) {
-			repository.salvar(Produto);
-		}
-
-		List<Produto> ProdutoBuscada = repository.selecionar();
-		assertThat(ProdutoBuscada, is(Produtos));
 	}
 	
 	@After

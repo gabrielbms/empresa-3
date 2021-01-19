@@ -123,6 +123,32 @@ public class FornecedorServiceTest {
         Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
         assertFalse(FornecedorBuscada.toString().contains("null"));
     }
+    
+    @Test
+    public void deve_selecionar_todos_fornecedor_no_banco() throws IOException {
+        FornecedorService repository = new FornecedorService(database);
+        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(), 
+            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
+        for(Fornecedor Fornecedor : Fornecedors) {
+            repository.salvar(Fornecedor);
+        }
+
+        List<Fornecedor> FornecedorBuscada = repository.selecionar();
+        assertThat(FornecedorBuscada.size(), is(Fornecedors.size()));
+    }
+
+    @Test
+    public void deve_selecionar_todos_fornecedor_no_banco_e_tem_que_ser_igual() throws IOException {
+        FornecedorService repository = new FornecedorService(database);
+        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(),
+            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
+        for(Fornecedor Fornecedor : Fornecedors) {
+            repository.salvar(Fornecedor);
+        }
+
+        List<Fornecedor> FornecedorBuscada = repository.selecionar();
+        assertThat(FornecedorBuscada, is(Fornecedors));
+    }
 
     @Test
     public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
@@ -186,32 +212,6 @@ public class FornecedorServiceTest {
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
         assertThat(FornecedorBuscada.getCnpj(), equalTo(Fornecedor.getCnpj()));
-    }
-
-    @Test
-    public void deve_selecionar_todos_fornecedor_no_banco() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(), 
-            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
-        for(Fornecedor Fornecedor : Fornecedors) {
-            repository.salvar(Fornecedor);
-        }
-
-        List<Fornecedor> FornecedorBuscada = repository.selecionar();
-        assertThat(FornecedorBuscada.size(), is(Fornecedors.size()));
-    }
-
-    @Test
-    public void deve_selecionar_todos_fornecedor_no_banco_e_tem_que_ser_igual() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(),
-            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
-        for(Fornecedor Fornecedor : Fornecedors) {
-            repository.salvar(Fornecedor);
-        }
-
-        List<Fornecedor> FornecedorBuscada = repository.selecionar();
-        assertThat(FornecedorBuscada, is(Fornecedors));
     }
 
     @After

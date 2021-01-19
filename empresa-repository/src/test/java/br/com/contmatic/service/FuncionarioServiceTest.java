@@ -123,6 +123,32 @@ public class FuncionarioServiceTest {
         Funcionario FuncionarioBuscada = repository.selecionar(Funcionario.getCpf());
         assertFalse(FuncionarioBuscada.toString().contains("null"));
     }
+    
+    @Test
+    public void deve_selecionar_todos_funcionario_no_banco() throws IOException {
+        FuncionarioService repository = new FuncionarioService(database);
+        List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
+            randomObject.funcionarioRandomizer());
+        for(Funcionario Funcionario : Funcionarios) {
+            repository.salvar(Funcionario);
+        }
+
+        List<Funcionario> FuncionarioBuscada = repository.selecionar();
+        assertThat(FuncionarioBuscada.size(), is(Funcionarios.size()));
+    }
+
+    @Test
+    public void deve_selecionar_todos_funcionario_no_banco_e_tem_que_ser_igual() throws IOException {
+        FuncionarioService repository = new FuncionarioService(database);
+        List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
+            randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer());
+        for(Funcionario Funcionario : Funcionarios) {
+            repository.salvar(Funcionario);
+        }
+
+        List<Funcionario> FuncionarioBuscada = repository.selecionar();
+        assertThat(FuncionarioBuscada, is(Funcionarios));
+    }
 
     @Test
     public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
@@ -186,32 +212,6 @@ public class FuncionarioServiceTest {
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Funcionario.getCpf());
         assertThat(FuncionarioBuscada.getCpf(), equalTo(Funcionario.getCpf()));
-    }
-
-    @Test
-    public void deve_selecionar_todos_funcionario_no_banco() throws IOException {
-        FuncionarioService repository = new FuncionarioService(database);
-        List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
-            randomObject.funcionarioRandomizer());
-        for(Funcionario Funcionario : Funcionarios) {
-            repository.salvar(Funcionario);
-        }
-
-        List<Funcionario> FuncionarioBuscada = repository.selecionar();
-        assertThat(FuncionarioBuscada.size(), is(Funcionarios.size()));
-    }
-
-    @Test
-    public void deve_selecionar_todos_funcionario_no_banco_e_tem_que_ser_igual() throws IOException {
-        FuncionarioService repository = new FuncionarioService(database);
-        List<Funcionario> Funcionarios = Arrays.asList(randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer(),
-            randomObject.funcionarioRandomizer(), randomObject.funcionarioRandomizer());
-        for(Funcionario Funcionario : Funcionarios) {
-            repository.salvar(Funcionario);
-        }
-
-        List<Funcionario> FuncionarioBuscada = repository.selecionar();
-        assertThat(FuncionarioBuscada, is(Funcionarios));
     }
 
     @After

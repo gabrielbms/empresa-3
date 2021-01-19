@@ -124,6 +124,32 @@ public class ClienteServiceTest {
         Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
         assertFalse(clienteBuscado.toString().contains("null"));
     }
+    
+    @Test
+    public void deve_selecionar_todas_cliente_no_banco() throws IOException {
+        ClienteService repository = new ClienteService(database);
+        List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
+            randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
+        for(Cliente cliente : clientes) {
+            repository.salvar(cliente);
+        }
+
+        List<Cliente> clienteBuscado = repository.selecionar();
+        assertThat(clienteBuscado.size(), is(clientes.size()));
+    }
+
+    @Test
+    public void deve_selecionar_todos_cliente_no_banco_e_tem_que_ser_igual() throws IOException {
+        ClienteService repository = new ClienteService(database);
+        List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
+            randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
+        for(Cliente cliente : clientes) {
+            repository.salvar(cliente);
+        }
+
+        List<Cliente> clienteBuscada = repository.selecionar();
+        assertThat(clienteBuscada, is(clientes));
+    }
 
     @Test
     public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
@@ -187,32 +213,6 @@ public class ClienteServiceTest {
         repository.salvar(cliente);
         Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
         assertThat(clienteBuscado.getCpf(), equalTo(cliente.getCpf()));
-    }
-
-    @Test
-    public void deve_selecionar_todas_cliente_no_banco() throws IOException {
-        ClienteService repository = new ClienteService(database);
-        List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
-            randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
-        for(Cliente cliente : clientes) {
-            repository.salvar(cliente);
-        }
-
-        List<Cliente> clienteBuscado = repository.selecionar();
-        assertThat(clienteBuscado.size(), is(clientes.size()));
-    }
-
-    @Test
-    public void deve_selecionar_todos_cliente_no_banco_e_tem_que_ser_igual() throws IOException {
-        ClienteService repository = new ClienteService(database);
-        List<Cliente> clientes = Arrays.asList(randomObject.clienteRandomizer(), randomObject.clienteRandomizer(),
-            randomObject.clienteRandomizer(), randomObject.clienteRandomizer());
-        for(Cliente cliente : clientes) {
-            repository.salvar(cliente);
-        }
-
-        List<Cliente> clienteBuscada = repository.selecionar();
-        assertThat(clienteBuscada, is(clientes));
     }
 
     @After
