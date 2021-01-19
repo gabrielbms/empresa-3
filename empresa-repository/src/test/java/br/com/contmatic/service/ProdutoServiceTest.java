@@ -72,7 +72,7 @@ public class ProdutoServiceTest {
 		MongoCollection<Document> collection = database.getCollection("Produto");
 		ProdutoService repository = new ProdutoService(database);
 		repository.salvar(randomObject.produtoRandomizerClass());
-		assertTrue("Deve armazenar um Produto no banco", collection.estimatedDocumentCount() == 1);
+		assertTrue("Deve armazenar um produto no banco", collection.estimatedDocumentCount() == 1);
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class ProdutoServiceTest {
 		repository.alterar(Produto);
 		FindIterable<Document> findIterable = collection.find(new Document("_id", Produto.getId()));
 		Produto novaProduto = new ProdutoResourceAssembly().toResource(findIterable.first());
-		assertThat("Deve alterar uma Produto no banco", Produto.getNome(), equalTo(novaProduto.getNome()));
+		assertThat("Deve alterar um produto no banco", Produto.getNome(), equalTo(novaProduto.getNome()));
 	}
 
 	@Test
@@ -94,10 +94,21 @@ public class ProdutoServiceTest {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
-	      assertTrue("Deve armazenar uma Produto no banco", collection.estimatedDocumentCount() == 1);
+	      assertTrue("Deve armazenar um produto no banco", collection.estimatedDocumentCount() == 1);
 		repository.deletar(Produto);
-		assertTrue("Deve armazenar uma Produto no banco", collection.estimatedDocumentCount() == 0);
+		assertTrue("Deve armazenar um produto no banco", collection.estimatedDocumentCount() == 0);
 	}
+	
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_apagar_um_produto_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("{classe}");
+        ProdutoService repository = new ProdutoService(database);
+        Produto produto = randomObject.produtoRandomizerClass();
+        repository.salvar(produto);
+        Produto produtoBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
+        repository.deletar(produtoBuscado);
+        assertTrue("Deve armazenar um produto no banco", collection.estimatedDocumentCount() == 0);
+    }
 
 	@Test
 	public void deve_selecionar_pelo_id_um_produto_no_banco() throws IOException {
@@ -105,7 +116,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Produto.getId());
-		assertTrue("Deve armazenar uma Produto no banco", ProdutoBuscada.getId().equals(Produto.getId()));
+		assertTrue("Deve armazenar um produto no banco", ProdutoBuscada.getId().equals(Produto.getId()));
 	}
 
 	@Test

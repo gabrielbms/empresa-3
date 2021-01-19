@@ -97,6 +97,17 @@ public class ClienteServiceTest {
         repository.deletar(cliente);
         assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 0);
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_apagar_um_cliente_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("cliente");
+        ClienteService repository = new ClienteService(database);
+        Cliente cliente = randomObject.clienteRandomizer();
+        repository.salvar(cliente);
+        Cliente clienteBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
+        repository.deletar(clienteBuscado);
+        assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 0);
+    }
 
     @Test
     public void deve_selecionar_pelo_cpf_um_cliente_no_banco() throws IOException {

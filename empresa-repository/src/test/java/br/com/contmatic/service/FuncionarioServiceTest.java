@@ -70,7 +70,7 @@ public class FuncionarioServiceTest {
         MongoCollection<Document> collection = database.getCollection("Funcionario");
         FuncionarioService repository = new FuncionarioService(database);
         repository.salvar(randomObject.funcionarioRandomizer());
-        assertTrue("Deve armazenar uma Funcionario no banco", collection.estimatedDocumentCount() == 1);
+        assertTrue("Deve armazenar um funcionario no banco", collection.estimatedDocumentCount() == 1);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FuncionarioServiceTest {
         repository.alterar(Funcionario);
         FindIterable<Document> findIterable = collection.find(new Document("_id", Funcionario.getCpf()));
         Funcionario novaFuncionario = new FuncionarioResourceAssembly().toResource(findIterable.first());
-        assertThat("Deve alterar uma Funcionario no banco", Funcionario.getNome(), equalTo(novaFuncionario.getNome()));
+        assertThat("Deve alterar um funcionario no banco", Funcionario.getNome(), equalTo(novaFuncionario.getNome()));
     }
 
     @Test
@@ -92,9 +92,20 @@ public class FuncionarioServiceTest {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
-        assertTrue("Deve armazenar uma Funcionario no banco", collection.estimatedDocumentCount() == 1);
+        assertTrue("Deve armazenar um funcionario no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(Funcionario);
-        assertTrue("Deve armazenar uma Funcionario no banco", collection.estimatedDocumentCount() == 0);
+        assertTrue("Deve armazenar um funcionario no banco", collection.estimatedDocumentCount() == 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_apagar_um_funcionario_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("{classe}");
+        FuncionarioService repository = new FuncionarioService(database);
+        Funcionario funcionario = randomObject.funcionarioRandomizer();
+        repository.salvar(funcionario);
+        Funcionario funcionarioBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
+        repository.deletar(funcionarioBuscado);
+        assertTrue("Deve armazenar um funcionario no banco", collection.estimatedDocumentCount() == 0);
     }
 
     @Test
@@ -103,7 +114,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Funcionario.getCpf());
-        assertTrue("Deve armazenar uma Funcionario no banco", FuncionarioBuscada.getCpf().equals(Funcionario.getCpf()));
+        assertTrue("Deve armazenar um funcionario no banco", FuncionarioBuscada.getCpf().equals(Funcionario.getCpf()));
     }
 
     @Test

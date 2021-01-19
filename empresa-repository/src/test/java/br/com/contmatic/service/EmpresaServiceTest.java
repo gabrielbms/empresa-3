@@ -96,6 +96,17 @@ public class EmpresaServiceTest {
         repository.deletar(empresa);
         assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 0);
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_apagar_uma_empresa_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("empresa");
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
+        repository.deletar(empresaBuscada);
+        assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 0);
+    }
 
     @Test
     public void deve_selecionar_pelo_cnpj_uma_empresa_no_banco() throws IOException {

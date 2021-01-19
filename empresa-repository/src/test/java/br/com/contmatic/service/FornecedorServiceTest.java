@@ -70,7 +70,7 @@ public class FornecedorServiceTest {
         MongoCollection<Document> collection = database.getCollection("Fornecedor");
         FornecedorService repository = new FornecedorService(database);
         repository.salvar(randomObject.fornecedorRandomizer());
-        assertTrue("Deve armazenar uma Fornecedor no banco", collection.estimatedDocumentCount() == 1);
+        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 1);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FornecedorServiceTest {
         repository.alterar(Fornecedor);
         FindIterable<Document> findIterable = collection.find(new Document("_id", Fornecedor.getCnpj()));
         Fornecedor novaFornecedor = new FornecedorResourceAssembly().toResource(findIterable.first());
-        assertThat("Deve alterar uma Fornecedor no banco", Fornecedor.getNome(), equalTo(novaFornecedor.getNome()));
+        assertThat("Deve alterar um fornecedor no banco", Fornecedor.getNome(), equalTo(novaFornecedor.getNome()));
     }
 
     @Test
@@ -92,9 +92,20 @@ public class FornecedorServiceTest {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
-        assertTrue("Deve armazenar uma Fornecedor no banco", collection.estimatedDocumentCount() == 1);
+        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(Fornecedor);
-        assertTrue("Deve armazenar uma Fornecedor no banco", collection.estimatedDocumentCount() == 0);
+        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_apagar_um_fornecedor_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("{classe}");
+        FornecedorService repository = new FornecedorService(database);
+        Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+        repository.salvar(fornecedor);
+        Fornecedor fornecedorBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
+        repository.deletar(fornecedorBuscado);
+        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 0);
     }
 
     @Test
@@ -103,7 +114,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertTrue("Deve armazenar uma Fornecedor no banco", FornecedorBuscada.getCnpj().equals(Fornecedor.getCnpj()));
+        assertTrue("Deve armazenar um fornecedor no banco", FornecedorBuscada.getCnpj().equals(Fornecedor.getCnpj()));
     }
 
     @Test
