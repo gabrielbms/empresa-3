@@ -92,6 +92,7 @@ public class EmpresaServiceTest {
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
+        assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(empresa);
         assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 0);
     }
@@ -102,7 +103,7 @@ public class EmpresaServiceTest {
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(empresa.getCnpj());
-        assertTrue("Deve armazenar uma empresa no banco", empresaBuscada != null);
+        assertTrue("Deve armazenar uma empresa no banco", empresaBuscada.getCnpj().equals(empresa.getCnpj()));
     }
 
     @Test
@@ -148,7 +149,6 @@ public class EmpresaServiceTest {
         repository.salvar(empresa);
         Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
         assertTrue(empresaBuscada.toString().contains("\"nome\":\"" + empresa.getNome() + "\""));
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -156,7 +156,7 @@ public class EmpresaServiceTest {
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
-        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "site")).get(0);
         assertTrue(empresaBuscada.toString().contains("null"));
     }
 
@@ -165,7 +165,7 @@ public class EmpresaServiceTest {
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
-        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "email", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
+        Empresa empresaBuscada = repository.selecionar(Arrays.asList("nome", "site", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
         assertTrue(empresaBuscada.toString().contains("null"));
     }
 

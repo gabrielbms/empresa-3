@@ -92,6 +92,7 @@ public class FornecedorServiceTest {
         FornecedorService repository = new FornecedorService(database);
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
+        assertTrue("Deve armazenar uma Fornecedor no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(Fornecedor);
         assertTrue("Deve armazenar uma Fornecedor no banco", collection.estimatedDocumentCount() == 0);
     }
@@ -102,7 +103,7 @@ public class FornecedorServiceTest {
         Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
         repository.salvar(Fornecedor);
         Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertTrue("Deve armazenar uma Fornecedor no banco", FornecedorBuscada != null);
+        assertTrue("Deve armazenar uma Fornecedor no banco", FornecedorBuscada.getCnpj().equals(Fornecedor.getCnpj()));
     }
 
     @Test

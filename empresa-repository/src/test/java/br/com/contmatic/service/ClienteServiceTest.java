@@ -93,6 +93,7 @@ public class ClienteServiceTest {
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
+        assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(cliente);
         assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 0);
     }
@@ -103,7 +104,7 @@ public class ClienteServiceTest {
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
         Cliente clienteBuscado = repository.selecionar(cliente.getCpf());
-        assertTrue("Deve armazenar um cliente no banco", clienteBuscado != null);
+        assertTrue("Deve armazenar um cliente no banco", clienteBuscado.getCpf().equals(cliente.getCpf()));
     }
 
     @Test

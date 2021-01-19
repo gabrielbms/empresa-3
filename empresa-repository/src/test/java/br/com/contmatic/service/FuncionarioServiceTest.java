@@ -92,6 +92,7 @@ public class FuncionarioServiceTest {
         FuncionarioService repository = new FuncionarioService(database);
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
+        assertTrue("Deve armazenar uma Funcionario no banco", collection.estimatedDocumentCount() == 1);
         repository.deletar(Funcionario);
         assertTrue("Deve armazenar uma Funcionario no banco", collection.estimatedDocumentCount() == 0);
     }
@@ -102,7 +103,7 @@ public class FuncionarioServiceTest {
         Funcionario Funcionario = randomObject.funcionarioRandomizer();
         repository.salvar(Funcionario);
         Funcionario FuncionarioBuscada = repository.selecionar(Funcionario.getCpf());
-        assertTrue("Deve armazenar uma Funcionario no banco", FuncionarioBuscada != null);
+        assertTrue("Deve armazenar uma Funcionario no banco", FuncionarioBuscada.getCpf().equals(Funcionario.getCpf()));
     }
 
     @Test

@@ -94,6 +94,7 @@ public class ProdutoServiceTest {
 		ProdutoService repository = new ProdutoService(database);
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
+	      assertTrue("Deve armazenar uma Produto no banco", collection.estimatedDocumentCount() == 1);
 		repository.deletar(Produto);
 		assertTrue("Deve armazenar uma Produto no banco", collection.estimatedDocumentCount() == 0);
 	}
@@ -104,7 +105,7 @@ public class ProdutoServiceTest {
 		Produto Produto = randomObject.produtoRandomizerClass();
 		repository.salvar(Produto);
 		Produto ProdutoBuscada = repository.selecionar(Produto.getId());
-		assertTrue("Deve armazenar uma Produto no banco", ProdutoBuscada != null);
+		assertTrue("Deve armazenar uma Produto no banco", ProdutoBuscada.getId().equals(Produto.getId()));
 	}
 
 	@Test
