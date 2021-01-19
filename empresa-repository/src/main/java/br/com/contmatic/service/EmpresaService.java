@@ -17,7 +17,7 @@ import br.com.contmatic.empresa.Empresa;
 
 public class EmpresaService {
 
-    private static final String NAME_COLLECTION = "empresa";
+    private static final String NAME_COLLECTION = "Empresa";
 
     private MongoDatabase database;
 

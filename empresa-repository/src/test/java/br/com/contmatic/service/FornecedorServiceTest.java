@@ -85,6 +85,19 @@ public class FornecedorServiceTest {
         Fornecedor novaFornecedor = new FornecedorResourceAssembly().toResource(findIterable.first());
         assertThat("Deve alterar um fornecedor no banco", Fornecedor.getNome(), equalTo(novaFornecedor.getNome()));
     }
+    
+    @Test
+    public void deve_alterar_um_fornecedor_selecionado_no_banco() throws IOException { 
+        MongoCollection<Document> collection = database.getCollection("Fornecedor");
+        FornecedorService repository = new FornecedorService(database);
+        Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+        repository.salvar(fornecedor);
+        fornecedor.setNome("Teste");
+        repository.alterar(fornecedor);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", fornecedor.getCnpj()));
+        Fornecedor novoFornecedor = new FornecedorResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar um fornecedor no banco", fornecedor.getNome(), equalTo(novoFornecedor.getNome()));
+    }
 
     @Test
     public void deve_apagar_um_fornecedor_no_banco() throws IOException {

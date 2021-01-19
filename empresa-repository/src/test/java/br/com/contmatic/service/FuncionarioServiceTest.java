@@ -85,6 +85,19 @@ public class FuncionarioServiceTest {
         Funcionario novaFuncionario = new FuncionarioResourceAssembly().toResource(findIterable.first());
         assertThat("Deve alterar um funcionario no banco", Funcionario.getNome(), equalTo(novaFuncionario.getNome()));
     }
+    
+    @Test
+    public void deve_alterar_um_funcionario_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("Funcionario");
+        FuncionarioService repository = new FuncionarioService(database);
+        Funcionario funcionario = randomObject.funcionarioRandomizer();
+        repository.salvar(funcionario);
+        funcionario.setNome("Teste");
+        repository.alterar(funcionario);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", funcionario.getCpf()));
+        Funcionario novoFuncionario = new FuncionarioResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar uma funcionario no banco", funcionario.getNome(), equalTo(novoFuncionario.getNome()));
+    }
 
     @Test
     public void deve_apagar_um_funcionario_no_banco() throws IOException {

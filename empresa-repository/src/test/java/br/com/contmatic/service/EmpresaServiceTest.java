@@ -61,13 +61,13 @@ public class EmpresaServiceTest {
 
     @Before
     public void setUp() {
-        database = mongo.getDatabase("empresa");
-        database.createCollection("empresa");
+        database = mongo.getDatabase("Empresa");
+        database.createCollection("Empresa");
     }
 
     @Test
     public void deve_armazenar_uma_empresa_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("empresa");
+        MongoCollection<Document> collection = database.getCollection("Empresa");
         EmpresaService repository = new EmpresaService(database);
         repository.salvar(randomObject.empresaRandomizer());
         assertTrue("Deve armazenar uma empresa no banco", collection.estimatedDocumentCount() == 1);
@@ -75,7 +75,20 @@ public class EmpresaServiceTest {
 
     @Test
     public void deve_alterar_uma_empresa_no_banco() throws IOException, InterruptedException {
-        MongoCollection<Document> collection = database.getCollection("empresa");
+        MongoCollection<Document> collection = database.getCollection("Empresa");
+        EmpresaService repository = new EmpresaService(database);
+        Empresa empresa = randomObject.empresaRandomizer();
+        repository.salvar(empresa);
+        empresa.setNome("Teste");
+        repository.alterar(empresa);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", empresa.getCnpj()));
+        Empresa novaEmpresa = new EmpresaResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar uma empresa no banco", empresa.getNome(), equalTo(novaEmpresa.getNome()));
+    }
+    
+    @Test
+    public void deve_alterar_uma_empresa_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("Empresa");
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
@@ -88,7 +101,7 @@ public class EmpresaServiceTest {
 
     @Test
     public void deve_apagar_uma_empresa_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("empresa");
+        MongoCollection<Document> collection = database.getCollection("Empresa");
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);
@@ -99,7 +112,7 @@ public class EmpresaServiceTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void deve_apagar_uma_empresa_selecionado_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("empresa");
+        MongoCollection<Document> collection = database.getCollection("Empresa");
         EmpresaService repository = new EmpresaService(database);
         Empresa empresa = randomObject.empresaRandomizer();
         repository.salvar(empresa);

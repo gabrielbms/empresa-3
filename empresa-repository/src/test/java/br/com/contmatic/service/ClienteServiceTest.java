@@ -62,13 +62,13 @@ public class ClienteServiceTest {
 
     @Before
     public void setUp() {
-        database = mongo.getDatabase("empresa");
-        database.createCollection("cliente");
+        database = mongo.getDatabase("Empresa");
+        database.createCollection("Cliente");
     }
 
     @Test
     public void deve_armazenar_um_cliente_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("cliente");
+        MongoCollection<Document> collection = database.getCollection("Cliente");
         ClienteService repository = new ClienteService(database);
         repository.salvar(randomObject.clienteRandomizer());
         assertTrue("Deve armazenar um cliente no banco", collection.estimatedDocumentCount() == 1);
@@ -76,7 +76,20 @@ public class ClienteServiceTest {
 
     @Test
     public void deve_alterar_um_cliente_no_banco() throws IOException, InterruptedException {
-        MongoCollection<Document> collection = database.getCollection("cliente");
+        MongoCollection<Document> collection = database.getCollection("Cliente");
+        ClienteService repository = new ClienteService(database);
+        Cliente cliente = randomObject.clienteRandomizer();
+        repository.salvar(cliente);
+        cliente.setNome("Teste");
+        repository.alterar(cliente);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", cliente.getCpf()));
+        Cliente novoCliente = new ClienteResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar um cliente no banco", cliente.getNome(), equalTo(novoCliente.getNome()));
+    }
+    
+    @Test
+    public void deve_alterar_um_cliente_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("Cliente");
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -89,7 +102,7 @@ public class ClienteServiceTest {
 
     @Test
     public void deve_apagar_um_cliente_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("cliente");
+        MongoCollection<Document> collection = database.getCollection("Cliente");
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);
@@ -100,7 +113,7 @@ public class ClienteServiceTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void deve_apagar_um_cliente_selecionado_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("cliente");
+        MongoCollection<Document> collection = database.getCollection("Cliente");
         ClienteService repository = new ClienteService(database);
         Cliente cliente = randomObject.clienteRandomizer();
         repository.salvar(cliente);

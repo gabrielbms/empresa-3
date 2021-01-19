@@ -87,6 +87,19 @@ public class ProdutoServiceTest {
 		Produto novaProduto = new ProdutoResourceAssembly().toResource(findIterable.first());
 		assertThat("Deve alterar um produto no banco", Produto.getNome(), equalTo(novaProduto.getNome()));
 	}
+	
+    @Test
+    public void deve_alterar_um_produto_selecionado_no_banco() throws IOException {
+        MongoCollection<Document> collection = database.getCollection("Produto");
+        ProdutoService repository = new ProdutoService(database);
+        Produto produto = randomObject.produtoRandomizerClass();
+        repository.salvar(produto);
+        produto.setNome("Teste");
+        repository.alterar(produto);
+        FindIterable<Document> findIterable = collection.find(new Document("_id", produto.getId()));
+        Produto novoProduto = new ProdutoResourceAssembly().toResource(findIterable.first());
+        assertThat("Deve alterar um produto no banco", produto.getNome(), equalTo(novoProduto.getNome()));
+    }
 
 	@Test
 	public void deve_apagar_um_produto_no_banco() throws IOException {

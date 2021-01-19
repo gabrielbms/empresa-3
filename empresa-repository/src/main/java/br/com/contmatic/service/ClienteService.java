@@ -17,7 +17,7 @@ import br.com.contmatic.empresa.Cliente;
 
 public class ClienteService {
 
-    private static final String NAME_COLLECTION = "cliente";
+    private static final String NAME_COLLECTION = "Cliente";
 
     private MongoDatabase database;
 
