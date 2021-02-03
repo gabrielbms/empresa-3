@@ -25,6 +25,7 @@ import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_PEQUENO_DEMAIS;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MAX;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MINIMA;
 import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
+import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
 import static br.com.contmatic.util.RegexType.EMAIL;
 import static br.com.contmatic.util.RegexType.LETRAS;
 import static br.com.contmatic.util.RegexType.NUMEROS;
@@ -48,6 +49,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
+import org.joda.time.DateTime;
 
 import br.com.contmatic.groups.Post;
 import br.com.contmatic.groups.Put;
@@ -85,6 +87,9 @@ public class Cliente {
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
+    
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Put.class, Post.class })
+    private DateTime dataCriacao;
 
     public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
         this.setCpf(cpf);
@@ -244,6 +249,28 @@ public class Cliente {
     private void validaValorBoleto(BigDecimal boleto) {
         if (boleto.doubleValue() < 0) {
             throw new IllegalArgumentException(BOLETO_NEGATIVO);
+        }
+    }
+    
+    public DateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(DateTime dataCriacao) {
+        validaDataCriacaoNullo(dataCriacao);
+        validarDataAbsurda(dataCriacao);
+        this.dataCriacao = dataCriacao;
+    }
+    
+    private void validaDataCriacaoNullo(DateTime dataCriacao) {
+        if (dataCriacao == null) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        }
+    }
+    
+    private void validarDataAbsurda(DateTime dataCriacao) {
+        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
         }
     }
 

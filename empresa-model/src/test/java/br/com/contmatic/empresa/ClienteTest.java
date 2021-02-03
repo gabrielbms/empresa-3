@@ -17,6 +17,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.joda.time.MutableDateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -271,6 +272,25 @@ public class ClienteTest {
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_o_exception_do_boleto() {
         cliente.setBoleto(BigDecimal.valueOf(-20.00));
+    }
+        
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_null_na_data_criacao() {
+        cliente.setDataCriacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_muito_antiga() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(1500, 01, 01);
+        cliente.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_no_futuro() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2100, 01, 01);
+        cliente.setDataCriacao(dataModificada.toDateTime());
     }
 
     @Test

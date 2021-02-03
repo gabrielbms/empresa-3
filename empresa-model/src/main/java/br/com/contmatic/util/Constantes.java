@@ -15,6 +15,8 @@ public final class Constantes {
 	
 	public static final String EMAIL_VAZIO = "O campo e-mail não pode estar vazio";
 	
+	public static final String DATA_CRIACAO_INVALIDO = "A data de criação está incorreta";
+	
 	public static final String EMAIL_TAMANHO = "O e-mail do funcionario pode ter no máximo {max} caracteres";
 	
 	public static final String TELEFONE_VAZIO = "O telefone não pode ser vazio";
@@ -158,6 +160,8 @@ public final class Constantes {
 	public static final String CPF_VAZIO = "O CPF não pode ser vazio ou nullo";
 	
 	public static final String CNPJ_VAZIO = "O CNPJ não pode ser vazio ou nullo";
+	
+	public static final String DATA_CRIACAO_VAZIO = "A data de criação não pode ser vazio ou nullo";
 	
 	public static final String ID_VAZIO = "O ID foi preenchido incorretamente.";
 	

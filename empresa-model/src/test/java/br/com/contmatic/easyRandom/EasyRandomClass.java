@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 
 import org.jeasy.random.EasyRandom;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import com.github.javafaker.Faker;
@@ -34,6 +35,7 @@ public class EasyRandomClass {
         cliente.setEmail(nomeCliente.toLowerCase().replace(" ", "").replace("'", "") + Geradores.DominioEmail());
         cliente.setTelefones(telefoneRandomizer());
         cliente.setBoleto(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(10.00), BigDecimal.valueOf(500.00).setScale(2)));
+        cliente.setDataCriacao(DateTime.now());
         return cliente;
     }
 
