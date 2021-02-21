@@ -1,8 +1,5 @@
 package br.com.contmatic.service;
 
-import static com.mongodb.client.model.Projections.include;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,78 +7,92 @@ import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 
 import br.com.contmatic.assembly.FornecedorResourceAssembly;
 import br.com.contmatic.empresa.Fornecedor;
+import br.com.contmatic.mongoDB.MongoDbConnection;
+import br.com.contmatic.repository.FornecedorRepository;
 
-public class FornecedorService {
+public class FornecedorService implements FornecedorRepository {
 
-    private static final String NAME_COLLECTION = "Fornecedor";
+    private FornecedorResourceAssembly assembly = new FornecedorResourceAssembly();
 
-    private MongoDatabase database;
+    private MongoDatabase database = MongoDbConnection.getMongoDatabase();
+    
+    MongoCollection<Document> fornecedorCollection = database.getCollection("Fornecedor");
 
-    public FornecedorService(MongoDatabase database) {
-        this.database = database;
+    @Override
+    public String save(Fornecedor fornecedor) {
+        fornecedorCollection.insertOne(Document.parse(fornecedor.toString()).append("_id", fornecedor.getCnpj()));
+        return "Cadastro -> fornecedor nº" + fornecedorCollection.countDocuments() + "Inserido com sucesso";
     }
-
-    public void salvar(Fornecedor fornecedor) throws IOException {
-        Document document = Document.parse(fornecedor.toString());
-        document.append("_id", fornecedor.getCnpj());
-        database.getCollection(NAME_COLLECTION).insertOne(document);
-    }
-
-    public void alterar(Fornecedor fornecedor) {
-        Document document = Document.parse(fornecedor.toString());
-        document.remove("cnpj");
-        document.append("_id", fornecedor.getCnpj());
-
+    
+    @Override
+    public void update(Fornecedor fornecedor) {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.append("_id", fornecedor.getCnpj());
-
-        database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
+        Document fornecedorDocument = assembly.toDocument(fornecedor);
+        fornecedorCollection.replaceOne(whereQuery, fornecedorDocument);
+    }
+    
+    @Override
+    public void updateByField(String campo, String conteudo, Fornecedor fornecedor) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudo);
+        Document empresaDocument = assembly.toDocument(fornecedor);
+        fornecedorCollection.replaceOne(whereQuery, empresaDocument);
     }
 
-    public void deletar(Fornecedor fornecedor) throws IOException {
-        Document document = new Document("_id", fornecedor.getCnpj());
-        document.remove("cnpj");
-        document.append("_id", fornecedor.getCnpj());
-        database.getCollection(NAME_COLLECTION).deleteOne(new Document("_id", fornecedor.getCnpj()));
-    }
-
-    public Fornecedor selecionar(String _id) throws IOException {
+    @Override
+    public void deleteById(String _id) {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.append("_id", _id);
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find(whereQuery);
-        return new FornecedorResourceAssembly().toResource(find.first());
+        fornecedorCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public void deleteByField(String campo, String counteudo, Fornecedor fornecedor) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, counteudo);
+        fornecedorCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public Fornecedor findById(String _id) {    
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append("_id", _id);
+        FindIterable<Document> find = database.getCollection("Fornecedor").find(whereQuery);
+        Fornecedor fornecedor = new Fornecedor();
+        for(Document doc : find) {
+            fornecedor = assembly.toResource(doc);
+        }
+        return fornecedor;
+    }
+    
+    @Override
+    public Fornecedor findAndReturnsSelectedFields(String campo, String conteudoCampo, List<String> conteudo) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudoCampo);
+        FindIterable<Document> find = fornecedorCollection.find(whereQuery).projection(Projections.include(conteudo));
+        Fornecedor fornecedor = new Fornecedor();
+        for(Document doc : find) {
+            fornecedor = assembly.toResource(doc);
+        }
+        return fornecedor;
     }
 
-    public List<Fornecedor> selecionar() throws IOException {
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find();
-        List<Fornecedor> fornecedores = new ArrayList<Fornecedor>();
-        FornecedorResourceAssembly fornecedorResourceAssembly = new FornecedorResourceAssembly();
-        for(Document document : find) {
-            fornecedores.add(fornecedorResourceAssembly.toResource(document));
+    @Override
+    public List<Fornecedor> findAll() {
+        List<Fornecedor> fornecedoress = new ArrayList<>();
+        MongoCursor<Document> cursor = fornecedorCollection.find().iterator();
+        while (cursor.hasNext()) {
+            fornecedoress.add(assembly.toResource(cursor.next()));
         }
-        return fornecedores;
-    }
-
-    public List<Fornecedor> selecionar(List<String> campos) throws IOException {
-        List<Fornecedor> fornecedores = null;
-        if (campos == null) {
-            return fornecedores;
-        }
-        if (campos.isEmpty()) {
-            return fornecedores;
-        }
-        fornecedores = new ArrayList<Fornecedor>();
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find().projection(include(campos)).limit(50);
-
-        FornecedorResourceAssembly fornecedorResourceAssembly = new FornecedorResourceAssembly();
-        for(Document document : find) {
-            fornecedores.add(fornecedorResourceAssembly.toResource(document));
-        }
-        return fornecedores;
+        return fornecedoress;
     }
 
 }

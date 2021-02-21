@@ -1,8 +1,5 @@
 package br.com.contmatic.service;
 
-import static com.mongodb.client.model.Projections.include;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,78 +7,89 @@ import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 
 import br.com.contmatic.assembly.ProdutoResourceAssembly;
 import br.com.contmatic.empresa.Produto;
+import br.com.contmatic.mongoDB.MongoDbConnection;
+import br.com.contmatic.repository.ProdutoRepository;
 
-public class ProdutoService {
+public class ProdutoService implements ProdutoRepository{
 
-    private static final String NAME_COLLECTION = "Produto";
+    private ProdutoResourceAssembly assembly = new ProdutoResourceAssembly();
 
-    private MongoDatabase database;
+    private MongoDatabase database = MongoDbConnection.getMongoDatabase();
+    
+    MongoCollection<Document> produtoCollection = database.getCollection("Produto");
 
-    public ProdutoService(MongoDatabase database) {
-        this.database = database;
+    @Override
+    public String save(Produto produto) {
+        produtoCollection.insertOne(Document.parse(produto.toString()).append("_id", produto.getId()));
+        return "Cadastro -> produto nº" + produtoCollection.countDocuments() + "Inserido com sucesso";
     }
-
-    public void salvar(Produto produto) throws IOException {
-        Document document = Document.parse(produto.toString());
-        document.append("_id", produto.getId());
-        database.getCollection(NAME_COLLECTION).insertOne(document);
-    }
-
-    public void alterar(Produto produto) {
-        Document document = Document.parse(produto.toString());
-        document.remove("Id");
-        document.append("_id", produto.getId());
-
+    
+    @Override
+    public void update(Produto produto) {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.append("_id", produto.getId());
-
-        database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
+        Document produtoDocument = assembly.toDocument(produto);
+        produtoCollection.replaceOne(whereQuery, produtoDocument);
+    }
+    
+    public void updateByField(String campo, String conteudo, Produto produto) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudo);
+        Document produtoDocument = assembly.toDocument(produto);
+        produtoCollection.replaceOne(whereQuery, produtoDocument);
     }
 
-    public void deletar(Produto Produto) throws IOException {
-        Document document = new Document("_id", Produto.getId());
-        document.remove("Id");
-        document.append("_id", Produto.getId());
-        database.getCollection(NAME_COLLECTION).deleteOne(new Document("_id", Produto.getId()));
-    }
-
-    public Produto selecionar(Integer _id) throws IOException {
+    @Override
+    public void deleteById(Integer _id) {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.append("_id", _id);
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find(whereQuery);
-        return new ProdutoResourceAssembly().toResource(find.first());
+        produtoCollection.deleteOne(whereQuery);
+    }
+    
+    public void deleteByField(String campo, String counteudo, Produto produto) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, counteudo);
+        produtoCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public Produto findById(Integer _id) {    
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append("_id", _id);
+        FindIterable<Document> find = database.getCollection("Produto").find(whereQuery);
+        Produto produto = new Produto();
+        for(Document doc : find) {
+            produto = assembly.toResource(doc);
+        }
+        return produto;
+    }
+    
+    public Produto findAndReturnsSelectedFields(String campo, Integer conteudoCampo, List<String> conteudo) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudoCampo);
+        FindIterable<Document> find = produtoCollection.find(whereQuery).projection(Projections.include(conteudo));
+        Produto produto = new Produto();
+        for(Document doc : find) {
+            produto = assembly.toResource(doc);
+        }
+        return produto;
     }
 
-    public List<Produto> selecionar() throws IOException {
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find();
-        List<Produto> Produtos = new ArrayList<Produto>();
-        ProdutoResourceAssembly ProdutoResourceAssembly = new ProdutoResourceAssembly();
-        for(Document document : find) {
-            Produtos.add(ProdutoResourceAssembly.toResource(document));
+    @Override
+    public List<Produto> findAll() {
+        List<Produto> produtos = new ArrayList<>();
+        MongoCursor<Document> cursor = produtoCollection.find().iterator();
+        while (cursor.hasNext()) {
+            produtos.add(assembly.toResource(cursor.next()));
         }
-        return Produtos;
-    }
-
-    public List<Produto> selecionar(List<String> campos) throws IOException {
-        List<Produto> Produtos = null;
-        if (campos == null) {
-            return Produtos;
-        }
-        if (campos.isEmpty()) {
-            return Produtos;
-        }
-        Produtos = new ArrayList<Produto>();
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find().projection(include(campos)).limit(50);
-
-        ProdutoResourceAssembly ProdutoResourceAssembly = new ProdutoResourceAssembly();
-        for(Document document : find) {
-            Produtos.add(ProdutoResourceAssembly.toResource(document));
-        }
-        return Produtos;
+        return produtos;
     }
 
 }

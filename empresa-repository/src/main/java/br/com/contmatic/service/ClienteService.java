@@ -1,8 +1,5 @@
 package br.com.contmatic.service;
 
-import static com.mongodb.client.model.Projections.include;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,76 +7,90 @@ import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 
 import br.com.contmatic.assembly.ClienteResourceAssembly;
 import br.com.contmatic.empresa.Cliente;
+import br.com.contmatic.mongoDB.MongoDbConnection;
+import br.com.contmatic.repository.ClienteRepository;
 
-public class ClienteService {
+public class ClienteService implements ClienteRepository{
+    
+    private ClienteResourceAssembly assembly = new ClienteResourceAssembly();
 
-    private static final String NAME_COLLECTION = "Cliente";
+    private MongoDatabase database = MongoDbConnection.getMongoDatabase();
+    
+    MongoCollection<Document> clienteCollection = database.getCollection("Cliente");
 
-    private MongoDatabase database;
-
-    public ClienteService(MongoDatabase database) {
-        this.database = database;
+    @Override
+    public String save(Cliente cliente) {
+        clienteCollection.insertOne(Document.parse(cliente.toString()));
+        return "Cadastro -> Cliente nº" + clienteCollection.countDocuments() + "Inserido com sucesso";
     }
-
-    public void salvar(Cliente cliente) throws IOException {
-        Document document = Document.parse(cliente.toString());
-        document.append("_id", cliente.getCpf());
-        database.getCollection(NAME_COLLECTION).insertOne(document);
-    }
-
-    public void alterar(Cliente cliente) {
-        Document document = Document.parse(cliente.toString());
-        document.remove("cpf");
-        document.append("_id", cliente.getCpf());
-
+    
+    @Override
+    public void update(Cliente cliente) {
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("_id", cliente.getCpf());
-
-        database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
+        whereQuery.append("cpf", cliente.getCpf());
+        Document clienteDocument = assembly.toDocument(cliente);
+        clienteCollection.replaceOne(whereQuery, clienteDocument);
     }
-
-    public void deletar(Cliente cliente) throws IOException {
-        Document document = new Document("_id", cliente.getCpf());
-        document.remove("cpf");
-        document.append("_id", cliente.getCpf());
-        database.getCollection(NAME_COLLECTION).deleteOne(new Document("_id", cliente.getCpf()));
-    }
-
-    public Cliente selecionar(String _id) throws IOException {
+    
+    @Override
+    public void updateByField(String campo, String conteudo, Cliente cliente) {
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("_id", _id);
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find(whereQuery);
-        return new ClienteResourceAssembly().toResource(find.first());
+        whereQuery.append(campo, conteudo);
+        Document clienteDocument = assembly.toDocument(cliente);
+        clienteCollection.replaceOne(whereQuery, clienteDocument);
     }
 
-    public List<Cliente> selecionar() throws IOException {
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find();
-        List<Cliente> clientes = new ArrayList<Cliente>();
-        ClienteResourceAssembly clienteResourceAssembly = new ClienteResourceAssembly();
-        for(Document document : find) {
-            clientes.add(clienteResourceAssembly.toResource(document));
+    @Override
+    public void deleteById(String cpf) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append("cpf", cpf);
+        clienteCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public void deleteByField(String campo, String counteudo, Cliente cliente) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, counteudo);
+        clienteCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public Cliente findById(String cpf) {    
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append("cpf", cpf);
+        FindIterable<Document> find = database.getCollection("Cliente").find(whereQuery);
+        Cliente cliente = new Cliente();
+        for(Document doc : find) {
+            cliente = assembly.toResource(doc);
         }
-        return clientes;
+        return cliente;
+    }
+    
+    @Override
+    public Cliente findAndReturnsSelectedFields(String campo, String conteudoCampo, List<String> conteudo) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudoCampo);
+        FindIterable<Document> find = clienteCollection.find(whereQuery).projection(Projections.include(conteudo));
+        Cliente cliente = new Cliente();
+        for(Document doc : find) {
+            cliente = assembly.toResource(doc);
+        }
+        return cliente;
     }
 
-    public List<Cliente> selecionar(List<String> campos) throws IOException {
-        List<Cliente> clientes = null;
-        if (campos == null) {
-            return clientes;
-        }
-        if (campos.isEmpty()) {
-            return clientes;
-        }
-        clientes = new ArrayList<Cliente>();
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find().projection(include(campos)).limit(50);
-
-        ClienteResourceAssembly clienteResourceAssembly = new ClienteResourceAssembly();
-        for(Document document : find) {
-            clientes.add(clienteResourceAssembly.toResource(document));
+    @Override
+    public List<Cliente> findAll() {
+        List<Cliente> clientes = new ArrayList<>();
+        MongoCursor<Document> cursor = clienteCollection.find().iterator();
+        while (cursor.hasNext()) {
+            clientes.add(assembly.toResource(cursor.next()));
         }
         return clientes;
     }

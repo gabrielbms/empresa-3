@@ -1,8 +1,5 @@
 package br.com.contmatic.service;
 
-import static com.mongodb.client.model.Projections.include;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,78 +7,92 @@ import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 
 import br.com.contmatic.assembly.FuncionarioResourceAssembly;
 import br.com.contmatic.empresa.Funcionario;
+import br.com.contmatic.mongoDB.MongoDbConnection;
+import br.com.contmatic.repository.FuncionarioRepository;
 
-public class FuncionarioService {
+public class FuncionarioService implements FuncionarioRepository {
 
-    private static final String NAME_COLLECTION = "Funcionario";
+    private FuncionarioResourceAssembly assembly = new FuncionarioResourceAssembly();
 
-    private MongoDatabase database;
+    private MongoDatabase database = MongoDbConnection.getMongoDatabase();
+    
+    MongoCollection<Document> funcionarioCollection = database.getCollection("Funcionario");
 
-    public FuncionarioService(MongoDatabase database) {
-        this.database = database;
+    @Override
+    public String save(Funcionario funcionario) {
+        funcionarioCollection.insertOne(Document.parse(funcionario.toString()).append("_id", funcionario.getCpf()));
+        return "Cadastro -> funcionario nº" + funcionarioCollection.countDocuments() + "Inserido com sucesso";
     }
-
-    public void salvar(Funcionario Funcionario) throws IOException {
-        Document document = Document.parse(Funcionario.toString());
-        document.append("_id", Funcionario.getCpf());
-        database.getCollection(NAME_COLLECTION).insertOne(document);
-    }
-
-    public void alterar(Funcionario Funcionario) {
-        Document document = Document.parse(Funcionario.toString());
-        document.remove("cnpj");
-        document.append("_id", Funcionario.getCpf());
-
+    
+    @Override
+    public void update(Funcionario funcionario) {
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("_id", Funcionario.getCpf());
-
-        database.getCollection(NAME_COLLECTION).updateOne(whereQuery, new Document("$set", document));
+        whereQuery.append("_id", funcionario.getCpf());
+        Document funcionarioDocument = assembly.toDocument(funcionario);
+        funcionarioCollection.replaceOne(whereQuery, funcionarioDocument);
+    }
+    
+    @Override
+    public void updateByField(String campo, String conteudo, Funcionario funcionario) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudo);
+        Document funcionarioDocument = assembly.toDocument(funcionario);
+        funcionarioCollection.replaceOne(whereQuery, funcionarioDocument);
     }
 
-    public void deletar(Funcionario Funcionario) throws IOException {
-        Document document = new Document("_id", Funcionario.getCpf());
-        document.remove("cnpj");
-        document.append("_id", Funcionario.getCpf());
-        database.getCollection(NAME_COLLECTION).deleteOne(new Document("_id", Funcionario.getCpf()));
-    }
-
-    public Funcionario selecionar(String _id) throws IOException {
+    @Override
+    public void deleteById(String _id) {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.append("_id", _id);
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find(whereQuery);
-        return new FuncionarioResourceAssembly().toResource(find.first());
+        funcionarioCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public void deleteByField(String campo, String counteudo, Funcionario funcionario) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, counteudo);
+        funcionarioCollection.deleteOne(whereQuery);
+    }
+    
+    @Override
+    public Funcionario findById(String _id) {    
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append("_id", _id);
+        FindIterable<Document> find = database.getCollection("Funcionario").find(whereQuery);
+        Funcionario funcionario = new Funcionario();
+        for(Document doc : find) {
+            funcionario = assembly.toResource(doc);
+        }
+        return funcionario;
+    }
+    
+    @Override
+    public Funcionario findAndReturnsSelectedFields(String campo, String conteudoCampo, List<String> conteudo) {
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.append(campo, conteudoCampo);
+        FindIterable<Document> find = funcionarioCollection.find(whereQuery).projection(Projections.include(conteudo));
+        Funcionario funcionario = new Funcionario();
+        for(Document doc : find) {
+            funcionario = assembly.toResource(doc);
+        }
+        return funcionario;
     }
 
-    public List<Funcionario> selecionar() throws IOException {
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find();
-        List<Funcionario> Funcionarios = new ArrayList<Funcionario>();
-        FuncionarioResourceAssembly FuncionarioResourceAssembly = new FuncionarioResourceAssembly();
-        for(Document document : find) {
-            Funcionarios.add(FuncionarioResourceAssembly.toResource(document));
+    @Override
+    public List<Funcionario> findAll() {
+        List<Funcionario> funcionarios = new ArrayList<>();
+        MongoCursor<Document> cursor = funcionarioCollection.find().iterator();
+        while (cursor.hasNext()) {
+            funcionarios.add(assembly.toResource(cursor.next()));
         }
-        return Funcionarios;
-    }
-
-    public List<Funcionario> selecionar(List<String> campos) throws IOException {
-        List<Funcionario> Funcionarios = null;
-        if (campos == null) {
-            return Funcionarios;
-        }
-        if (campos.isEmpty()) {
-            return Funcionarios;
-        }
-        Funcionarios = new ArrayList<Funcionario>();
-        FindIterable<Document> find = database.getCollection(NAME_COLLECTION).find().projection(include(campos)).limit(50);
-
-        FuncionarioResourceAssembly FuncionarioResourceAssembly = new FuncionarioResourceAssembly();
-        for(Document document : find) {
-            Funcionarios.add(FuncionarioResourceAssembly.toResource(document));
-        }
-        return Funcionarios;
+        return funcionarios;
     }
 
 }

@@ -1,252 +1,132 @@
 package br.com.contmatic.service;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.bson.Document;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
-import br.com.contmatic.assembly.FornecedorResourceAssembly;
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.empresa.Fornecedor;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 
 public class FornecedorServiceTest {
 
-    private static final MongodStarter starter = MongodStarter.getDefaultInstance();
-
-    private static MongodExecutable mongodExe;
-
-    private static MongoClient mongo;
-
-    private MongoDatabase database;
+    private FornecedorService fornecedorService = new FornecedorService();
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(FornecedorServiceTest.class);
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
+    @Test
+    public void deve_salvar_fornecedor() {
         try {
-            mongodExe = starter.prepare(new MongodConfigBuilder().version(Version.Main.V3_4).net(new Net("localhost", 12345, Network.localhostIsIPv6())).build());
-            mongodExe.start();
-            mongo = new MongoClient("localhost", 12345);
-
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+        } catch (Exception e) { 
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_atualizar_um_cliente() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            fornecedor.setNome("Atualizando um fornecedor");
+            fornecedorService.update(fornecedor);
+            Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
+            assertEquals("Atualizando um fornecedor", fornecedorBanco.getNome());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
-    }
-
-    @Before
-    public void setUp() {
-        database = mongo.getDatabase("Empresa");
-        database.createCollection("Fornecedor");
-    }
-
-    @Test
-    public void deve_armazenar_um_fornecedor_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("Fornecedor");
-        FornecedorService repository = new FornecedorService(database);
-        repository.salvar(randomObject.fornecedorRandomizer());
-        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 1);
-    }
-
-    @Test
-    public void deve_alterar_um_fornecedor_no_banco() throws IOException, InterruptedException {
-        MongoCollection<Document> collection = database.getCollection("Fornecedor");
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor.setNome("Teste");
-        repository.alterar(Fornecedor);
-        FindIterable<Document> findIterable = collection.find(new Document("_id", Fornecedor.getCnpj()));
-        Fornecedor novaFornecedor = new FornecedorResourceAssembly().toResource(findIterable.first());
-        assertThat("Deve alterar um fornecedor no banco", Fornecedor.getNome(), equalTo(novaFornecedor.getNome()));
     }
     
     @Test
-    public void deve_alterar_um_fornecedor_selecionado_no_banco() throws IOException { 
-        MongoCollection<Document> collection = database.getCollection("Fornecedor");
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(fornecedor);
-        fornecedor.setNome("Teste");
-        repository.alterar(fornecedor);
-        FindIterable<Document> findIterable = collection.find(new Document("_id", fornecedor.getCnpj()));
-        Fornecedor novoFornecedor = new FornecedorResourceAssembly().toResource(findIterable.first());
-        assertThat("Deve alterar um fornecedor no banco", fornecedor.getNome(), equalTo(novoFornecedor.getNome()));
-    }
-
-    @Test
-    public void deve_apagar_um_fornecedor_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("Fornecedor");
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 1);
-        repository.deletar(Fornecedor);
-        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 0);
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void deve_apagar_um_fornecedor_selecionado_no_banco() throws IOException {
-        MongoCollection<Document> collection = database.getCollection("{classe}");
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(fornecedor);
-        Fornecedor fornecedorBuscado = repository.selecionar(Arrays.asList("nome")).get(0);
-        repository.deletar(fornecedorBuscado);
-        assertTrue("Deve armazenar um fornecedor no banco", collection.estimatedDocumentCount() == 0);
-    }
-
-    @Test
-    public void deve_selecionar_pelo_cnpj_um_fornecedor_no_banco() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertTrue("Deve armazenar um fornecedor no banco", FornecedorBuscada.getCnpj().equals(Fornecedor.getCnpj()));
-    }
-
-    @Test
-    public void deve_selecionar_pelo_cnpj_um_fornecedor_no_banco_e_retornar_campos_iguais_como_salvou() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertTrue(FornecedorBuscada.toString().equals(Fornecedor.toString()));
-    }
-
-    @Test
-    public void deve_selecionar_pelo_cnpj_um_fornecedor_e_nao_deve_ter_valores_nulo() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertFalse(FornecedorBuscada.toString().contains("null"));
+    public void deve_atualizar_uma_empresa_pelo_campo() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            String nomefornecedor = fornecedor.getNome();
+            fornecedorService.save(fornecedor);
+            fornecedor.setNome("Atualizando um fornecedor pelo campo");
+            fornecedorService.updateByField("nome", nomefornecedor, fornecedor);
+            Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
+            assertEquals("Atualizando um fornecedor pelo campo", fornecedorBanco.getNome());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
     
     @Test
-    public void deve_selecionar_todos_fornecedor_no_banco() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(), 
-            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
-        for(Fornecedor Fornecedor : Fornecedors) {
-            repository.salvar(Fornecedor);
+    public void deve_deletar_um_cliente_pelo_cpf() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+            fornecedorService.deleteById(fornecedor.getCnpj());
+            Fornecedor clienteDeletado = fornecedorService.findById(fornecedor.getCnpj());
+            assertEquals(null, clienteDeletado.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
-
-        List<Fornecedor> FornecedorBuscada = repository.selecionar();
-        assertThat(FornecedorBuscada.size(), is(Fornecedors.size()));
     }
-
+    
     @Test
-    public void deve_selecionar_todos_fornecedor_no_banco_e_tem_que_ser_igual() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        List<Fornecedor> Fornecedors = Arrays.asList(randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer(),
-            randomObject.fornecedorRandomizer(), randomObject.fornecedorRandomizer());
-        for(Fornecedor Fornecedor : Fornecedors) {
-            repository.salvar(Fornecedor);
+    public void deve_deletar_um_empresa_pelo_campo() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            String nome = fornecedor.getNome();
+            fornecedorService.save(fornecedor);
+            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+            fornecedorService.deleteByField("nome", nome, fornecedor);
+            Fornecedor fornecedorDeletado = fornecedorService.findById(fornecedor.getCnpj());
+            assertEquals(null, fornecedorDeletado.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
-
-        List<Fornecedor> FornecedorBuscada = repository.selecionar();
-        assertThat(FornecedorBuscada, is(Fornecedors));
     }
-
+    
     @Test
-    public void deve_retornar_nulo_quando_manda_uma_lista_nula() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        List<Fornecedor> FornecedorBuscada = repository.selecionar((List<String>) null);
-        assertNull(FornecedorBuscada);
+    public void deve_selecioar_um_cliente_pelo_cpf() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
+            assertEquals(fornecedor, fornecedorBanco);
+            fornecedorService.deleteById(fornecedor.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-
+    
     @Test
-    public void deve_retornar_nulo_quando_manda_uma_lista_vazia() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        List<Fornecedor> FornecedorBuscada = repository.selecionar(new ArrayList<String>());
-        assertNull(FornecedorBuscada);
+    public void deve_selecionar_por_campos() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cnpj", "nome", "produtos", "enderecos", "telefones");
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
+            fornecedorService.deleteById(fornecedor.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nome_do_fornecedor() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome")).get(0);
-        assertTrue(FornecedorBuscada.toString().contains("\"nome\":\"" + Fornecedor.getNome() + "\""));
-
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_nulos_do_fornecedor_ao_selecionar_escolhendo_campo() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome", "email")).get(0);
-        assertTrue(FornecedorBuscada.toString().contains("null"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_campo_do_fornecedor_mesmo_caso_nao_exista_ao_selecionar_escolhendo_campo() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("nome", "produto", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertTrue(FornecedorBuscada.toString().contains("null"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deve_retornar_o_fornecedor_mesmo_nao_exista_valores() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Arrays.asList("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")).get(0);
-        assertTrue(FornecedorBuscada.toString().contains("null"));
-    }
-
+    
     @Test
-    public void deve_retornar_o_fornecedor_com_o_cpnj_escolhendo_os_campos_da_classe() throws IOException {
-        FornecedorService repository = new FornecedorService(database);
-        Fornecedor Fornecedor = randomObject.fornecedorRandomizer();
-        repository.salvar(Fornecedor);
-        Fornecedor FornecedorBuscada = repository.selecionar(Fornecedor.getCnpj());
-        assertThat(FornecedorBuscada.getCnpj(), equalTo(Fornecedor.getCnpj()));
-    }
-
-    @After
-    public void tearDown() {
-        database.drop();
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        mongo.close();
-        mongodExe.stop();
+    public void deve_selecioar_todos_os_clientes() {
+        try {
+            List<Fornecedor> fornecedorsBanco = fornecedorService.findAll();
+            assertNotNull(fornecedorsBanco);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
 }

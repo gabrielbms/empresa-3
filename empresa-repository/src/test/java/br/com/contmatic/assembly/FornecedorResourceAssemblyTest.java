@@ -5,19 +5,14 @@ import static org.junit.Assert.assertThat;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.Document;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.empresa.Fornecedor;
-import br.com.contmatic.mongoDB.MongoDbConnection;
 
 public class FornecedorResourceAssemblyTest {
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
-
-    /** The fornecedor. */
-    private static Fornecedor fornecedor;
 
     @Test
     public void deve_transformar_uma_classe_fornecedor_em_document() {
@@ -51,12 +46,6 @@ public class FornecedorResourceAssemblyTest {
     public void deve_retornar_nulo_se_um_document_for_nulo_ao_transformar_em_fornecedor() {
         Fornecedor fornecedor = new FornecedorResourceAssembly().toResource(null);
         assertThat(fornecedor, equalTo(null));
-    }
-
-    @AfterClass
-    public static void envia_para_base_de_dados() {
-        FornecedorResourceAssemblyTest.fornecedor = randomObject.fornecedorRandomizer();
-        MongoDbConnection.SentToDatabaseFornecedor(fornecedor);
     }
 
 }

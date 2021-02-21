@@ -30,7 +30,7 @@ public class EasyRandomClass {
         EasyRandom easyFakeObject = new EasyRandom();
         Cliente cliente = easyFakeObject.nextObject(Cliente.class);
         cliente.setCpf(Geradores.geraCpf());
-        String nomeCliente = faker.name().fullName();
+        String nomeCliente = faker.name().fullName().replace(".", "");
         cliente.setNome(nomeCliente);
         cliente.setEmail(nomeCliente.toLowerCase().replace(" ", "").replace("'", "") + Geradores.DominioEmail());
         cliente.setTelefones(telefoneRandomizer());
@@ -44,7 +44,7 @@ public class EasyRandomClass {
         EasyRandom easyFakeObject = new EasyRandom();
         Empresa empresa = easyFakeObject.nextObject(Empresa.class);
         empresa.setCnpj(Geradores.geraCnpj());
-        String nomeEmpresa = faker.company().name();
+        String nomeEmpresa = faker.company().name().replace(".", "");
         empresa.setNome(nomeEmpresa);
         empresa.setSite("www." + nomeEmpresa.toLowerCase().replace(" ", "").replace("'", "").replace(",", "").replace("-", "") + ".com.br");
         empresa.setTelefones(telefoneRandomizer());
@@ -57,7 +57,7 @@ public class EasyRandomClass {
         EasyRandom easyFakeObject = new EasyRandom();
         Fornecedor fornecedor = easyFakeObject.nextObject(Fornecedor.class);
         fornecedor.setCnpj(Geradores.geraCnpj());
-        String nomeFornecedor = faker.company().name();
+        String nomeFornecedor = faker.company().name().replace(".", "");
         fornecedor.setNome(nomeFornecedor);
         fornecedor.setProduto(produtoRandomizer());
         fornecedor.setTelefones(telefoneRandomizer());
@@ -70,7 +70,7 @@ public class EasyRandomClass {
         EasyRandom easyFakeObject = new EasyRandom();
         Funcionario funcionario = easyFakeObject.nextObject(Funcionario.class);
         funcionario.setCpf(Geradores.geraCpf());
-        funcionario.setNome(faker.name().fullName());
+        funcionario.setNome(faker.name().fullName().replace(".", ""));
         funcionario.setIdade(faker.number().numberBetween(18, 40));
         funcionario.setSalario(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(1045.00), BigDecimal.valueOf(8000.00).setScale(2)));
         funcionario.setDataContratacao(new LocalDate(Geradores.geraData(new LocalDate(2012, 01, 01), new LocalDate(2014, 12, 30)).toString()));
@@ -86,7 +86,7 @@ public class EasyRandomClass {
         EasyRandom easyFakeObject = new EasyRandom();
         Produto produto = easyFakeObject.nextObject(Produto.class);
         produto.setId(faker.number().numberBetween(1, 10000));
-        produto.setNome(faker.name().fullName());
+        produto.setNome(faker.name().fullName().replace(".", ""));
         produto.setQuantidade(faker.number().numberBetween(1, 10));
         produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
         produtos.add(produto);

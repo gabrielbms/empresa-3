@@ -5,19 +5,14 @@ import static org.junit.Assert.assertThat;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.Document;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.empresa.Funcionario;
-import br.com.contmatic.mongoDB.MongoDbConnection;
 
 public class FuncionarioResourceAssemblyTest {
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
-
-    /** The funcionario. */
-    private static Funcionario funcionario;
 
     @Test
     public void deve_transformar_uma_classe_funcionario_em_document() {
@@ -52,12 +47,6 @@ public class FuncionarioResourceAssemblyTest {
     public void deve_retornar_nulo_se_um_document_for_nulo_ao_transformar_em_funcionario() {
         Funcionario funcionario = new FuncionarioResourceAssembly().toResource(null);
         assertThat(funcionario, equalTo(null));
-    }
-
-    @AfterClass
-    public static void envia_para_base_de_dados() {
-        FuncionarioResourceAssemblyTest.funcionario = randomObject.funcionarioRandomizer();
-        MongoDbConnection.SentToDatabaseFuncionario(funcionario);
     }
 
 }

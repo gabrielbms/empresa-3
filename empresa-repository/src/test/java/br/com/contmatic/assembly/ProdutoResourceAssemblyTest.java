@@ -5,19 +5,14 @@ import static org.junit.Assert.assertThat;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.Document;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.empresa.Produto;
-import br.com.contmatic.mongoDB.MongoDbConnection;
 
 public class ProdutoResourceAssemblyTest {
 
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
-
-    /** The Produto. */
-    private static Produto produto;
 
     @Test
     public void deve_transformar_uma_classe_Produto_em_document() {
@@ -51,12 +46,6 @@ public class ProdutoResourceAssemblyTest {
     public void deve_retornar_nulo_se_um_document_for_nulo_ao_transformar_em_Produto() {
         Produto Produto = new ProdutoResourceAssembly().toResource(null);
         assertThat(Produto, equalTo(null));
-    }
-
-    @AfterClass
-    public static void envia_para_base_de_dados() {
-        ProdutoResourceAssemblyTest.produto = randomObject.produtoRandomizerClass();
-        MongoDbConnection.SentToDatabaseProduto(produto);
     }
 
 }
