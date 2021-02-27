@@ -3,8 +3,6 @@ package br.com.contmatic.assembly;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bson.Document;
 import org.junit.Test;
@@ -19,7 +17,6 @@ public class ClienteResourceAssemblyTest {
     @Test
     public void deve_transformar_uma_classe_cliente_em_document() {
         Cliente cliente = randomObject.clienteRandomizer();
-        cliente.setBoleto(BigDecimal.valueOf(250.10));
         Document document = new ClienteResourceAssembly().toDocument(cliente);
         String clienteUTF8 = StringEscapeUtils.unescapeJava(cliente.toString()).replaceAll("\\s", "");
         assertThat(clienteUTF8, equalTo(document.toJson().replaceAll("\\s", "")));

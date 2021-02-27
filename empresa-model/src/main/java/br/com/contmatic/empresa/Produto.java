@@ -1,5 +1,6 @@
 package br.com.contmatic.empresa;
 
+import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
 import static br.com.contmatic.util.Constantes.ID_MINIMO;
 import static br.com.contmatic.util.Constantes.ID_VAZIO;
 import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
@@ -17,12 +18,18 @@ import static br.com.contmatic.util.RegexType.validaSeNaoTemEspacosIncorretosECa
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
+
+import br.com.contmatic.groups.Post;
+import br.com.contmatic.groups.Put;
 
 /**
  * The Class Produto.
@@ -39,6 +46,10 @@ public class Produto {
     private Integer quantidade;
 
     private BigDecimal preco;
+    
+    @Null(groups = { Put.class })
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class })
+    private DateTime dataCriacao;
 
     public Produto(Integer id, String nome) {
         super();
@@ -140,6 +151,33 @@ public class Produto {
             throw new IllegalArgumentException(PRECO_MINIMO_MENSAGEM);
         }
     }
+    
+    public DateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(DateTime dataCriacao) {
+        validaDataCriacaoNullo(dataCriacao);
+        validarDataAbsurda(dataCriacao);
+        this.dataCriacao = dataCriacao;
+    }
+    
+    private void validaDataCriacaoNullo(DateTime dataCriacao) {
+        if (dataCriacao == null) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        }
+    }
+    
+    private void validarDataAbsurda(DateTime dataCriacao) {
+        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+    }
 
     @Override
     public int hashCode() {
@@ -149,11 +187,6 @@ public class Produto {
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 
 }

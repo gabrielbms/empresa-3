@@ -13,6 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.joda.time.MutableDateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -249,6 +250,25 @@ public class EmpresaTest {
     public void deve_testar_o_getEndereco() {
         empresa.setEnderecos(enderecos);
         assertEquals(empresa.getEndereco(), enderecos);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_null_na_data_criacao() {
+        empresa.setDataCriacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_muito_antiga() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(1500, 01, 01);
+        empresa.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_no_futuro() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2100, 01, 01);
+        empresa.setDataCriacao(dataModificada.toDateTime());
     }
 
     @Test

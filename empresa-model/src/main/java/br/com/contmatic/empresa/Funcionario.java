@@ -6,6 +6,7 @@ import static br.com.contmatic.util.Constantes.CPF_SIZE;
 import static br.com.contmatic.util.Constantes.CPF_VAZIO;
 import static br.com.contmatic.util.Constantes.DATA_CONTRATACAO_FUTURA;
 import static br.com.contmatic.util.Constantes.DATA_CONTRATACAO_VAZIA;
+import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
 import static br.com.contmatic.util.Constantes.DATA_SALARIO_FUTURA;
 import static br.com.contmatic.util.Constantes.DATA_SALARIO_NULA;
 import static br.com.contmatic.util.Constantes.ENDERECO_QTDE_MAX;
@@ -42,6 +43,7 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -52,6 +54,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import br.com.contmatic.endereco.Endereco;
@@ -96,6 +99,10 @@ public class Funcionario {
     @Size.List({ @Size(min = 1, message = TELEFONE_QTDE_MINIMA, groups = { Put.class, Post.class }), 
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
+    
+    @Null(groups = { Put.class })
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class })
+    private DateTime dataCriacao;
 
     @Valid
     @NotNull(message = ENDERECO_VAZIO)
@@ -283,6 +290,28 @@ public class Funcionario {
     private void validaEnderecoNullo(Set<Endereco> endereco) {
         if (endereco == null) {
             throw new IllegalArgumentException(ENDERECO_VAZIO);
+        }
+    }
+    
+    public DateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(DateTime dataCriacao) {
+        validaDataCriacaoNullo(dataCriacao);
+        validarDataAbsurda(dataCriacao);
+        this.dataCriacao = dataCriacao;
+    }
+    
+    private void validaDataCriacaoNullo(DateTime dataCriacao) {
+        if (dataCriacao == null) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        }
+    }
+    
+    private void validarDataAbsurda(DateTime dataCriacao) {
+        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
         }
     }
 

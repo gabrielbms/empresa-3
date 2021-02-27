@@ -20,6 +20,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.joda.time.LocalDate;
+import org.joda.time.MutableDateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -242,6 +243,25 @@ public class FuncionarioTest {
     public void deve_testar_o_getSalario() {
         funcionario.setSalario(BigDecimal.valueOf(1700.00));
         assertEquals(funcionario.getSalario(), BigDecimal.valueOf(1700.00));
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_null_na_data_criacao() {
+        funcionario.setDataCriacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_muito_antiga() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(1500, 01, 01);
+        funcionario.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_no_futuro() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2100, 01, 01);
+        funcionario.setDataCriacao(dataModificada.toDateTime());
     }
 
     @Test

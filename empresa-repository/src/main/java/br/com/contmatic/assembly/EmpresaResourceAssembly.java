@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.bson.Document;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import br.com.contmatic.empresa.Empresa;
 import br.com.contmatic.telefone.Telefone;
@@ -21,6 +24,7 @@ public class EmpresaResourceAssembly implements Assembly<Empresa, Document> {
             resource.setSite(document.getString("site"));
             resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
             resource.setEnderecos(toResourceEnderecos(document.getList("enderecos", Document.class)));
+            resource.setDataCriacao(toDateTime(document.getString("dataCriacao")));
             return resource;
         }
         return null;
@@ -59,6 +63,20 @@ public class EmpresaResourceAssembly implements Assembly<Empresa, Document> {
         }
 
         return telefones;
+    }
+    
+    private DateTime toDateTime(String dataCriacao) {
+        String dia = dataCriacao.substring(8, 10);
+        String mes = dataCriacao.substring(5, 7);
+        String ano = dataCriacao.substring(0, 4);
+        String hora = dataCriacao.substring(11, 13);
+        String minuto = dataCriacao.substring(14, 16);
+        String segundo = dataCriacao.substring(17, 19);
+        String milisegundo = dataCriacao.substring(20, 23);
+        String dataString = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto  + ":" + segundo + ":" + milisegundo;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss:SSS");
+        DateTime dataFormatada = formatter.parseDateTime(dataString);
+        return dataFormatada;
     }
 
 }

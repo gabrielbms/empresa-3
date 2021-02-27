@@ -49,6 +49,7 @@ public class EasyRandomClass {
         empresa.setSite("www." + nomeEmpresa.toLowerCase().replace(" ", "").replace("'", "").replace(",", "").replace("-", "") + ".com.br");
         empresa.setTelefones(telefoneRandomizer());
         empresa.setEnderecos(enderecoRandomizer());
+        empresa.setDataCriacao(DateTime.now());
         return empresa;
     }
 
@@ -62,6 +63,7 @@ public class EasyRandomClass {
         fornecedor.setProduto(produtoRandomizer());
         fornecedor.setTelefones(telefoneRandomizer());
         fornecedor.setEnderecos(enderecoRandomizer());
+        fornecedor.setDataCriacao(DateTime.now());
         return fornecedor;
     }
 
@@ -77,6 +79,7 @@ public class EasyRandomClass {
         funcionario.setDataSalario(new LocalDate(Geradores.geraData(new LocalDate(2015, 01, 01), new LocalDate(2022, 12, 30)).toString()));
         funcionario.setTelefones(telefoneRandomizer());
         funcionario.setEnderecos(enderecoRandomizer());
+        funcionario.setDataCriacao(DateTime.now());
         return funcionario;
     }
 
@@ -89,6 +92,7 @@ public class EasyRandomClass {
         produto.setNome(faker.name().fullName().replace(".", ""));
         produto.setQuantidade(faker.number().numberBetween(1, 10));
         produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
+        produto.setDataCriacao(DateTime.now());
         produtos.add(produto);
         return produtos;
     }
@@ -101,6 +105,7 @@ public class EasyRandomClass {
         produto.setNome(faker.name().fullName());
         produto.setQuantidade(faker.number().numberBetween(1, 10));
         produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
+        produto.setDataCriacao(DateTime.now());
         return produto;
     }
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 
 import java.math.BigDecimal;
 
+import org.joda.time.MutableDateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -138,6 +139,25 @@ public class ProdutoTest {
     @Test(expected = IllegalArgumentException.class)
     public void deve_testar_o_exception_do_setPreço() {
         produto.setPreco(BigDecimal.valueOf(-500.00));
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_null_na_data_criacao() {
+        produto.setDataCriacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_muito_antiga() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(1500, 01, 01);
+        produto.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_data_no_futuro() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2100, 01, 01);
+        produto.setDataCriacao(dataModificada.toDateTime());
     }
 
     @Test

@@ -6,6 +6,7 @@ import static br.com.contmatic.util.Constantes.CPF_INCORRETO;
 import static br.com.contmatic.util.Constantes.CPF_INVALIDO;
 import static br.com.contmatic.util.Constantes.CPF_SIZE;
 import static br.com.contmatic.util.Constantes.CPF_VAZIO;
+import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
 import static br.com.contmatic.util.Constantes.EMAIL_INVALIDO;
 import static br.com.contmatic.util.Constantes.EMAIL_MAX_SIZE;
 import static br.com.contmatic.util.Constantes.EMAIL_MIN_SIZE;
@@ -25,7 +26,6 @@ import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_PEQUENO_DEMAIS;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MAX;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MINIMA;
 import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
-import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
 import static br.com.contmatic.util.RegexType.EMAIL;
 import static br.com.contmatic.util.RegexType.LETRAS;
 import static br.com.contmatic.util.RegexType.NUMEROS;
@@ -40,6 +40,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -88,7 +89,8 @@ public class Cliente {
         @Size(max = 3, message = TELEFONE_QTDE_MAX, groups = { Put.class, Post.class }) })
     private Set<Telefone> telefones;
     
-    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Put.class, Post.class })
+    @Null(groups = { Put.class })
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class })
     private DateTime dataCriacao;
 
     public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
