@@ -80,7 +80,7 @@ public class FornecedorTest {
         assertEquals("35667373000103", fornecedor.getCnpj());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_cnpj() {
         fornecedor.setCnpj(null);
     }
@@ -147,7 +147,7 @@ public class FornecedorTest {
         assertEquals("Gabriel", fornecedor.getNome());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_nome() {
         fornecedor.setNome(null);
     }
@@ -252,7 +252,7 @@ public class FornecedorTest {
         assertEquals(fornecedor.getTelefone(), enderecos2);
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_na_data_criacao() {
         fornecedor.setDataCriacao(null);
     }
@@ -277,7 +277,7 @@ public class FornecedorTest {
         assertEquals(fornecedor.hashCode(), fornecedor2.hashCode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_hashCode_com_uma_fornecedor_de_cnpj_null() {
         Fornecedor fornecedor2 = new Fornecedor(null, "CA peças LTDA");
         assertNotEquals(fornecedor.hashCode(), fornecedor2.hashCode());
@@ -289,10 +289,10 @@ public class FornecedorTest {
         assertEquals(fornecedor, fornecedor2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_fornecedor_de_cnpj_null() {
         Fornecedor fornecedor2 = new Fornecedor(null, "CA peças LTDA");
-        assertEquals(fornecedor, fornecedor2);
+        assertNotEquals(fornecedor, fornecedor2);
     }
 
     @Test
@@ -305,7 +305,7 @@ public class FornecedorTest {
         assertNotEquals(fornecedor, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_true_no_equals_comparando_dois_fornecedores_de_cnpj_null() {
         Fornecedor fornecedor1 = new Fornecedor(null, "CA peças LTDA");
         Fornecedor fornecedor2 = new Fornecedor(null, "CA peças LTDA");

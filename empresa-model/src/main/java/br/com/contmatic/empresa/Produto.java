@@ -6,7 +6,6 @@ import static br.com.contmatic.util.Constantes.ID_VAZIO;
 import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
 import static br.com.contmatic.util.Constantes.NOME_MAX_SIZE;
 import static br.com.contmatic.util.Constantes.NOME_MIN_SIZE;
-import static br.com.contmatic.util.Constantes.NOME_VAZIO;
 import static br.com.contmatic.util.Constantes.PRECO_MINIMO;
 import static br.com.contmatic.util.Constantes.PRECO_MINIMO_MENSAGEM;
 import static br.com.contmatic.util.Constantes.QUANTIDADE_MINIMA;
@@ -52,7 +51,6 @@ public class Produto {
     private DateTime dataCriacao;
 
     public Produto(Integer id, String nome) {
-        super();
         this.setId(id);
         this.setNome(nome);
     }
@@ -93,32 +91,31 @@ public class Produto {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-            throw new IllegalArgumentException(NOME_INVALIDO);
+        if (nome != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+                throw new IllegalArgumentException(NOME_INVALIDO);
+            }
         }
     }
 
     private void validaNomeIncorreto(String nome) {
-        this.validaNomeNulloOuVazio(nome);
         this.validaNomePequenoDemais(nome);
         this.validaNomeGrandeDemais(nome);
     }
 
     private void validaNomeGrandeDemais(String nome) {
-        if (nome.length() > NOME_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        if (nome != null) {
+            if (nome.length() > NOME_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaNomePequenoDemais(String nome) {
-        if (nome.length() < NOME_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaNomeNulloOuVazio(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException(NOME_VAZIO);
+        if (nome != null) {
+            if (nome.length() < NOME_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+            } 
         }
     }
 
@@ -132,8 +129,10 @@ public class Produto {
     }
 
     private void validaQuantidadeIncorreta(Integer quantidade) {
-        if (quantidade < QUANTIDADE_MINIMA) {
-            throw new IllegalArgumentException(QUANTIDADE_MINIMA_MENSAGEM);
+        if (quantidade != null) {
+            if (quantidade < QUANTIDADE_MINIMA) {
+                throw new IllegalArgumentException(QUANTIDADE_MINIMA_MENSAGEM);
+            }
         }
     }
 
@@ -147,8 +146,10 @@ public class Produto {
     }
 
     private void validaPrecoIncorreto(BigDecimal preco) {
-        if (preco.doubleValue() < PRECO_MINIMO) {
-            throw new IllegalArgumentException(PRECO_MINIMO_MENSAGEM);
+        if (!preco.equals(BigDecimal.valueOf(0))) {
+            if (preco.doubleValue() < PRECO_MINIMO) {
+                throw new IllegalArgumentException(PRECO_MINIMO_MENSAGEM);
+            }
         }
     }
     
@@ -157,20 +158,15 @@ public class Produto {
     }
 
     public void setDataCriacao(DateTime dataCriacao) {
-        validaDataCriacaoNullo(dataCriacao);
         validarDataAbsurda(dataCriacao);
         this.dataCriacao = dataCriacao;
     }
     
-    private void validaDataCriacaoNullo(DateTime dataCriacao) {
-        if (dataCriacao == null) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
-        }
-    }
-    
     private void validarDataAbsurda(DateTime dataCriacao) {
-        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        if (dataCriacao != null) {
+            if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+                throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
         }
     }
 

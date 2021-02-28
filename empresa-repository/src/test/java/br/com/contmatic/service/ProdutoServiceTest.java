@@ -105,12 +105,42 @@ public class ProdutoServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_campos() {
+    public void deve_selecionar_por_nome() {
         try {
             Produto produto = randomObject.produtoRandomizerClass();
             produtoService.save(produto);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "id", "nome", "quantidade", "preco");
+            Collections.addAll(campos, "nome");
+            Produto produtoBuscado = produtoService.findAndReturnsSelectedFields("id", produto.getId(), campos);
+            assertEquals(produto.getNome(), produtoBuscado.getNome());
+            produtoService.deleteById(produto.getId());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_id_nome() {
+        try {
+            Produto produto = randomObject.produtoRandomizerClass();
+            produtoService.save(produto);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "id", "nome");
+            Produto produtoBuscado = produtoService.findAndReturnsSelectedFields("id", produto.getId(), campos);
+            assertEquals(produto.getNome(), produtoBuscado.getNome());
+            produtoService.deleteById(produto.getId());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_id_nome_quantidade_preco_dataCriacao() {
+        try {
+            Produto produto = randomObject.produtoRandomizerClass();
+            produtoService.save(produto);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "id", "nome", "quantidade", "preco", "dataCriacao");
             Produto produtoBuscado = produtoService.findAndReturnsSelectedFields("id", produto.getId(), campos);
             assertEquals(produto.getNome(), produtoBuscado.getNome());
             produtoService.deleteById(produto.getId());

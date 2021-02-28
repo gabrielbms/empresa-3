@@ -76,7 +76,7 @@ public class EmpresaTest {
         assertEquals("35667373000103", empresa.getCnpj());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_cnpj() {
         empresa.setCnpj(null);
     }
@@ -144,7 +144,7 @@ public class EmpresaTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_nome() {
         empresa.setNome(null);
     }
@@ -208,7 +208,7 @@ public class EmpresaTest {
         assertEquals(empresa.getSite(), empresa.getSite());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_email() {
         empresa.setSite(null);
     }
@@ -252,7 +252,7 @@ public class EmpresaTest {
         assertEquals(empresa.getEndereco(), enderecos);
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_na_data_criacao() {
         empresa.setDataCriacao(null);
     }
@@ -277,7 +277,7 @@ public class EmpresaTest {
         assertEquals(empresa.hashCode(), Empresa2.hashCode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_hashCode_com_uma_empresa_de_cnpj_null() {
         Empresa Empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
         assertNotEquals(empresa.hashCode(), Empresa2.hashCode());
@@ -289,7 +289,7 @@ public class EmpresaTest {
         assertEquals(empresa, empresa2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_empresa_de_cnpj_null() {
         Empresa empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
         assertFalse(empresa.equals(empresa2) & empresa2.equals(empresa));
@@ -305,7 +305,7 @@ public class EmpresaTest {
         assertNotEquals(empresa, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_true_no_equals_comparando_dois_empresas_de_cnpj_null() {
         Empresa empresa1 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);
         Empresa empresa2 = new Empresa(null, "GB Conserto de computadores", telefones, enderecos);

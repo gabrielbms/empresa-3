@@ -105,7 +105,37 @@ public class EmpresaServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_campos() {
+    public void deve_selecionar_nome() {
+        try {
+            Empresa empresa = randomObject.empresaRandomizer();
+            empresaService.save(empresa);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "nome");
+            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("cnpj", empresa.getCnpj(), campos);
+            assertEquals(empresa.getNome(), empresaBuscado.getNome());
+            empresaService.deleteById(empresa.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_cnpj_nome() {
+        try {
+            Empresa empresa = randomObject.empresaRandomizer();
+            empresaService.save(empresa);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cnpj", "nome");
+            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("cnpj", empresa.getCnpj(), campos);
+            assertEquals(empresa.getNome(), empresaBuscado.getNome());
+            empresaService.deleteById(empresa.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_cnpj_nome_site_telefones_enderecos() {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);

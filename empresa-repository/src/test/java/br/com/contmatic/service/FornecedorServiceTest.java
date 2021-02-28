@@ -105,7 +105,37 @@ public class FornecedorServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_campos() {
+    public void deve_selecionar_por_nome() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "nome");
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
+            fornecedorService.deleteById(fornecedor.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_cnpj_nome() {
+        try {
+            Fornecedor fornecedor = randomObject.fornecedorRandomizer();
+            fornecedorService.save(fornecedor);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cnpj", "nome");
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
+            fornecedorService.deleteById(fornecedor.getCnpj());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_cnpj_nome_produtos_enderecos_telefones() {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);

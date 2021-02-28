@@ -90,7 +90,7 @@ public class FuncionarioTest {
         assertEquals("43701888817", funcionario.getCpf());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_cpf() {
         funcionario.setCpf(null);
     }
@@ -157,7 +157,7 @@ public class FuncionarioTest {
         assertEquals("Gabriel", funcionario.getNome());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_nome() {
         funcionario.setNome(null);
     }
@@ -245,7 +245,7 @@ public class FuncionarioTest {
         assertEquals(funcionario.getSalario(), BigDecimal.valueOf(1700.00));
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_na_data_criacao() {
         funcionario.setDataCriacao(null);
     }
@@ -270,7 +270,7 @@ public class FuncionarioTest {
         assertEquals(funcionario.hashCode(), funcionario2.hashCode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_hashCode_com_um_funcionario_de_cpf_null() {
         Funcionario funcionario2 = new Funcionario(null, "Gabriel Bueno", BigDecimal.valueOf(1500.00));
         assertNotEquals(funcionario.hashCode(), funcionario2.hashCode());
@@ -282,7 +282,7 @@ public class FuncionarioTest {
         assertTrue(funcionario.equals(funcionario2) & funcionario2.equals(funcionario));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_funcionario_de_cpf_null() {
         Funcionario funcionario2 = new Funcionario(null, "Gabriel Bueno", BigDecimal.valueOf(1500.00));
         assertFalse(funcionario.equals(funcionario2) & funcionario2.equals(funcionario));
@@ -298,7 +298,7 @@ public class FuncionarioTest {
         assertNotEquals(funcionario, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_true_no_equals_comparando_dois_funcionarios_de_cpf_null() {
         Funcionario funcionario1 = new Funcionario(null, "Gabriel Bueno", BigDecimal.valueOf(1500.00));
         Funcionario funcionario2 = new Funcionario(null, "Gabriel Bueno", BigDecimal.valueOf(1500.00));
@@ -317,9 +317,9 @@ public class FuncionarioTest {
         assertNotEquals(funcionario, new Object());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toString_deve_retornar_null() {
-        funcionario = new Funcionario(null, null, null, null, null, null, null, null);
+        funcionario = new Funcionario(null, null, 0, null, null, BigDecimal.valueOf(0), null, null);
         String funcionarioToString = funcionario.toString();
         assertEquals(funcionario.toString(), funcionarioToString);
     }

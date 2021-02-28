@@ -142,38 +142,39 @@ public class Funcionario {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciais(String cpf) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
-            throw new IllegalArgumentException(CPF_INVALIDO);
+        if (cpf != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
+                throw new IllegalArgumentException(CPF_INVALIDO);
+            }
         }
     }
 
     private void validaCalculoCpf(String cpf) {
-        if (isNotCPF(cpf)) {
-            throw new IllegalStateException(CPF_INVALIDO);
+        if (cpf != null) {
+            if (isNotCPF(cpf)) {
+                throw new IllegalStateException(CPF_INVALIDO);
+            } 
         }
     }
 
     private void validaCpfIncorreto(String cpf) {
-        this.validaCpfNulloOuVazio(cpf);
         this.validaCpfComTamanhoMenor(cpf);
         this.validaCpfComTamanhoMaior(cpf);
     }
 
-    private void validaCpfNulloOuVazio(String cpf) {
-        if (cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException(CPF_VAZIO);
-        }
-    }
-
     private void validaCpfComTamanhoMenor(String cpf) {
-        if (cpf.length() < CPF_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+        if (cpf != null) {
+            if (cpf.length() < CPF_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+            }
         }
     }
 
     private void validaCpfComTamanhoMaior(String cpf) {
-        if (cpf.length() > CPF_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+        if (cpf != null) {
+            if (cpf.length() > CPF_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+            }
         }
     }
 
@@ -188,32 +189,31 @@ public class Funcionario {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-            throw new IllegalArgumentException(NOME_INVALIDO);
+        if (nome != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+                throw new IllegalArgumentException(NOME_INVALIDO);
+            }
         }
     }
 
     private void validaNomeIncorreto(String nome) {
-        this.validaNomeNulloOuVazio(nome);
         this.validaNomeMenorQueOTamanhoMinimo(nome);
         this.validaNomeMaiorQueOTamanhoMinimo(nome);
     }
 
     private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
-        if (nome.length() > NOME_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        if (nome != null) {
+            if (nome.length() > NOME_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+            }  
         }
     }
 
     private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-        if (nome.length() < NOME_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaNomeNulloOuVazio(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException(NOME_VAZIO);
+        if (nome != null) {
+            if (nome.length() < NOME_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -226,7 +226,10 @@ public class Funcionario {
         this.idade = idade;
     }
 
-    private void validaIdade(int idade) {
+    private void validaIdade(Integer idade) {
+        if (idade.equals(0)) {
+            return;
+        }
         if (idade < IDADE_MINIMA) {
             throw new IllegalArgumentException(IDADE_MINIMA_MENSAGEM);
         }
@@ -250,9 +253,12 @@ public class Funcionario {
     }
 
     private void validaSalario(BigDecimal salario) {
-        if (salario.doubleValue() < SALARIO_MINIMO) {
-            throw new IllegalArgumentException(SALARIO_MINIMO_MENSAGEM);
+        if (!salario.equals(BigDecimal.valueOf(0))) {
+            if (salario.doubleValue() < SALARIO_MINIMO) {
+                throw new IllegalArgumentException(SALARIO_MINIMO_MENSAGEM);
+            }
         }
+
     }
 
     public LocalDate getDataContratacao() {
@@ -272,46 +278,27 @@ public class Funcionario {
     }
 
     public void setTelefones(Set<Telefone> telefone) {
-        this.validaTelefoneNullo(telefone);
         this.telefones = telefone;
     }
 
-    private void validaTelefoneNullo(Set<Telefone> telefone) {
-        if (telefone == null) {
-            throw new IllegalArgumentException(TELEFONE_VAZIO);
-        }
-    }
-
     public void setEnderecos(Set<Endereco> endereco) {
-        this.validaEnderecoNullo(endereco);
         this.enderecos = endereco;
     }
 
-    private void validaEnderecoNullo(Set<Endereco> endereco) {
-        if (endereco == null) {
-            throw new IllegalArgumentException(ENDERECO_VAZIO);
-        }
-    }
-    
     public DateTime getDataCriacao() {
         return dataCriacao;
     }
 
     public void setDataCriacao(DateTime dataCriacao) {
-        validaDataCriacaoNullo(dataCriacao);
         validarDataAbsurda(dataCriacao);
         this.dataCriacao = dataCriacao;
     }
     
-    private void validaDataCriacaoNullo(DateTime dataCriacao) {
-        if (dataCriacao == null) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
-        }
-    }
-    
     private void validarDataAbsurda(DateTime dataCriacao) {
-        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        if (dataCriacao != null) {
+            if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+                throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
         }
     }
 

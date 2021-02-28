@@ -78,7 +78,7 @@ public class ClienteTest {
         assertEquals("43701888817", cliente.getCpf());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_cpf() {
         cliente.setCpf(null);
     }
@@ -150,7 +150,7 @@ public class ClienteTest {
         assertEquals("Gabriel", cliente.getNome());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_nome() {
         cliente.setNome(null);
     }
@@ -220,7 +220,7 @@ public class ClienteTest {
         assertEquals(cliente.getEmail(), cliente.getEmail());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_email() {
         cliente.setEmail(null);
     }
@@ -252,7 +252,7 @@ public class ClienteTest {
     "bcabcacabcabcabcaabcabcabcabxc@gmail.com");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_telefone_nulo() {
         cliente.setTelefones(null);
     }
@@ -274,7 +274,7 @@ public class ClienteTest {
         cliente.setBoleto(BigDecimal.valueOf(-20.00));
     }
         
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_na_data_criacao() {
         cliente.setDataCriacao(null);
     }
@@ -299,7 +299,7 @@ public class ClienteTest {
         assertEquals(cliente.hashCode(), cliente2.hashCode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_hashCode_com_um_cliente_de_cpf_null() {
         Cliente cliente2 = new Cliente(null, "Gabriel", telefones, BigDecimal.valueOf(250.00));
         assertNotEquals(cliente.hashCode(), cliente2.hashCode());
@@ -311,7 +311,7 @@ public class ClienteTest {
         assertEquals(cliente, cliente2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_cliente_de_cpf_null() {
         Cliente cliente2 = new Cliente(null, "Gabriela", telefones, BigDecimal.valueOf(270.00));
         assertNotEquals(cliente, cliente2);
@@ -327,10 +327,10 @@ public class ClienteTest {
         assertNotEquals(cliente, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_true_no_equals_comparando_dois_clientes_de_cpf_null() {
         Cliente cliente1 = new Cliente(null, "Gabriel", telefones, BigDecimal.valueOf(250.00));
-        Cliente cliente2 = new Cliente(null, "Gabriela", telefones, BigDecimal.valueOf(270.00));
+        Cliente cliente2 = new Cliente(null, "Gabriel", telefones, BigDecimal.valueOf(250.00));
         assertEquals(cliente1, cliente2);
     }
 
@@ -346,7 +346,7 @@ public class ClienteTest {
         assertNotEquals(cliente, new Object());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toString_deve_retornar_null() {
         Cliente clienteNull = new Cliente(null, null, null, new BigDecimal("1"));
         String clienteNullToString = clienteNull.toString();

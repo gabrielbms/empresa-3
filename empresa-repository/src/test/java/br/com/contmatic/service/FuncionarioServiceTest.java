@@ -112,7 +112,37 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_campos() {
+    public void deve_selecionar_por_nome() {
+        try {
+            Funcionario funcionario = randomObject.funcionarioRandomizer();
+            funcionarioService.save(funcionario);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "nome");
+            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("cpf", funcionario.getCpf(), campos);
+            assertEquals(funcionario.getNome(), funcionarioBuscado.getNome());
+            funcionarioService.deleteById(funcionario.getCpf());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_cpf_nome() {
+        try {
+            Funcionario funcionario = randomObject.funcionarioRandomizer();
+            funcionarioService.save(funcionario);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cpf", "nome");
+            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("cpf", funcionario.getCpf(), campos);
+            assertEquals(funcionario.getNome(), funcionarioBuscado.getNome());
+            funcionarioService.deleteById(funcionario.getCpf());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_por_cpf_nome_idade_salario_dataContratacao_dataSalario_telefones_enderecos() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);

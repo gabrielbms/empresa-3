@@ -31,6 +31,7 @@ import static br.com.contmatic.util.RegexType.LETRAS;
 import static br.com.contmatic.util.RegexType.NUMEROS;
 import static br.com.contmatic.util.RegexType.validaSeNaoTemEspacosIncorretosECaracteresEspeciaos;
 import static br.com.contmatic.util.Validate.isNotCNPJ;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Set;
 
@@ -49,8 +50,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Preconditions;
 
 import br.com.contmatic.endereco.Endereco;
 import br.com.contmatic.groups.Post;
@@ -124,38 +123,39 @@ public class Fornecedor {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciais(String cnpj) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
-            throw new IllegalArgumentException(CPF_INVALIDO);
+        if (cnpj != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
+                throw new IllegalArgumentException(CPF_INVALIDO);
+            }
         }
     }
 
     private void validaCnpjInvalido(String cnpj) {
-        if (isNotCNPJ(cnpj)) {
-            throw new IllegalStateException(CNPJ_INVALIDO);
+        if (cnpj != null) {
+            if (isNotCNPJ(cnpj)) {
+                throw new IllegalStateException(CNPJ_INVALIDO);
+            }
         }
     }
 
     private void validaCnpjIncorreto(String cnpj) {
-        this.validaCnpjNulloOuVazio(cnpj);
         this.validaCnpjComTamanhoMenor(cnpj);
         this.validaCnpjComTamanhoMaior(cnpj);
     }
 
     private void validaCnpjComTamanhoMaior(String cnpj) {
-        if (cnpj.length() > CNPJ_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
+        if (cnpj != null) {
+            if (cnpj.length() > CNPJ_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaCnpjComTamanhoMenor(String cnpj) {
-        if (cnpj.length() < CNPJ_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaCnpjNulloOuVazio(String cnpj) {
-        if (cnpj == null || cnpj.trim().isEmpty()) {
-            throw new IllegalArgumentException(CNPJ_VAZIO);
+        if (cnpj != null) {
+            if (cnpj.length() < CNPJ_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -170,32 +170,31 @@ public class Fornecedor {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-            throw new IllegalArgumentException(NOME_INVALIDO);
+        if (nome != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+                throw new IllegalArgumentException(NOME_INVALIDO);
+            }
         }
     }
 
     private void validaNomeIncorreto(String nome) {
-        this.validaNomeNulloOuVazio(nome);
         this.validaNomeMenorQueOTamanhoMinimo(nome);
         this.validaNomeMaiorQueOTamanhoMinimo(nome);
     }
 
     private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
-        if (nome.length() > NOME_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        if (nome != null) {
+            if (nome.length() > NOME_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-        if (nome.length() < NOME_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaNomeNulloOuVazio(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException(NOME_VAZIO);
+        if (nome != null) {
+            if (nome.length() < NOME_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -204,14 +203,7 @@ public class Fornecedor {
     }
 
     public void setProduto(Set<Produto> produto) {
-        this.validaProdutoNullo(produto);
         this.produtos = produto;
-    }
-
-    private void validaProdutoNullo(Set<Produto> produto) {
-        if (produto == null) {
-            throw new IllegalArgumentException(PRODUTO_VAZIO);
-        }
     }
 
     public @Valid Set<Telefone> getTelefone() {
@@ -219,14 +211,13 @@ public class Fornecedor {
     }
 
     public void setTelefones(Set<Telefone> telefone) {
-        Preconditions.checkArgument(telefone.size() < 2, TELEFONE_SIZE_MAX);
-        this.validaTelefoneNullo(telefone);
+        validaTelefones(telefone);
         this.telefones = telefone;
     }
-
-    private void validaTelefoneNullo(Set<Telefone> telefone) {
-        if (telefone == null) {
-            throw new IllegalArgumentException(TELEFONE_VAZIO);
+    
+    private void validaTelefones(Set<Telefone> telefone) {
+        if (telefone != null) {
+            checkArgument(telefone.size() < 2, TELEFONE_SIZE_MAX);
         }
     }
 
@@ -235,14 +226,13 @@ public class Fornecedor {
     }
 
     public void setEnderecos(Set<Endereco> endereco) {
-        Preconditions.checkArgument(endereco.size() < 2, ENDERECO_SIZE_MAX);
-        this.validaEnderecoNullo(endereco);
+        validaEnderecos(endereco);
         this.enderecos = endereco;
     }
-
-    private void validaEnderecoNullo(Set<Endereco> endereco) {
-        if (endereco == null) {
-            throw new IllegalArgumentException(ENDERECO_VAZIO);
+    
+    private void validaEnderecos(Set<Endereco> endereco) {
+        if (endereco != null) {
+            checkArgument(endereco.size() < 2, ENDERECO_SIZE_MAX);
         }
     }
     
@@ -251,20 +241,15 @@ public class Fornecedor {
     }
 
     public void setDataCriacao(DateTime dataCriacao) {
-        validaDataCriacaoNullo(dataCriacao);
         validarDataAbsurda(dataCriacao);
         this.dataCriacao = dataCriacao;
     }
     
-    private void validaDataCriacaoNullo(DateTime dataCriacao) {
-        if (dataCriacao == null) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
-        }
-    }
-    
     private void validarDataAbsurda(DateTime dataCriacao) {
-        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        if (dataCriacao != null) {
+            if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+                throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
         }
     }
 

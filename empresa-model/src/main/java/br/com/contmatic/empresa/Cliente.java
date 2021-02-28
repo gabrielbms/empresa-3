@@ -64,7 +64,7 @@ import br.com.contmatic.telefone.Telefone;
 public class Cliente {
 
     @CPF(message = CPF_INVALIDO, groups = { Put.class, Post.class })
-    @NotNull(message = CPF_VAZIO, groups = { Put.class, Post.class })
+    @NotBlank(message = CPF_VAZIO, groups = { Put.class, Post.class })
     @Pattern(regexp = NUMEROS, message = CPF_INCORRETO, groups = { Put.class, Post.class })
     private String cpf;
 
@@ -116,38 +116,39 @@ public class Cliente {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoCpf(String cpf) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
-            throw new IllegalArgumentException(CPF_INVALIDO);
+        if (cpf != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cpf)) {
+                throw new IllegalArgumentException(CPF_INVALIDO);
+            }
         }
     }
 
     private void validaCalculoCpf(String cpf) {
-        if (isNotCPF(cpf)) {
-            throw new IllegalStateException(CPF_INVALIDO);
+        if (cpf != null) {
+            if (isNotCPF(cpf)) {
+                throw new IllegalStateException(CPF_INVALIDO);
+            }
         }
     }
 
     private void validaCpfIncorreto(String cpf) {
-        this.validaCpfNulloOuVazio(cpf);
         this.validaCpfComTamanhoMenor(cpf);
         this.validaCpfComTamanhoMaior(cpf);
     }
 
     private void validaCpfComTamanhoMaior(String cpf) {
-        if (cpf.length() > CPF_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+        if (cpf != null) {
+            if (cpf.length() > CPF_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CPF_GRANDE_DEMAIS);
+            }  
         }
     }
 
     private void validaCpfComTamanhoMenor(String cpf) {
-        if (cpf.length() < CPF_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaCpfNulloOuVazio(String cpf) {
-        if (cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException(CPF_VAZIO);
+        if (cpf != null) {
+            if (cpf.length() < CPF_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CPF_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -162,32 +163,31 @@ public class Cliente {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-            throw new IllegalArgumentException(NOME_INVALIDO);
+        if (nome != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+                throw new IllegalArgumentException(NOME_INVALIDO);
+            }
         }
     }
 
     private void validaNomeIncorreto(String nome) {
-        this.validaNomeNulloOuVazio(nome);
         this.validaNomeMenorQueOTamanhoMinimo(nome);
         this.validaNomeMaiorQueOTamanhoMinimo(nome);
     }
 
     private void validaNomeMaiorQueOTamanhoMinimo(String nome) {
-        if (nome.length() > NOME_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        if (nome != null) {
+            if (nome.length() > NOME_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-        if (nome.length() < NOME_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaNomeNulloOuVazio(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException(NOME_VAZIO);
+        if (nome != null) {
+            if (nome.length() < NOME_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -201,26 +201,23 @@ public class Cliente {
     }
 
     private void validaEmailIncorreto(String email) {
-        this.validaEmailNulloOuVazio(email);
         this.validaEmailMenorQueOTamanhoMinimo(email);
         this.validaEmailMaiorQueOTamanhoMaximo(email);
     }
 
     private void validaEmailMaiorQueOTamanhoMaximo(String email) {
-        if (email.length() > EMAIL_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_EMAIL_GRANDE_DEMAIS);
+        if (email != null) {
+            if (email.length() > EMAIL_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_EMAIL_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaEmailMenorQueOTamanhoMinimo(String email) {
-        if (email.length() < EMAIL_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_EMAIL_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaEmailNulloOuVazio(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException(EMAIL_VAZIO);
+        if (email != null) {
+            if (email.length() < EMAIL_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_EMAIL_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -229,14 +226,7 @@ public class Cliente {
     }
 
     public void setTelefones(Set<Telefone> telefone) {
-        this.validaTelefoneNullo(telefone);
         this.telefones = telefone;
-    }
-
-    private void validaTelefoneNullo(Set<Telefone> telefones) {
-        if (telefones == null) {
-            throw new IllegalArgumentException(TELEFONE_VAZIO);
-        }
     }
 
     public BigDecimal getBoleto() {
@@ -259,20 +249,15 @@ public class Cliente {
     }
 
     public void setDataCriacao(DateTime dataCriacao) {
-        validaDataCriacaoNullo(dataCriacao);
         validarDataAbsurda(dataCriacao);
         this.dataCriacao = dataCriacao;
     }
-    
-    private void validaDataCriacaoNullo(DateTime dataCriacao) {
-        if (dataCriacao == null) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
-        }
-    }
-    
+
     private void validarDataAbsurda(DateTime dataCriacao) {
-        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        if (dataCriacao != null) {
+            if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+                throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
         }
     }
 

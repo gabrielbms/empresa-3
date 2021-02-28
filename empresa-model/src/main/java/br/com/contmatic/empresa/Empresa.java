@@ -118,38 +118,39 @@ public class Empresa {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciais(String cnpj) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
-            throw new IllegalArgumentException(CPF_INVALIDO);
+        if (cnpj != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(cnpj)) {
+                throw new IllegalArgumentException(CPF_INVALIDO);
+            }
         }
     }
 
     private void validaCnpjInvalido(String cnpj) {
-        if (isNotCNPJ(cnpj)) {
-            throw new IllegalStateException(CNPJ_INVALIDO);
+        if (cnpj != null) {
+            if (isNotCNPJ(cnpj)) {
+                throw new IllegalStateException(CNPJ_INVALIDO);
+            }
         }
     }
 
     private void validaCnpjIncorreto(String cnpj) {
-        this.validaCnpjNulloOuVazio(cnpj);
         this.validaCnpjComTamanhoMenor(cnpj);
         this.validaCnpjComTamanhoMaior(cnpj);
     }
 
     private void validaCnpjComTamanhoMaior(String cnpj) {
-        if (cnpj.length() > CNPJ_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
+        if (cnpj != null) {
+            if (cnpj.length() > CNPJ_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CNPJ_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaCnpjComTamanhoMenor(String cnpj) {
-        if (cnpj.length() < CNPJ_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaCnpjNulloOuVazio(String cnpj) {
-        if (cnpj == null || cnpj.trim().isEmpty()) {
-            throw new IllegalArgumentException(CNPJ_VAZIO);
+        if (cnpj != null) {
+            if (cnpj.length() < CNPJ_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_CNPJ_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -164,32 +165,31 @@ public class Empresa {
     }
 
     private void validaEspacosIncorretosECaracteresEspeciaisNoNome(String nome) {
-        if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
-            throw new IllegalArgumentException(NOME_INVALIDO);
+        if (nome != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(nome)) {
+                throw new IllegalArgumentException(NOME_INVALIDO);
+            }  
         }
     }
 
     private void validaNomeIncorreto(String nome) {
-        this.validaNomeNulloOuIncorreto(nome);
         this.validaNomeMenorQueOTamanhoMinimo(nome);
         this.validaNomeMaiorQueOTamanhoMaximo(nome);
     }
 
     private void validaNomeMaiorQueOTamanhoMaximo(String nome) {
-        if (nome.length() > NOME_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+        if (nome != null) {
+            if (nome.length() > NOME_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaNomeMenorQueOTamanhoMinimo(String nome) {
-        if (nome.length() < NOME_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaNomeNulloOuIncorreto(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException(NOME_VAZIO);
+        if (nome != null) {
+            if (nome.length() < NOME_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_NOME_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -203,26 +203,23 @@ public class Empresa {
     }
 
     private void validaSiteIncorreto(String site) {
-        this.validaSiteNulloOuIncorreto(site);
         this.validaSiteMenorQueOTamanhoMinimo(site);
         this.validaSiteMaiorQueOTamanhoMaximo(site);
     }
 
     private void validaSiteMaiorQueOTamanhoMaximo(String site) {
-        if (site.length() > SITE_MAX_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_SITE_GRANDE_DEMAIS);
+        if (site != null) {
+            if (site.length() > SITE_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_SITE_GRANDE_DEMAIS);
+            }
         }
     }
 
     private void validaSiteMenorQueOTamanhoMinimo(String site) {
-        if (site.length() < SITE_MIN_SIZE) {
-            throw new IllegalArgumentException(TAMANHO_DO_SITE_PEQUENO_DEMAIS);
-        }
-    }
-
-    private void validaSiteNulloOuIncorreto(String site) {
-        if (site == null || site.trim().isEmpty()) {
-            throw new IllegalArgumentException(SITE_VAZIO);
+        if (site != null) {
+            if (site.length() < SITE_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_SITE_PEQUENO_DEMAIS);
+            }
         }
     }
 
@@ -231,14 +228,7 @@ public class Empresa {
     }
 
     public void setTelefones(Set<Telefone> telefone) {
-        this.validaTelefoneNullo(telefone);
         this.telefones = telefone;
-    }
-
-    private void validaTelefoneNullo(Set<Telefone> telefone) {
-        if (telefone == null) {
-            throw new IllegalArgumentException(TELEFONE_VAZIO);
-        }
     }
 
     public @Valid Set<Endereco> getEndereco() {
@@ -246,14 +236,7 @@ public class Empresa {
     }
 
     public void setEnderecos(Set<Endereco> endereco) {
-        this.validaEnderecoNullo(endereco);
         this.enderecos = endereco;
-    }
-
-    private void validaEnderecoNullo(Set<Endereco> endereco) {
-        if (endereco == null) {
-            throw new IllegalArgumentException(ENDERECO_VAZIO);
-        }
     }
     
     public DateTime getDataCriacao() {
@@ -261,20 +244,15 @@ public class Empresa {
     }
 
     public void setDataCriacao(DateTime dataCriacao) {
-        validaDataCriacaoNullo(dataCriacao);
         validarDataAbsurda(dataCriacao);
         this.dataCriacao = dataCriacao;
     }
     
-    private void validaDataCriacaoNullo(DateTime dataCriacao) {
-        if (dataCriacao == null) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
-        }
-    }
-    
     private void validarDataAbsurda(DateTime dataCriacao) {
-        if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
-            throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+        if (dataCriacao != null) {
+            if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
+                throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
         }
     }
 

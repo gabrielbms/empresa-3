@@ -37,7 +37,6 @@ public class ProdutoTest {
     @Before
     public void setUp() {
         ProdutoTest.produto = randomObject.produtoRandomizerClass();
-
     }
 
     @Test
@@ -46,7 +45,7 @@ public class ProdutoTest {
         assertEquals("Ryzen 5 2600", produto.getNome());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_no_nome() {
         produto.setNome(null);
     }
@@ -141,7 +140,7 @@ public class ProdutoTest {
         produto.setPreco(BigDecimal.valueOf(-500.00));
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nao_deve_aceitar_null_na_data_criacao() {
         produto.setDataCriacao(null);
     }

@@ -112,12 +112,42 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_campos() {
+    public void deve_selecionar_nome() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cpf", "nome", "email", "boleto", "telefones", "dataCriacao");
+            Collections.addAll(campos, "nome");
+            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
+            assertEquals(cliente.getNome(), clienteBuscado.getNome());
+            clienteService.deleteById(cliente.getCpf());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_cpf_nome() {
+        try {
+            Cliente cliente = randomObject.clienteRandomizer();
+            clienteService.save(cliente);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cpf", "nome");
+            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
+            assertEquals(cliente.getNome(), clienteBuscado.getNome());
+            clienteService.deleteById(cliente.getCpf());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    
+    @Test
+    public void deve_selecionar_cpf_nome_email_boleto() {
+        try {
+            Cliente cliente = randomObject.clienteRandomizer();
+            clienteService.save(cliente);
+            List<String> campos = new ArrayList<>();
+            Collections.addAll(campos, "cpf", "nome", "email", "boleto");
             Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
             assertEquals(cliente.getNome(), clienteBuscado.getNome());
             clienteService.deleteById(cliente.getCpf());
