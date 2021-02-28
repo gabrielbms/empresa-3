@@ -26,6 +26,9 @@ public class ClienteResourceAssembly implements Assembly<Cliente, Document> {
             resource.setBoleto(valorBoleto);
             resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
             resource.setDataCriacao(toDateTime(document.getString("dataCriacao")));
+            resource.setDataModificacao(toDateTime(document.getString("dataModificacao")));
+            resource.setUsuarioCriacao(document.getString("usuarioCriacao"));
+            resource.setUsuarioModificacao(document.getString("usuarioModificacao"));
             return resource;
         }
         return null;

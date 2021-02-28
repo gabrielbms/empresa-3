@@ -71,6 +71,8 @@ public final class Constantes {
 	
 	public static final String NOME_INVALIDO = "O nome informado não é valido.";
 	
+	public static final String USUARIO_INVALIDO = "O usuário informado não é valido.";
+	
 	public static final String NOME_INCORRETO = "O nome foi preenchido incorretamente.";
 	
 	public static final String NOME_VAZIO = "O nome informado não pode ser vazio ou nullo.";
@@ -78,6 +80,10 @@ public final class Constantes {
 	public static final String TAMANHO_DO_NOME_PEQUENO_DEMAIS = "O nome não cumpre o tamanho mínimo de 2 caracteres.";
 
 	public static final String TAMANHO_DO_NOME_GRANDE_DEMAIS = "O nome não cumpre o tamanho máximo de 80 caracteres.";
+	
+	public static final String TAMANHO_DO_USUARIO_PEQUENO_DEMAIS = "O usuário não cumpre o tamanho mínimo de 4 caracteres.";
+
+	public static final String TAMANHO_DO_USUARIO_GRANDE_DEMAIS = "O usuário não cumpre o tamanho máximo de 80 caracteres.";
 
 	public static final String TELEFONE_INVALIDO = "O telefone informado não é valido.";
 
@@ -163,6 +169,12 @@ public final class Constantes {
 	
 	public static final String DATA_CRIACAO_VAZIO = "A data de criação não pode ser vazio ou nullo";
 	
+	public static final String USUARIO_CRIACAO_VAZIO = "A data de criação não pode ser vazio ou nullo";
+	
+	public static final String USUARIO_MODIFICACAO_VAZIO = "A data de criação não pode ser vazio ou nullo";
+	
+	public static final String DATA_MODIFICACAO_INVALIDA = "A data de modificação informada é inválida.";
+	
 	public static final String ID_VAZIO = "O ID foi preenchido incorretamente.";
 	
 	public static final String DDD_VAZIO = "O DDD foi preenchido incorretamente.";
@@ -200,6 +212,10 @@ public final class Constantes {
 	public static final Integer NOME_MIN_SIZE = 2;
 	
 	public static final Integer NOME_MAX_SIZE = 80;
+
+	public static final Integer USUARIO_MIN_SIZE = 4;
+	    
+	public static final Integer USUARIO_MAX_SIZE = 80;
 	
 	public static final Integer EMAIL_MIN_SIZE = 7;
 	

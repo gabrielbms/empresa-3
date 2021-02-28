@@ -7,6 +7,7 @@ import static br.com.contmatic.util.Constantes.CPF_INVALIDO;
 import static br.com.contmatic.util.Constantes.CPF_SIZE;
 import static br.com.contmatic.util.Constantes.CPF_VAZIO;
 import static br.com.contmatic.util.Constantes.DATA_CRIACAO_VAZIO;
+import static br.com.contmatic.util.Constantes.DATA_MODIFICACAO_INVALIDA;
 import static br.com.contmatic.util.Constantes.EMAIL_INVALIDO;
 import static br.com.contmatic.util.Constantes.EMAIL_MAX_SIZE;
 import static br.com.contmatic.util.Constantes.EMAIL_MIN_SIZE;
@@ -23,9 +24,14 @@ import static br.com.contmatic.util.Constantes.TAMANHO_DO_EMAIL_GRANDE_DEMAIS;
 import static br.com.contmatic.util.Constantes.TAMANHO_DO_EMAIL_PEQUENO_DEMAIS;
 import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_GRANDE_DEMAIS;
 import static br.com.contmatic.util.Constantes.TAMANHO_DO_NOME_PEQUENO_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_USUARIO_GRANDE_DEMAIS;
+import static br.com.contmatic.util.Constantes.TAMANHO_DO_USUARIO_PEQUENO_DEMAIS;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MAX;
 import static br.com.contmatic.util.Constantes.TELEFONE_QTDE_MINIMA;
 import static br.com.contmatic.util.Constantes.TELEFONE_VAZIO;
+import static br.com.contmatic.util.Constantes.USUARIO_INVALIDO;
+import static br.com.contmatic.util.Constantes.USUARIO_MAX_SIZE;
+import static br.com.contmatic.util.Constantes.USUARIO_MIN_SIZE;
 import static br.com.contmatic.util.RegexType.EMAIL;
 import static br.com.contmatic.util.RegexType.LETRAS;
 import static br.com.contmatic.util.RegexType.NUMEROS;
@@ -92,6 +98,18 @@ public class Cliente {
     @Null(groups = { Put.class })
     @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class })
     private DateTime dataCriacao;
+    
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class, Put.class })
+    private DateTime dataModificacao;
+    
+    @Null(groups = { Put.class })
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class })
+    @Pattern(regexp = LETRAS, message = USUARIO_INVALIDO, groups = { Post.class })
+    private String usuarioCriacao;
+    
+    @NotNull(message = DATA_CRIACAO_VAZIO, groups = { Post.class, Put.class })
+    @Pattern(regexp = LETRAS, message = USUARIO_INVALIDO, groups = { Put.class, Post.class })
+    private String usuarioModificacao;
 
     public Cliente(String cpf, String nome, @Valid Set<Telefone> telefone, BigDecimal boleto) {
         this.setCpf(cpf);
@@ -257,6 +275,72 @@ public class Cliente {
         if (dataCriacao != null) {
             if (dataCriacao.getYear() < 1950 || dataCriacao.getYear() > DateTime.now().getYear()) {
                 throw new IllegalArgumentException(DATA_CRIACAO_VAZIO);
+            }
+        }
+    }
+
+    public DateTime getDataModificacao() {
+        return dataModificacao;
+    }
+
+    public void setDataModificacao(DateTime dataModificacao) {
+        validaDataModificacao(dataModificacao);
+        this.dataModificacao = dataModificacao;
+    }
+    
+    private void validaDataModificacao(DateTime dataModificacao) {
+        if (dataModificacao != null) {
+            if (dataModificacao.isBefore(dataCriacao)) {
+                throw new IllegalArgumentException(DATA_MODIFICACAO_INVALIDA);
+            }
+        }
+    }
+
+    public String getUsuarioCriacao() {
+        return usuarioCriacao;
+    }
+
+    public void setUsuarioCriacao(String usuarioCriacao) {
+        validaEspacosIncorretosECaracteresEspeciaisNoUsuario(usuarioCriacao);
+        validaUsuarioIncorreto(usuarioCriacao);
+        this.usuarioCriacao = usuarioCriacao;
+    }
+
+    public String getUsuarioModificacao() {
+        return usuarioModificacao;
+    }
+
+    public void setUsuarioModificacao(String usuarioModificacao) {
+        validaEspacosIncorretosECaracteresEspeciaisNoUsuario(usuarioModificacao);
+        validaUsuarioIncorreto(usuarioModificacao);
+        this.usuarioModificacao = usuarioModificacao;
+    }
+    
+    private void validaEspacosIncorretosECaracteresEspeciaisNoUsuario(String usuario) {
+        if (usuario != null) {
+            if (validaSeNaoTemEspacosIncorretosECaracteresEspeciaos(usuario)) {
+                throw new IllegalArgumentException(USUARIO_INVALIDO);
+            }
+        }
+    }
+
+    private void validaUsuarioIncorreto(String usuario) {
+        this.validausuarioMenorQueOTamanhoMinimo(usuario);
+        this.validausuarioMaiorQueOTamanhoMinimo(usuario);
+    }
+
+    private void validausuarioMaiorQueOTamanhoMinimo(String usuario) {
+        if (usuario != null) {
+            if (usuario.length() > USUARIO_MAX_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_USUARIO_GRANDE_DEMAIS);
+            }
+        }
+    }
+
+    private void validausuarioMenorQueOTamanhoMinimo(String usuario) {
+        if (usuario != null) {
+            if (usuario.length() < USUARIO_MIN_SIZE) {
+                throw new IllegalArgumentException(TAMANHO_DO_USUARIO_PEQUENO_DEMAIS);
             }
         }
     }

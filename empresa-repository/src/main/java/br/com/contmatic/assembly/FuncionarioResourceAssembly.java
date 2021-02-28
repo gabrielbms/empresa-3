@@ -32,6 +32,9 @@ public class FuncionarioResourceAssembly implements Assembly<Funcionario, Docume
             resource.setDataContratacao(LocalDate(document.getString("dataContratacao")));
             resource.setDataSalario(LocalDate(document.getString("dataSalario")));
             resource.setDataCriacao(toDateTime(document.getString("dataCriacao")));
+            resource.setDataModificacao(toDateTime(document.getString("dataModificacao")));
+            resource.setUsuarioCriacao(document.getString("usuarioCriacao"));
+            resource.setUsuarioModificacao(document.getString("usuarioModificacao"));
             return resource;
         }
         return null;

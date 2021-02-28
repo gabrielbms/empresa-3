@@ -21,6 +21,9 @@ public class ProdutoResourceAssembly implements Assembly<Produto, Document> {
             BigDecimal preco = validarPreco(document);
             resource.setPreco(preco);
             resource.setDataCriacao(toDateTime(document.getString("dataCriacao")));
+            resource.setDataModificacao(toDateTime(document.getString("dataModificacao")));
+            resource.setUsuarioCriacao(document.getString("usuarioCriacao"));
+            resource.setUsuarioModificacao(document.getString("usuarioModificacao"));
             return resource;
         }
         return null;

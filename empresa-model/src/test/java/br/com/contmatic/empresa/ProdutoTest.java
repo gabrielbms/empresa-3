@@ -158,6 +158,136 @@ public class ProdutoTest {
         dataModificada.setDate(2100, 01, 01);
         produto.setDataCriacao(dataModificada.toDateTime());
     }
+    
+    @Test
+    public void nao_deve_aceitar_null_na_data_modificacao() {
+        produto.setDataModificacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_modificacao_anterior_a_data_criacao() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2021, 02, 25);
+        produto.setDataModificacao(dataModificada.toDateTime());
+    }
+    
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_letras() {
+        produto.setUsuarioCriacao("Gabriel");
+        assertEquals("Gabriel", produto.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_criacao() {
+        produto.setUsuarioCriacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_criacao() {
+        produto.setUsuarioCriacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_criacao() {
+        produto.setUsuarioCriacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_criacao() {
+        produto.setUsuarioCriacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_criacao() {
+        produto.setUsuarioCriacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_criacao() {
+        produto.setUsuarioCriacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_um_espaco_entre_as_palavras() {
+        produto.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", produto.getUsuarioCriacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_criacao() {
+        produto.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", produto.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_menor() {
+        produto.setUsuarioCriacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_maior() {
+        produto.setUsuarioCriacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_letras() {
+        produto.setUsuarioModificacao("Gabriel");
+        assertEquals("Gabriel", produto.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_modificacao() {
+        produto.setUsuarioModificacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_modificacao() {
+        produto.setUsuarioModificacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_modificacao() {
+        produto.setUsuarioModificacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_modificacao() {
+        produto.setUsuarioModificacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_modificacao() {
+        produto.setUsuarioModificacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_modificacao() {
+        produto.setUsuarioModificacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_um_espaco_entre_as_palavras() {
+        produto.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", produto.getUsuarioModificacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_modificacao() {
+        produto.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", produto.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_menor() {
+        produto.setUsuarioModificacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_maior() {
+        produto.setUsuarioModificacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
+    }
 
     @Test
     public void deve_testar_o_toString_preenchido() {

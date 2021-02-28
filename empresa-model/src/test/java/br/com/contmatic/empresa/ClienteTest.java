@@ -2,20 +2,13 @@ package br.com.contmatic.empresa;
 
 import static br.com.contmatic.telefone.TelefoneDDDType.DDD11;
 import static br.com.contmatic.telefone.TelefoneType.CELULAR;
-import static br.com.contmatic.util.Constantes.NOME_INVALIDO;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.joda.time.MutableDateTime;
 import org.junit.After;
@@ -24,8 +17,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
-import br.com.contmatic.groups.Post;
-import br.com.contmatic.groups.Put;
 import br.com.contmatic.telefone.Telefone;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -43,10 +34,6 @@ public class ClienteTest {
 
     private Set<Telefone> telefones = new HashSet<>();
 
-    private Validator validator;
-
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
     @Before
@@ -54,22 +41,6 @@ public class ClienteTest {
         ClienteTest.cliente = randomObject.clienteRandomizer();
         telefone = new Telefone(DDD11, "978457845", CELULAR);
         telefones.add(telefone);
-    }
-
-    public boolean isValid(Cliente cliente, String mensagem) {
-        validator = factory.getValidator();
-        boolean valido = true;
-        Set<ConstraintViolation<Cliente>> restricoesPost = validator.validate(cliente, Post.class);
-        for(ConstraintViolation<Cliente> constraintViolation : restricoesPost)
-            if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
-                valido = false;
-
-        Set<ConstraintViolation<Cliente>> restricoesPut = validator.validate(cliente, Put.class);
-        for(ConstraintViolation<Cliente> constraintViolation : restricoesPut)
-            if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
-                valido = false;
-
-        return valido;
     }
 
     @Test
@@ -150,11 +121,6 @@ public class ClienteTest {
         assertEquals("Gabriel", cliente.getNome());
     }
 
-    @Test
-    public void nao_deve_aceitar_null_no_nome() {
-        cliente.setNome(null);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void nao_deve_aceitar_vazio_no_nome() {
         cliente.setNome("");
@@ -163,12 +129,6 @@ public class ClienteTest {
     @Test(expected = IllegalArgumentException.class)
     public void nao_deve_aceitar_espacos_no_nome() {
         cliente.setNome("          ");
-    }
-
-    @Test
-    public void nao_deve_aceitar_numeros_no_nome() {
-        cliente.setNome("123456");
-        assertFalse(isValid(cliente, NOME_INVALIDO));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -291,6 +251,136 @@ public class ClienteTest {
         MutableDateTime dataModificada = new MutableDateTime();
         dataModificada.setDate(2100, 01, 01);
         cliente.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test
+    public void nao_deve_aceitar_null_na_data_modificacao() {
+        cliente.setDataModificacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_modificacao_anterior_a_data_criacao() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2021, 02, 25);
+        cliente.setDataModificacao(dataModificada.toDateTime());
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_letras() {
+        cliente.setUsuarioCriacao("Gabriel");
+        assertEquals("Gabriel", cliente.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_criacao() {
+        cliente.setUsuarioCriacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_criacao() {
+        cliente.setUsuarioCriacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_criacao() {
+        cliente.setUsuarioCriacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_criacao() {
+        cliente.setUsuarioCriacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_criacao() {
+        cliente.setUsuarioCriacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_criacao() {
+        cliente.setUsuarioCriacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_um_espaco_entre_as_palavras() {
+        cliente.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", cliente.getUsuarioCriacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_criacao() {
+        cliente.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", cliente.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_menor() {
+        cliente.setUsuarioCriacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_maior() {
+        cliente.setUsuarioCriacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_letras() {
+        cliente.setUsuarioModificacao("Gabriel");
+        assertEquals("Gabriel", cliente.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_modificacao() {
+        cliente.setUsuarioModificacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_modificacao() {
+        cliente.setUsuarioModificacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_modificacao() {
+        cliente.setUsuarioModificacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_modificacao() {
+        cliente.setUsuarioModificacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_modificacao() {
+        cliente.setUsuarioModificacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_modificacao() {
+        cliente.setUsuarioModificacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_um_espaco_entre_as_palavras() {
+        cliente.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", cliente.getUsuarioModificacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_modificacao() {
+        cliente.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", cliente.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_menor() {
+        cliente.setUsuarioModificacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_maior() {
+        cliente.setUsuarioModificacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
     }
 
     @Test

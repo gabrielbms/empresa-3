@@ -25,6 +25,9 @@ public class EmpresaResourceAssembly implements Assembly<Empresa, Document> {
             resource.setTelefones(toResourceTelefones(document.getList("telefones", Document.class)));
             resource.setEnderecos(toResourceEnderecos(document.getList("enderecos", Document.class)));
             resource.setDataCriacao(toDateTime(document.getString("dataCriacao")));
+            resource.setDataModificacao(toDateTime(document.getString("dataModificacao")));
+            resource.setUsuarioCriacao(document.getString("usuarioCriacao"));
+            resource.setUsuarioModificacao(document.getString("usuarioModificacao"));
             return resource;
         }
         return null;

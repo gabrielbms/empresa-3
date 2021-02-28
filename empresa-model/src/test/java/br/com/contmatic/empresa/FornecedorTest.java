@@ -9,11 +9,6 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
 import org.joda.time.MutableDateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -22,8 +17,6 @@ import org.junit.Test;
 
 import br.com.contmatic.easyRandom.EasyRandomClass;
 import br.com.contmatic.endereco.Endereco;
-import br.com.contmatic.groups.Post;
-import br.com.contmatic.groups.Put;
 import br.com.contmatic.telefone.Telefone;
 import nl.jqno.equalsverifier.EqualsVerifier;;
 
@@ -45,33 +38,11 @@ public class FornecedorTest {
     
     private Set<Endereco> enderecos = new HashSet<>();
 
-    private Validator validator;
-
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
 
     @Before
     public void setUp() {
         FornecedorTest.fornecedor = randomObject.fornecedorRandomizer();
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
-    }
-
-    public boolean isValid(Fornecedor fornecedor, String mensagem) {
-        validator = factory.getValidator();
-        boolean valido = true;
-        Set<ConstraintViolation<Fornecedor>> restricoesPost = validator.validate(fornecedor, Post.class);
-        for(ConstraintViolation<Fornecedor> constraintViolation : restricoesPost)
-            if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
-                valido = false;
-
-        Set<ConstraintViolation<Fornecedor>> restricoesPut = validator.validate(fornecedor, Put.class);
-        for(ConstraintViolation<Fornecedor> constraintViolation : restricoesPut)
-            if (constraintViolation.getMessage().equalsIgnoreCase(mensagem))
-                valido = false;
-
-        return valido;
     }
 
     @Test
@@ -269,6 +240,136 @@ public class FornecedorTest {
         MutableDateTime dataModificada = new MutableDateTime();
         dataModificada.setDate(2100, 01, 01);
         fornecedor.setDataCriacao(dataModificada.toDateTime());
+    }
+    
+    @Test
+    public void nao_deve_aceitar_null_na_data_modificacao() {
+        fornecedor.setDataModificacao(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_modificacao_anterior_a_data_criacao() {
+        MutableDateTime dataModificada = new MutableDateTime();
+        dataModificada.setDate(2021, 02, 25);
+        fornecedor.setDataModificacao(dataModificada.toDateTime());
+    }
+    
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_letras() {
+        fornecedor.setUsuarioCriacao("Gabriel");
+        assertEquals("Gabriel", fornecedor.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_criacao() {
+        fornecedor.setUsuarioCriacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_criacao_aceita_um_espaco_entre_as_palavras() {
+        fornecedor.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", fornecedor.getUsuarioCriacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_criacao() {
+        fornecedor.setUsuarioCriacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", fornecedor.getUsuarioCriacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_menor() {
+        fornecedor.setUsuarioCriacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_criacao_tamanho_maior() {
+        fornecedor.setUsuarioCriacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_letras() {
+        fornecedor.setUsuarioModificacao("Gabriel");
+        assertEquals("Gabriel", fornecedor.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_vazio_no_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("          ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_caracteres_especiais_no_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("@#$");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_inicio_do_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao(" Gabriel");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_espacos_no_final_do_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("Gabriel ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nao_deve_aceitar_mais_que_dois_espacos_no_meio_do_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("Gabriel         Bueno");
+    }
+
+    @Test
+    public void deve_testar_se_o_usuario_modificacao_aceita_um_espaco_entre_as_palavras() {
+        fornecedor.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", fornecedor.getUsuarioModificacao());
+    }
+
+    @Test
+    public void deve_testar_o_get_usuario_modificacao() {
+        fornecedor.setUsuarioModificacao("Gabriel Bueno");
+        assertEquals("Gabriel Bueno", fornecedor.getUsuarioModificacao());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_menor() {
+        fornecedor.setUsuarioModificacao("a");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deve_testar_exception_do_set_usuario_modificacao_tamanho_maior() {
+        fornecedor.setUsuarioModificacao("abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcaabcabcabcabcabcaabcabcabc" +
+    "abcabcaabcabcabcabcabcabcabcabcabcabcabxc");
     }
 
     @Test

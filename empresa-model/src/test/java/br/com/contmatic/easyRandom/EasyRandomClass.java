@@ -36,6 +36,10 @@ public class EasyRandomClass {
         cliente.setTelefones(telefoneRandomizer());
         cliente.setBoleto(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(10.00), BigDecimal.valueOf(500.00).setScale(2)));
         cliente.setDataCriacao(DateTime.now());
+        cliente.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        cliente.setUsuarioCriacao(nomeUsuario);
+        cliente.setUsuarioModificacao(nomeUsuario);
         return cliente;
     }
 
@@ -50,6 +54,10 @@ public class EasyRandomClass {
         empresa.setTelefones(telefoneRandomizer());
         empresa.setEnderecos(enderecoRandomizer());
         empresa.setDataCriacao(DateTime.now());
+        empresa.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        empresa.setUsuarioCriacao(nomeUsuario);
+        empresa.setUsuarioModificacao(nomeUsuario);
         return empresa;
     }
 
@@ -64,6 +72,10 @@ public class EasyRandomClass {
         fornecedor.setTelefones(telefoneRandomizer());
         fornecedor.setEnderecos(enderecoRandomizer());
         fornecedor.setDataCriacao(DateTime.now());
+        fornecedor.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        fornecedor.setUsuarioCriacao(nomeUsuario);
+        fornecedor.setUsuarioModificacao(nomeUsuario);
         return fornecedor;
     }
 
@@ -80,6 +92,10 @@ public class EasyRandomClass {
         funcionario.setTelefones(telefoneRandomizer());
         funcionario.setEnderecos(enderecoRandomizer());
         funcionario.setDataCriacao(DateTime.now());
+        funcionario.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        funcionario.setUsuarioCriacao(nomeUsuario);
+        funcionario.setUsuarioModificacao(nomeUsuario);
         return funcionario;
     }
 
@@ -93,6 +109,10 @@ public class EasyRandomClass {
         produto.setQuantidade(faker.number().numberBetween(1, 10));
         produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
         produto.setDataCriacao(DateTime.now());
+        produto.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        produto.setUsuarioCriacao(nomeUsuario);
+        produto.setUsuarioModificacao(nomeUsuario);
         produtos.add(produto);
         return produtos;
     }
@@ -106,6 +126,10 @@ public class EasyRandomClass {
         produto.setQuantidade(faker.number().numberBetween(1, 10));
         produto.setPreco(Geradores.generateRandomBigDecimalValueFromRange(BigDecimal.valueOf(5.00), BigDecimal.valueOf(300.00).setScale(2)));
         produto.setDataCriacao(DateTime.now());
+        produto.setDataModificacao(DateTime.now());
+        String nomeUsuario = faker.name().fullName().replace(".", "");
+        produto.setUsuarioCriacao(nomeUsuario);
+        produto.setUsuarioModificacao(nomeUsuario);
         return produto;
     }
 
