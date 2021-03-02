@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.easyRandom.EasyRandomClass.geraNomeUsuario;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -21,13 +23,6 @@ public class FuncionarioServiceTest {
     private static EasyRandomClass randomObject = EasyRandomClass.InstanciaEasyRandomClass();
     
     private static final Logger LOGGER = LoggerFactory.getLogger(FuncionarioServiceTest.class);
-    
-    @Test
-    public void loop() {
-        for(int i = 0 ; i < 10; i++) {
-            deve_salvar_empresa();
-        }
-    }
 
     @Test
     public void deve_salvar_empresa() {
@@ -46,6 +41,8 @@ public class FuncionarioServiceTest {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
             funcionario.setNome("Atualizando um funcionario");
+            funcionario.setDataModificacao(now());
+            funcionario.setUsuarioModificacao(geraNomeUsuario());
             funcionarioService.update(funcionario);
             Funcionario funcionarioBanco = funcionarioService.findById(funcionario.getCpf());
             assertEquals("Atualizando um funcionario", funcionarioBanco.getNome());
@@ -61,6 +58,8 @@ public class FuncionarioServiceTest {
             String nomefuncionario = funcionario.getNome();
             funcionarioService.save(funcionario);
             funcionario.setNome("Atualizando um funcionario pelo campo");
+            funcionario.setDataModificacao(now());
+            funcionario.setUsuarioModificacao(geraNomeUsuario());
             funcionarioService.updateByField("nome", nomefuncionario, funcionario);
             Funcionario funcionarioBanco = funcionarioService.findById(funcionario.getCpf());
             assertEquals("Atualizando um funcionario pelo campo", funcionarioBanco.getNome());

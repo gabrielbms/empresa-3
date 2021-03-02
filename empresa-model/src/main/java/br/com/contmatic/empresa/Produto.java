@@ -93,7 +93,10 @@ public class Produto {
     }
 
     private void validaIdIncorreto(Integer id) {
-        if (id == null || id.doubleValue() < ID_MINIMO) {
+        if (id == null) {
+            return;
+        }
+        if (id.doubleValue() < ID_MINIMO) {
             throw new IllegalArgumentException(ID_VAZIO);
         }
     }

@@ -19,7 +19,9 @@ public class ClienteResourceAssemblyTest {
         Cliente cliente = randomObject.clienteRandomizer();
         Document document = new ClienteResourceAssembly().toDocument(cliente);
         String clienteUTF8 = StringEscapeUtils.unescapeJava(cliente.toString()).replaceAll("\\s", "");
-        assertThat(clienteUTF8, equalTo(document.toJson().replaceAll("\\s", "")));
+        assertThat(clienteUTF8.replace(".00,", ".0,").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
+            .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,"), equalTo(document.toJson().replaceAll("\\s", "").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
+            .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,")));
     }
 
     @Test
@@ -33,8 +35,8 @@ public class ClienteResourceAssemblyTest {
         Document document = Document.parse(randomObject.clienteRandomizer().toString());
         Cliente cliente = new ClienteResourceAssembly().toResource(document);
         String clienteUTF8 = StringEscapeUtils.unescapeJava(cliente.toString()).replaceAll("\\s", "");
-        assertThat(clienteUTF8.replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
-            .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,"), equalTo(document.toJson().replaceAll("\\s", "").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
+        assertThat(clienteUTF8.replace(".00,", ".0,").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
+            .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,"), equalTo(document.toJson().replaceAll("\\s", "").replace(".00,", ".0,").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
             .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,")));
     }
 

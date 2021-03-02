@@ -23,11 +23,11 @@ import br.com.contmatic.telefone.TelefoneType;
 
 public class EasyRandomClass {
 
+    static Faker faker = new Faker();
+    EasyRandom easyFakeObject = new EasyRandom();
     public static EasyRandomClass easy = new EasyRandomClass();
 
     public Cliente clienteRandomizer() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Cliente cliente = easyFakeObject.nextObject(Cliente.class);
         cliente.setCpf(Geradores.geraCpf());
         String nomeCliente = faker.name().fullName().replace(".", "");
@@ -44,8 +44,6 @@ public class EasyRandomClass {
     }
 
     public Empresa empresaRandomizer() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Empresa empresa = easyFakeObject.nextObject(Empresa.class);
         empresa.setCnpj(Geradores.geraCnpj());
         String nomeEmpresa = faker.company().name().replace(".", "");
@@ -62,8 +60,6 @@ public class EasyRandomClass {
     }
 
     public Fornecedor fornecedorRandomizer() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Fornecedor fornecedor = easyFakeObject.nextObject(Fornecedor.class);
         fornecedor.setCnpj(Geradores.geraCnpj());
         String nomeFornecedor = faker.company().name().replace(".", "");
@@ -80,8 +76,6 @@ public class EasyRandomClass {
     }
 
     public Funcionario funcionarioRandomizer() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Funcionario funcionario = easyFakeObject.nextObject(Funcionario.class);
         funcionario.setCpf(Geradores.geraCpf());
         funcionario.setNome(faker.name().fullName().replace(".", ""));
@@ -101,8 +95,6 @@ public class EasyRandomClass {
 
     public HashSet<Produto> produtoRandomizer() {
         HashSet<Produto> produtos = new HashSet<Produto>();
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Produto produto = easyFakeObject.nextObject(Produto.class);
         produto.setId(faker.number().numberBetween(1, 10000));
         produto.setNome(faker.name().fullName().replace(".", ""));
@@ -118,8 +110,6 @@ public class EasyRandomClass {
     }
 
     public Produto produtoRandomizerClass() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Produto produto = easyFakeObject.nextObject(Produto.class);
         produto.setId(faker.number().numberBetween(1, 10000));
         produto.setNome(faker.name().fullName());
@@ -135,8 +125,6 @@ public class EasyRandomClass {
 
     public HashSet<Endereco> enderecoRandomizer() {
         HashSet<Endereco> enderecos = new HashSet<Endereco>();
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Endereco endereco = easyFakeObject.nextObject(Endereco.class);
         endereco.setCep(faker.regexify("[0-9]{8}"));
         endereco.setRua(faker.address().streetName());
@@ -151,7 +139,6 @@ public class EasyRandomClass {
 
     public Endereco enderecoRandomizerClass() {
         Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Endereco endereco = easyFakeObject.nextObject(Endereco.class);
         endereco.setCep(faker.regexify("[0-9]{8}"));
         endereco.setRua(faker.address().streetName());
@@ -165,8 +152,6 @@ public class EasyRandomClass {
 
     public HashSet<Telefone> telefoneRandomizer() {
         HashSet<Telefone> telefones = new HashSet<Telefone>();
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
         telefone.setDdd(TelefoneDDDType.dddAleatorio());
         telefone.setTipoTelefone(TelefoneType.tipoTelefoneAleatorio());
@@ -180,8 +165,6 @@ public class EasyRandomClass {
     }
 
     public Telefone telefoneRandomizerClass() {
-        Faker faker = new Faker();
-        EasyRandom easyFakeObject = new EasyRandom();
         Telefone telefone = easyFakeObject.nextObject(Telefone.class);
         telefone.setDdd(TelefoneDDDType.dddAleatorio());
         if (telefone.getTipoTelefone().equals(TelefoneType.CELULAR)) {
@@ -196,6 +179,11 @@ public class EasyRandomClass {
     public static EasyRandomClass InstanciaEasyRandomClass() {
         EasyRandomClass easyRandom = new EasyRandomClass();
         return easyRandom;
+    }
+    
+    public static String geraNomeUsuario() {
+        String nome = faker.name().fullName().replace(".", "");
+        return nome;
     }
 
 }

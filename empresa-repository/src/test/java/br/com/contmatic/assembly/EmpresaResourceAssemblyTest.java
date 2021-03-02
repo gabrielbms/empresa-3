@@ -36,7 +36,7 @@ public class EmpresaResourceAssemblyTest {
         document.remove("_id");
         String empresaUTF8 = StringEscapeUtils.unescapeJava(empresa.toString()).replaceAll("\\s", "");
         assertThat(empresaUTF8.replace(".00", ".0").replace(".10", ".1").replace(".20", ".2").replace(".30", ".3").replace(".40", ".4").replace(".50", ".5").replace(".60", ".6")
-            .replace(".70", ".7").replace(".80", ".8").replace(".90", ".9"), equalTo(document.toJson().replaceAll("\\s", "").replaceAll("\\\\\\\\", "\\\\").replace(".00", ".0").replace(".10", ".1").replace(".20", ".2").replace(".30", ".3").replace(".40", ".4").replace(".50", ".5").replace(".60", ".6")
+            .replace(".70", ".7").replace(".80", ".8").replace(".90", ".9"), equalTo(document.toJson().replaceAll("\\s", "").replaceAll("\\\\\\\\", "\\\\").replace(".00,", ".0,").replace(".00", ".0").replace(".10", ".1").replace(".20", ".2").replace(".30", ".3").replace(".40", ".4").replace(".50", ".5").replace(".60", ".6")
                 .replace(".70", ".7").replace(".80", ".8").replace(".90", ".9")));
     }
 

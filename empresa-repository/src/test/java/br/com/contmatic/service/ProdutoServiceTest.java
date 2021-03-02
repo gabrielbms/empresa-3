@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.easyRandom.EasyRandomClass.geraNomeUsuario;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -39,6 +41,8 @@ public class ProdutoServiceTest {
             Produto produto = randomObject.produtoRandomizerClass();
             produtoService.save(produto);
             produto.setNome("Atualizando um produto");
+            produto.setDataModificacao(now());
+            produto.setUsuarioModificacao(geraNomeUsuario());
             produtoService.update(produto);
             Produto produtoBanco = produtoService.findById(produto.getId());
             assertEquals("Atualizando um produto", produtoBanco.getNome());
@@ -54,6 +58,8 @@ public class ProdutoServiceTest {
             String nomeproduto = produto.getNome();
             produtoService.save(produto);
             produto.setNome("Atualizando um produto pelo campo");
+            produto.setDataModificacao(now());
+            produto.setUsuarioModificacao(geraNomeUsuario());
             produtoService.updateByField("nome", nomeproduto, produto);
             Produto produtoBanco = produtoService.findById(produto.getId());
             assertEquals("Atualizando um produto pelo campo", produtoBanco.getNome());

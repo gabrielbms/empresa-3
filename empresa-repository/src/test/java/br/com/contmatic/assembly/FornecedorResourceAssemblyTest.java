@@ -37,7 +37,7 @@ public class FornecedorResourceAssemblyTest {
         Document document = Document.parse(randomObject.fornecedorRandomizer().toString());
         Fornecedor fornecedor = new FornecedorResourceAssembly().toResource(document);
         String fornecedorUTF8 = StringEscapeUtils.unescapeJava(fornecedor.toString()).replaceAll("\\s", "");
-        assertThat(fornecedorUTF8.replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
+        assertThat(fornecedorUTF8.replace(".00,", ".0,").replace(".10,", ".1,").replace(".20,", ".2,").replace(".30,", ".3,")
             .replace(".40,", ".4,").replace(".50,", ".5,").replace(".60,", ".6,").replace(".70,", ".7,").replace(".80,", ".8,").replace(".90,", ".9,"),
             equalTo(document.toJson().replaceAll("\\s", "")));
     }

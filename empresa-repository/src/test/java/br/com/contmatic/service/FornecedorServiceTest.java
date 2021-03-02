@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.easyRandom.EasyRandomClass.geraNomeUsuario;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -39,6 +41,8 @@ public class FornecedorServiceTest {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
             fornecedor.setNome("Atualizando um fornecedor");
+            fornecedor.setDataModificacao(now());
+            fornecedor.setUsuarioModificacao(geraNomeUsuario());
             fornecedorService.update(fornecedor);
             Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
             assertEquals("Atualizando um fornecedor", fornecedorBanco.getNome());
@@ -54,6 +58,8 @@ public class FornecedorServiceTest {
             String nomefornecedor = fornecedor.getNome();
             fornecedorService.save(fornecedor);
             fornecedor.setNome("Atualizando um fornecedor pelo campo");
+            fornecedor.setDataModificacao(now());
+            fornecedor.setUsuarioModificacao(geraNomeUsuario());
             fornecedorService.updateByField("nome", nomefornecedor, fornecedor);
             Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
             assertEquals("Atualizando um fornecedor pelo campo", fornecedorBanco.getNome());

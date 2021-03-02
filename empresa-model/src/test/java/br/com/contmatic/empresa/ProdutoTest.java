@@ -308,7 +308,7 @@ public class ProdutoTest {
         assertEquals(produto.hashCode(), outroProduto.hashCode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_hashCode_com_um_produto_de_id_null() {
         Produto outroProduto = new Produto(null, "teste", 5, BigDecimal.valueOf(500.00));
         
@@ -321,7 +321,7 @@ public class ProdutoTest {
         assertEquals(produto, outroProduto);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_produto_de_id_null() {
         Produto outroProduto = new Produto(null, "teste", 8, BigDecimal.valueOf(500.00));
         assertNotEquals(produto, outroProduto);
@@ -337,7 +337,7 @@ public class ProdutoTest {
         assertNotEquals(produto, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_true_no_equals_comparando_dois_produtos_de_id_null() {
         Produto produto1 = new Produto(null, "teste", 3, BigDecimal.valueOf(500.00));
         Produto produto2 = new Produto(null, "teste", 3, BigDecimal.valueOf(500.00));
@@ -351,7 +351,7 @@ public class ProdutoTest {
         assertNotEquals(produto1, produto2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deve_retornar_false_no_equals_com_um_id_null_e_outro_preenchido() {
         Produto produto1 = new Produto(null, "teste", 2, BigDecimal.valueOf(500.00));
         Produto produto2 = new Produto(3, "teste", 2, BigDecimal.valueOf(500.00));

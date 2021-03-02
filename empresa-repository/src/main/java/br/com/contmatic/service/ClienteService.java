@@ -27,7 +27,7 @@ public class ClienteService implements ClienteRepository{
 
     @Override
     public String save(Cliente cliente) {
-        clienteCollection.insertOne(Document.parse(cliente.toString()));
+        clienteCollection.insertOne(Document.parse(cliente.toString()).append("_id", cliente.getCpf()));
         return "Cadastro -> Cliente nº" + clienteCollection.countDocuments() + "Inserido com sucesso";
     }
     

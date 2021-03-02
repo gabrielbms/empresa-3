@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.easyRandom.EasyRandomClass.geraNomeUsuario;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -24,7 +26,7 @@ public class ClienteServiceTest {
 
     @Test
     public void loop() {
-        for(int i = 0 ; i < 2; i++) {
+        for(int i = 0 ; i < 0; i++) {
             deve_salvar_empresa();
         }
     }
@@ -46,6 +48,8 @@ public class ClienteServiceTest {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
             cliente.setNome("Atualizando um cliente");
+            cliente.setDataModificacao(now());
+            cliente.setUsuarioModificacao(geraNomeUsuario());
             clienteService.update(cliente);
             Cliente clienteBanco = clienteService.findById(cliente.getCpf());
             assertEquals("Atualizando um cliente", clienteBanco.getNome());
@@ -61,6 +65,8 @@ public class ClienteServiceTest {
             String nomeCliente = cliente.getNome();
             clienteService.save(cliente);
             cliente.setNome("Atualizando um cliente pelo campo");
+            cliente.setDataModificacao(now());
+            cliente.setUsuarioModificacao(geraNomeUsuario());
             clienteService.updateByField("nome", nomeCliente, cliente);
             Cliente clienteBanco = clienteService.findById(cliente.getCpf());
             assertEquals("Atualizando um cliente pelo campo", clienteBanco.getNome());
