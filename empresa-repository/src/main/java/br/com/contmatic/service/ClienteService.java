@@ -27,10 +27,10 @@ public class ClienteService implements ClienteRepository{
 
     @Override
     public String save(Cliente cliente) {
-        clienteCollection.insertOne(Document.parse(cliente.toString()).append("_id", cliente.getCpf()));
+        clienteCollection.insertOne(assembly.toDocument(cliente).append("_id", cliente.getCpf()));
         return "Cadastro -> Cliente nº" + clienteCollection.countDocuments() + "Inserido com sucesso";
     }
-    
+
     @Override
     public void update(Cliente cliente) {
         BasicDBObject whereQuery = new BasicDBObject();
@@ -38,7 +38,7 @@ public class ClienteService implements ClienteRepository{
         Document clienteDocument = assembly.toDocument(cliente);
         clienteCollection.replaceOne(whereQuery, clienteDocument);
     }
-    
+
     @Override
     public void updateByField(String campo, String conteudo, Cliente cliente) {
         BasicDBObject whereQuery = new BasicDBObject();
