@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.util.BsonUtil.removeFieldFromDocument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,9 @@ public class ProdutoService implements ProdutoRepository{
 
     @Override
     public String save(Produto produto) {
-        produtoCollection.insertOne(Document.parse(produto.toString()).append("_id", produto.getId()));
+        Document document = Document.parse(produto.toString()).append("_id", produto.getId());
+        removeFieldFromDocument(document, "id");
+        produtoCollection.insertOne(document);
         return "Cadastro -> produto nº" + produtoCollection.countDocuments() + "Inserido com sucesso";
     }
     

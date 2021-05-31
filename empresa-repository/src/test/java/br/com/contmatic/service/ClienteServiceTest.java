@@ -36,7 +36,7 @@ public class ClienteServiceTest {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
-            assertEquals(cliente, clienteService.findById(cliente.getCpf()));
+            assertEquals(cliente.getNome(), clienteService.findById(cliente.getCpf()).getNome());
         } catch (Exception e) { 
             LOGGER.error(e.getMessage(), e);
         }
@@ -59,7 +59,7 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_atualizar_um_cliente_pelo_campo() {
+    public void deve_atualizar_um_cliente_pelo_campo_nome() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             String nomeCliente = cliente.getNome();
@@ -76,11 +76,11 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_deletar_um_cliente_pelo_cpf() {
+    public void deve_deletar_um_cliente_pelo_id() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
-            assertEquals(cliente, clienteService.findById(cliente.getCpf()));
+            assertEquals(cliente.getNome(), clienteService.findById(cliente.getCpf()).getNome());
             clienteService.deleteById(cliente.getCpf());
             Cliente clienteDeletado = clienteService.findById(cliente.getCpf());
             assertEquals(null, clienteDeletado.getCpf());
@@ -95,7 +95,7 @@ public class ClienteServiceTest {
             Cliente cliente = randomObject.clienteRandomizer();
             String nome = cliente.getNome();
             clienteService.save(cliente);
-            assertEquals(cliente, clienteService.findById(cliente.getCpf()));
+            assertEquals(cliente.getNome(), clienteService.findById(cliente.getCpf()).getNome());
             clienteService.deleteByField("nome", nome, cliente);
             Cliente clienteDeletado = clienteService.findById(cliente.getCpf());
             assertEquals(null, clienteDeletado.getCpf());
@@ -105,12 +105,12 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_selecioar_um_cliente_pelo_cpf() {
+    public void deve_selecioar_um_cliente_pelo_id() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
             Cliente clienteBanco = clienteService.findById(cliente.getCpf());
-            assertEquals(cliente, clienteBanco);
+            assertEquals(cliente.getNome(), clienteBanco.getNome());
             clienteService.deleteById(cliente.getCpf());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -124,7 +124,7 @@ public class ClienteServiceTest {
             clienteService.save(cliente);
             List<String> campos = new ArrayList<>();
             Collections.addAll(campos, "nome");
-            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
+            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("_id", cliente.getCpf(), campos);
             assertEquals(cliente.getNome(), clienteBuscado.getNome());
             clienteService.deleteById(cliente.getCpf());
         } catch (Exception e) {
@@ -133,13 +133,13 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_selecionar_cpf_nome() {
+    public void deve_selecionar_nome_email() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cpf", "nome");
-            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
+            Collections.addAll(campos, "nome", "email");
+            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("_id", cliente.getCpf(), campos);
             assertEquals(cliente.getNome(), clienteBuscado.getNome());
             clienteService.deleteById(cliente.getCpf());
         } catch (Exception e) {
@@ -148,13 +148,13 @@ public class ClienteServiceTest {
     }
     
     @Test
-    public void deve_selecionar_cpf_nome_email_boleto() {
+    public void deve_selecionar_nome_email_boleto() {
         try {
             Cliente cliente = randomObject.clienteRandomizer();
             clienteService.save(cliente);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cpf", "nome", "email", "boleto");
-            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("cpf", cliente.getCpf(), campos);
+            Collections.addAll(campos, "nome", "email", "boleto");
+            Cliente clienteBuscado = clienteService.findAndReturnsSelectedFields("_id", cliente.getCpf(), campos);
             assertEquals(cliente.getNome(), clienteBuscado.getNome());
             clienteService.deleteById(cliente.getCpf());
         } catch (Exception e) {

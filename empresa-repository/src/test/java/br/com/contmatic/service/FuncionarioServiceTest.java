@@ -29,7 +29,7 @@ public class FuncionarioServiceTest {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
-            assertEquals(funcionario, funcionarioService.findById(funcionario.getCpf()));
+            assertEquals(funcionario.getNome(), funcionarioService.findById(funcionario.getCpf()).getNome());
         } catch (Exception e) { 
             LOGGER.error(e.getMessage(), e);
         }
@@ -69,11 +69,11 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_deletar_um_funcionario_pelo_cpf() {
+    public void deve_deletar_um_funcionario_pelo_id() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
-            assertEquals(funcionario, funcionarioService.findById(funcionario.getCpf()));
+            assertEquals(funcionario.getNome(), funcionarioService.findById(funcionario.getCpf()).getNome());
             funcionarioService.deleteById(funcionario.getCpf());
             Funcionario funcionarioDeletado = funcionarioService.findById(funcionario.getCpf());
             assertEquals(null, funcionarioDeletado.getCpf());
@@ -83,12 +83,12 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_deletar_um_funcionario_pelo_campo() {
+    public void deve_deletar_um_funcionario_pelo_campo_nome() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             String nome = funcionario.getNome();
             funcionarioService.save(funcionario);
-            assertEquals(funcionario, funcionarioService.findById(funcionario.getCpf()));
+            assertEquals(funcionario.getNome(), funcionarioService.findById(funcionario.getCpf()).getNome());
             funcionarioService.deleteByField("nome", nome, funcionario);
             Funcionario funcionarioDeletado = funcionarioService.findById(funcionario.getCpf());
             assertEquals(null, funcionarioDeletado.getCpf());
@@ -98,12 +98,12 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_selecioar_um_funcionario_pelo_cpf() {
+    public void deve_selecioar_um_funcionario_pelo_id() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
             Funcionario funcionarioBanco = funcionarioService.findById(funcionario.getCpf());
-            assertEquals(funcionario, funcionarioBanco);
+            assertEquals(funcionario.getNome(), funcionarioBanco.getNome());
             funcionarioService.deleteById(funcionario.getCpf());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -117,7 +117,7 @@ public class FuncionarioServiceTest {
             funcionarioService.save(funcionario);
             List<String> campos = new ArrayList<>();
             Collections.addAll(campos, "nome");
-            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("cpf", funcionario.getCpf(), campos);
+            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("_id", funcionario.getCpf(), campos);
             assertEquals(funcionario.getNome(), funcionarioBuscado.getNome());
             funcionarioService.deleteById(funcionario.getCpf());
         } catch (Exception e) {
@@ -126,13 +126,13 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_cpf_nome() {
+    public void deve_selecionar_por_nome_idade() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cpf", "nome");
-            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("cpf", funcionario.getCpf(), campos);
+            Collections.addAll(campos,"nome", "idade");
+            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("_id", funcionario.getCpf(), campos);
             assertEquals(funcionario.getNome(), funcionarioBuscado.getNome());
             funcionarioService.deleteById(funcionario.getCpf());
         } catch (Exception e) {
@@ -141,13 +141,13 @@ public class FuncionarioServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_cpf_nome_idade_salario_dataContratacao_dataSalario_telefones_enderecos() {
+    public void deve_selecionar_por_nome_idade_salario_dataContratacao_dataSalario_telefones_enderecos() {
         try {
             Funcionario funcionario = randomObject.funcionarioRandomizer();
             funcionarioService.save(funcionario);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cpf", "nome", "idade", "salario", "dataContratacao", "dataSalario", "telefones", "enderecos");
-            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("cpf", funcionario.getCpf(), campos);
+            Collections.addAll(campos, "nome", "idade", "salario", "dataContratacao", "dataSalario", "telefones", "enderecos");
+            Funcionario funcionarioBuscado = funcionarioService.findAndReturnsSelectedFields("_id", funcionario.getCpf(), campos);
             assertEquals(funcionario.getNome(), funcionarioBuscado.getNome());
             funcionarioService.deleteById(funcionario.getCpf());
         } catch (Exception e) {

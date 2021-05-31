@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.util.BsonUtil.removeFieldFromDocument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,9 @@ public class FuncionarioService implements FuncionarioRepository {
 
     @Override
     public String save(Funcionario funcionario) {
-        funcionarioCollection.insertOne(Document.parse(funcionario.toString()).append("_id", funcionario.getCpf()));
+        Document document = Document.parse(funcionario.toString()).append("_id", funcionario.getCpf());
+        removeFieldFromDocument(document, "cpf");
+        funcionarioCollection.insertOne(document);
         return "Cadastro -> funcionario nº" + funcionarioCollection.countDocuments() + "Inserido com sucesso";
     }
     

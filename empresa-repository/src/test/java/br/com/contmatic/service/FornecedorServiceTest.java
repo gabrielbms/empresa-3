@@ -29,7 +29,7 @@ public class FornecedorServiceTest {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
-            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+            assertEquals(fornecedor.getNome(), fornecedorService.findById(fornecedor.getCnpj()).getNome());
         } catch (Exception e) { 
             LOGGER.error(e.getMessage(), e);
         }
@@ -73,7 +73,7 @@ public class FornecedorServiceTest {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
-            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+            assertEquals(fornecedor.getNome(), fornecedorService.findById(fornecedor.getCnpj()).getNome());
             fornecedorService.deleteById(fornecedor.getCnpj());
             Fornecedor clienteDeletado = fornecedorService.findById(fornecedor.getCnpj());
             assertEquals(null, clienteDeletado.getCnpj());
@@ -83,12 +83,12 @@ public class FornecedorServiceTest {
     }
     
     @Test
-    public void deve_deletar_um_empresa_pelo_campo() {
+    public void deve_deletar_um_empresa_pelo_campo_nome() {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             String nome = fornecedor.getNome();
             fornecedorService.save(fornecedor);
-            assertEquals(fornecedor, fornecedorService.findById(fornecedor.getCnpj()));
+            assertEquals(fornecedor.getNome(), fornecedorService.findById(fornecedor.getCnpj()).getNome());
             fornecedorService.deleteByField("nome", nome, fornecedor);
             Fornecedor fornecedorDeletado = fornecedorService.findById(fornecedor.getCnpj());
             assertEquals(null, fornecedorDeletado.getCnpj());
@@ -98,12 +98,12 @@ public class FornecedorServiceTest {
     }
     
     @Test
-    public void deve_selecioar_um_cliente_pelo_cpf() {
+    public void deve_selecioar_um_cliente_pelo_id() {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
             Fornecedor fornecedorBanco = fornecedorService.findById(fornecedor.getCnpj());
-            assertEquals(fornecedor, fornecedorBanco);
+            assertEquals(fornecedor.getNome(), fornecedorBanco.getNome());
             fornecedorService.deleteById(fornecedor.getCnpj());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -117,7 +117,7 @@ public class FornecedorServiceTest {
             fornecedorService.save(fornecedor);
             List<String> campos = new ArrayList<>();
             Collections.addAll(campos, "nome");
-            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("_id", fornecedor.getCnpj(), campos);
             assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
             fornecedorService.deleteById(fornecedor.getCnpj());
         } catch (Exception e) {
@@ -126,13 +126,13 @@ public class FornecedorServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_cnpj_nome() {
+    public void deve_selecionar_por_nome_produtos() {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cnpj", "nome");
-            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            Collections.addAll(campos, "nome", "produtos");
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("_id", fornecedor.getCnpj(), campos);
             assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
             fornecedorService.deleteById(fornecedor.getCnpj());
         } catch (Exception e) {
@@ -141,13 +141,13 @@ public class FornecedorServiceTest {
     }
     
     @Test
-    public void deve_selecionar_por_cnpj_nome_produtos_enderecos_telefones() {
+    public void deve_selecionar_por_nome_produtos_enderecos_telefones() {
         try {
             Fornecedor fornecedor = randomObject.fornecedorRandomizer();
             fornecedorService.save(fornecedor);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cnpj", "nome", "produtos", "enderecos", "telefones");
-            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("cnpj", fornecedor.getCnpj(), campos);
+            Collections.addAll(campos, "nome", "produtos", "enderecos", "telefones");
+            Fornecedor fornecedorBuscado = fornecedorService.findAndReturnsSelectedFields("_id", fornecedor.getCnpj(), campos);
             assertEquals(fornecedor.getNome(), fornecedorBuscado.getNome());
             fornecedorService.deleteById(fornecedor.getCnpj());
         } catch (Exception e) {

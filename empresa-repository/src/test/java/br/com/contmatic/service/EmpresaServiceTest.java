@@ -29,7 +29,7 @@ public class EmpresaServiceTest {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);
-            assertEquals(empresa, empresaService.findById(empresa.getCnpj()));
+            assertEquals(empresa.getNome(), empresaService.findById(empresa.getCnpj()).getNome());
         } catch (Exception e) { 
             LOGGER.error(e.getMessage(), e);
         }
@@ -73,7 +73,7 @@ public class EmpresaServiceTest {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);
-            assertEquals(empresa, empresaService.findById(empresa.getCnpj()));
+            assertEquals(empresa.getNome(), empresaService.findById(empresa.getCnpj()).getNome());
             empresaService.deleteById(empresa.getCnpj());
             Empresa empresaDeletado = empresaService.findById(empresa.getCnpj());
             assertEquals(null, empresaDeletado.getCnpj());
@@ -83,12 +83,12 @@ public class EmpresaServiceTest {
     }
     
     @Test
-    public void deve_deletar_um_empresa_pelo_campo() {
+    public void deve_deletar_um_empresa_pelo_campo_nome() {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             String nome = empresa.getNome();
             empresaService.save(empresa);
-            assertEquals(empresa, empresaService.findById(empresa.getCnpj()));
+            assertEquals(empresa.getNome(), empresaService.findById(empresa.getCnpj()).getNome());
             empresaService.deleteByField("nome", nome, empresa);
             Empresa empresaDeletado = empresaService.findById(empresa.getCnpj());
             assertEquals(null, empresaDeletado.getCnpj());
@@ -98,12 +98,12 @@ public class EmpresaServiceTest {
     }
     
     @Test
-    public void deve_selecioar_uma_empresa_pelo_cpf() {
+    public void deve_selecioar_uma_empresa_pelo_id() {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);
             Empresa empresaBanco = empresaService.findById(empresa.getCnpj());
-            assertEquals(empresa, empresaBanco);
+            assertEquals(empresa.getNome(), empresaBanco.getNome());
             empresaService.deleteById(empresa.getCnpj());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -117,7 +117,7 @@ public class EmpresaServiceTest {
             empresaService.save(empresa);
             List<String> campos = new ArrayList<>();
             Collections.addAll(campos, "nome");
-            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("cnpj", empresa.getCnpj(), campos);
+            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("_id", empresa.getCnpj(), campos);
             assertEquals(empresa.getNome(), empresaBuscado.getNome());
             empresaService.deleteById(empresa.getCnpj());
         } catch (Exception e) {
@@ -126,13 +126,13 @@ public class EmpresaServiceTest {
     }
     
     @Test
-    public void deve_selecionar_cnpj_nome() {
+    public void deve_selecionar_nome_site() {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cnpj", "nome");
-            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("cnpj", empresa.getCnpj(), campos);
+            Collections.addAll(campos, "nome", "site");
+            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("_id", empresa.getCnpj(), campos);
             assertEquals(empresa.getNome(), empresaBuscado.getNome());
             empresaService.deleteById(empresa.getCnpj());
         } catch (Exception e) {
@@ -141,13 +141,13 @@ public class EmpresaServiceTest {
     }
     
     @Test
-    public void deve_selecionar_cnpj_nome_site_telefones_enderecos() {
+    public void deve_selecionar_nome_site_telefones_enderecos() {
         try {
             Empresa empresa = randomObject.empresaRandomizer();
             empresaService.save(empresa);
             List<String> campos = new ArrayList<>();
-            Collections.addAll(campos, "cnpj", "nome", "site", "telefones", "enderecos");
-            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("cnpj", empresa.getCnpj(), campos);
+            Collections.addAll(campos, "nome", "site", "telefones", "enderecos");
+            Empresa empresaBuscado = empresaService.findAndReturnsSelectedFields("_id", empresa.getCnpj(), campos);
             assertEquals(empresa.getNome(), empresaBuscado.getNome());
             empresaService.deleteById(empresa.getCnpj());
         } catch (Exception e) {

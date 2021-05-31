@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.util.BsonUtil.removeFieldFromDocument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +29,16 @@ public class ClienteService implements ClienteRepository{
 
     @Override
     public String save(Cliente cliente) {
-        clienteCollection.insertOne(assembly.toDocument(cliente).append("_id", cliente.getCpf()));
+        Document document = assembly.toDocument(cliente).append("_id", cliente.getCpf());
+        removeFieldFromDocument(document, "cpf");
+        clienteCollection.insertOne(document);
         return "Cadastro -> Cliente nº" + clienteCollection.countDocuments() + "Inserido com sucesso";
     }
 
     @Override
     public void update(Cliente cliente) {
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("cpf", cliente.getCpf());
+        whereQuery.append("_id", cliente.getCpf());
         Document clienteDocument = assembly.toDocument(cliente);
         clienteCollection.replaceOne(whereQuery, clienteDocument);
     }
@@ -50,7 +54,7 @@ public class ClienteService implements ClienteRepository{
     @Override
     public void deleteById(String cpf) {
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("cpf", cpf);
+        whereQuery.append("_id", cpf);
         clienteCollection.deleteOne(whereQuery);
     }
     
@@ -62,9 +66,9 @@ public class ClienteService implements ClienteRepository{
     }
     
     @Override
-    public Cliente findById(String cpf) {    
+    public Cliente findById(String id) {    
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.append("cpf", cpf);
+        whereQuery.append("_id", id);
         FindIterable<Document> find = database.getCollection("Cliente").find(whereQuery);
         Cliente cliente = new Cliente();
         for(Document doc : find) {

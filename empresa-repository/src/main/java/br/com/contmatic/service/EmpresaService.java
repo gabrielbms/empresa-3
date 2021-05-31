@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.util.BsonUtil.removeFieldFromDocument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,9 @@ public class EmpresaService implements EmpresaRepository {
 
     @Override
     public String save(Empresa empresa) {
-        empresaCollection.insertOne(Document.parse(empresa.toString()).append("_id", empresa.getCnpj()));
+        Document document = Document.parse(empresa.toString()).append("_id", empresa.getCnpj());
+        removeFieldFromDocument(document, "cnpj");
+        empresaCollection.insertOne(document);
         return "Cadastro -> empresa nº" + empresaCollection.countDocuments() + "Inserido com sucesso";
     }
     

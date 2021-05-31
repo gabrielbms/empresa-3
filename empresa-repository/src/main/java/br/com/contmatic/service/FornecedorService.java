@@ -1,5 +1,7 @@
 package br.com.contmatic.service;
 
+import static br.com.contmatic.util.BsonUtil.removeFieldFromDocument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,9 @@ public class FornecedorService implements FornecedorRepository {
 
     @Override
     public String save(Fornecedor fornecedor) {
-        fornecedorCollection.insertOne(Document.parse(fornecedor.toString()).append("_id", fornecedor.getCnpj()));
+        Document document = Document.parse(fornecedor.toString()).append("_id", fornecedor.getCnpj());
+        removeFieldFromDocument(document, "cnpj");
+        fornecedorCollection.insertOne(document);
         return "Cadastro -> fornecedor nº" + fornecedorCollection.countDocuments() + "Inserido com sucesso";
     }
     
